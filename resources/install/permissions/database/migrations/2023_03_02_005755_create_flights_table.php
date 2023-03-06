@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('destination');
             $table->dateTime('scheduled_time_arrival');
             $table->dateTime('scheduled_time_departure');
-            $table->enum('flight_type', ['domestic', 'international']);
+            $table->enum('flight_type', ['arrival', 'departure']);
             $table->timestamps();
         });
         

@@ -49,8 +49,8 @@
                         <label for="flight_type" class="form-label">Flight Type</label>
                         <select wire:model.lazy="flight_type" class="form-select form-select-sm" id="flight_type">
                             <option value="">Select Flight Type</option>
-                            <option value="domestic">Domestic</option>
-                            <option value="international">International</option>
+                            <option value="arrival">Arrival</option>
+                            <option value="departure">Departure</option>
                         </select>
                         @error('flight_type') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>

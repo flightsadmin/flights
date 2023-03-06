@@ -56,7 +56,7 @@ class Schedules extends Component
                 $flight->destination = strtoupper($this->flightFields[$flightNumber]['destination'] ?? 'MCT');
                 $flight->scheduled_time_arrival = $date->format('Y-m-d '). $this->flightFields[$flightNumber]['arrival'] ?? '00:00';
                 $flight->scheduled_time_departure = $date->format('Y-m-d '). $this->flightFields[$flightNumber]['departure'] ?? '00:00';
-                $flight->flight_type = strtoupper('international');
+                $flight->flight_type = strtoupper('departure');
                 $flight->save();
                 $date = $date->next($day);
             }
@@ -116,9 +116,9 @@ class Schedules extends Component
 
             fputcsv($file, ['flight_no', 'registration', 'origin', 'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type']);
 
-            fputcsv($file, ['AC121', '4G-LLM', 'DOH', 'MCT','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'international']);
-            fputcsv($file, ['AC122', '4G-LLN', 'DXB', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'international']);
-            fputcsv($file, ['AC123', '4G-LLO', 'ISU', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'international']);
+            fputcsv($file, ['AC121', '4G-LLM', 'DOH', 'MCT','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
+            fputcsv($file, ['AC122', '4G-LLN', 'DXB', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
+            fputcsv($file, ['AC123', '4G-LLO', 'ISU', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
 
             fclose($file);
         };

@@ -20,7 +20,7 @@ class Flights extends Component
         'destination' => 'required|string',
         'scheduled_time_arrival' => 'required|date',
         'scheduled_time_departure' => 'required|date',
-        'flight_type' => 'required|in:domestic,international',
+        'flight_type' => 'required|in:arrival,departure',
     ];
 
     public function cancel()
