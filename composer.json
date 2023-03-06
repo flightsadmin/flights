@@ -1,6 +1,6 @@
 {
     "name": "flightsadmin/flights",
-    "description": "Laravel ^9.19 Admin Dashboard using Bootstrap 5, laravel livewire and Spatie Laravel permission.",
+    "description": "Laravel ^9.19 Admin Dashboard using Bootstrap 5, laravel livewire and Spatie Laravel permission. Flights Dashboard",
     "keywords": [
         "flightsadmin", "flights", "laravel", "livewire", "spatie permission"
     ],

@@ -16,7 +16,7 @@ class LivewireInstall extends Command
     protected $argument;
     private $replaces = [];
 	
-    protected $signature = 'permission:install';
+    protected $signature = 'flights:install';
     protected $description = 'Install Livewire CRUD Generator, compile and publish it\'s assets';
 
     public function handle()
