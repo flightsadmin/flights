@@ -1,9 +1,9 @@
-# Livewire Crud Generator
+# Flight Admin
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/flightsadmin/flights.svg?style=flat-square)](https://packagist.org/packages/flightsadmin/flights)
 [![Total Downloads](https://img.shields.io/packagist/dt/flightsadmin/flights.svg?style=flat-square)](https://packagist.org/packages/flightsadmin/flights)
 
-A livewire Package to scaffold basic User Management Dashboard using Spatie Laravel Permission, Laravel Livewire and Bootstrap. Package is autoloaded as per PSR-4 autoloading in any laravel version `^9.19` so no extra config required.
+A Laravel Livewire Package to scaffold basic User Management Dashboard using Spatie Laravel Permission, Laravel Livewire and Bootstrap. Package is autoloaded as per PSR-4 autoloading in any laravel version `^9.19` so no extra config required.
 It uses ***auth*** middleware thus installs `laravel/ui` just incase you don't have any other auth mechanism, this does not mean you have to use `laravel/ui`.
 
 ## Installation
@@ -23,7 +23,7 @@ php artisan permission:install
 ```
 **This command will perfom below actions:
 
-    * Compile css/js based on `bootstrap and fontawesome/free using vite`.
+    * Compile css/js based on `bootstrap and bootstrap-icons using vite`.
     * Run `npm install && run build`
     * Flush *node_modules* files from your folder.
 
@@ -37,6 +37,12 @@ to generate Auth scaffolds using `laravel/ui` package. You can skip this step if
 /roles
 
 /permissions
+
+/flights
+
+/airlines
+
+/registrations
 
 ## Default Credentials
 
