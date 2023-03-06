@@ -1,0 +1,48 @@
+{
+    "name": "flightsadmin/flights",
+    "description": "Laravel ^9.19 Admin Dashboard using Bootstrap 5, laravel livewire and Spatie Laravel permission.",
+    "keywords": [
+        "flightsadmin", "flights", "laravel", "livewire", "spatie permission"
+    ],
+    "homepage": "https://github.com/flightsadmin/flights",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "George Chitechi",
+            "email": "flightsapps@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7|^8",
+        "laravel/framework": ">9.19",
+        "laravel/ui": "^4",
+        "livewire/livewire": "^2",
+        "spatie/laravel-permission": "^5"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Flightsadmin\\Flights\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flightsadmin\\Flights\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Flightsadmin\\Flights\\FlightsServiceProvider"
+            ],
+            "aliases": {
+                "Flights": "Flightsadmin\\Flights\\FlightsFacade"
+            }
+        }
+    }
+}
