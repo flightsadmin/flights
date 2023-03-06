@@ -14,6 +14,12 @@
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flight">
 						</div>
+						<div class="d-flex gap-2">
+							<a href="{{ url('/schedules') }}" class="btn btn-sm btn-warning bi bi-newspaper"> Generate Schedule </a>
+							<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
+								 Add Flight
+							</div>
+						</div>
 						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
 						 	Add Flight
 						</div>
