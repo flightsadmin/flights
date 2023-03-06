@@ -10,8 +10,8 @@
                             @if (session()->has('message'))
                                 <div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
                             @endif
-                            <button class="btn btn-sm btn-primary float-right" wire:click="form()">
-                                <i class="bi bi-plus-circle"> </i> Add Permission
+                            <button class="btn btn-sm btn-primary float-end bi bi-plus-circle" wire:click="form()">
+                                Add Permission
                             </button>
                         </div>
                     </div>
@@ -27,8 +27,8 @@
                                         @error('permission.name') <span class="text-danger small">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="mt-3" style="display: flex; justify-content: space-between; align-items: center;">
-                                        <button class="btn btn-sm btn-info" wire:click="index()"><i class="bi bi-x-circle"></i> Cancel</button>
-                                        <button class="btn btn-sm btn-success" wire:click="save()"><i class="bi bi-check-circle"></i> Save Permission</button>
+                                        <button class="btn btn-sm btn-info bi bi-x-circle" wire:click="index()"> Cancel</button>
+                                        <button class="btn btn-sm btn-success bi bi-check-circle" wire:click="save()"> Save Permission</button>
                                     </div>
                                 </div>
                             </div>
@@ -53,17 +53,16 @@
                                     <td>{{ $permission->name }}</td>
                                     <td>
                                         @foreach($permission->roles as $role)
-                                            <button class="btn btn-sm btn-warning"><i class="bi bi-shield-shaded"></i> {{ $role->name }}</button>
+                                            <button class="btn btn-sm btn-warning bi bi-shield-shaded"> {{ $role->name }}</button>
                                         @endforeach
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-primary" wire:click="form({{$permission}})"><i class="bi bi-pencil-square"></i></button>
+                                        <button type="button" class="btn btn-sm btn-primary bi bi-pencil-square" wire:click="form({{$permission}})"> </button>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-danger" 
+                                        <button type="button" class="btn btn-sm btn-danger bi bi-trash" 
                                             onclick="confirm('Are you shure want to delete permision: {{ $permission->name }}?') || event.stopImmediatePropagation()" 
                                             wire:click="delete({{$permission}})">
-                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
                                 </tr>

@@ -13,19 +13,19 @@
                         <img class="profile-img mb-2" src="{{ asset('storage/' . $selectedUser->photo) }}"  style="height:100px; width:100px;"  alt="{{ $selectedUser->title }}">
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
-                        <p class="py-2"><i class="bi bi-person-vcard-fill"></i> Full Name</p>
+                        <p class="py-2 bi bi-person-vcard-fill"> Full Name</p>
                         <p class="py-2 text-muted">{{ $selectedUser->name }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
-                        <p class="py-2"><i class="bi bi-envelope-at-fill"></i> Email</p>
+                        <p class="py-2 bi bi-envelope-at-fill"> Email</p>
                         <p class="py-2 text-muted"> {{ $selectedUser->email }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
-                        <p class="py-2"><i class="bi bi-telephone-fill"></i> Phone</p>
+                        <p class="py-2 bi bi-telephone-fill"> Phone</p>
                         <p class="py-2 text-muted">{{ $selectedUser->phone }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
-                        <p class="py-2"><i class="bi bi-geo-alt-fill"></i> Title</p>
+                        <p class="py-2 bi bi-geo-alt-fill"> Title</p>
                         <p class="py-2 text-muted">{{ $selectedUser->title }}</p>
                     </div>
                 </div>

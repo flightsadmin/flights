@@ -82,6 +82,7 @@ class Flights extends Component
         $flights = Flight::latest()
                     ->orWhere('flight_no', 'LIKE', $keyWord)
                     ->orWhere('registration', 'LIKE', $keyWord)
+                    ->orderBy('scheduled_time_arrival', 'asc')
                     ->paginate(10);
         return view('livewire.flights.view', [
             'flights' => $flights,

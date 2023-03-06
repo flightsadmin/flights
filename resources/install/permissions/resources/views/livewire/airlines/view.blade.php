@@ -14,8 +14,8 @@
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
 						</div>
-						<div class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#dataModal">
-							<i class="bi bi-plus-lg"></i>  Add Registration
+						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
+							 Add Registration
 						</div>
 					</div>
 				</div>
@@ -40,7 +40,7 @@
 								<td>{{ $row->iata_code }}</td>
 								<td>{{ $row->base }}</td>
 								<td width="90">
-									<button class="btn btn-sm btn-danger" onclick="confirm('Confirm Delete Registration id {{$row->id}}? \nDeleted Registration cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"><i class="bi bi-trash3"></i> </button>  
+									<button class="btn btn-sm btn-danger bi bi-trash3" onclick="confirm('Confirm Delete Registration id {{$row->id}}? \nDeleted Registration cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
 								</td>
 							</tr>
 							@empty

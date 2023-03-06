@@ -114,16 +114,16 @@
                                         <td>{{ $user->title }}</td>
                                         <td>
                                             @foreach($user->roles as $role)
-                                                <button class="btn btn-sm btn-warning"><i class="bi bi-shield-shaded"></i> {{ $role->name }}</button>
+                                                <button class="btn btn-sm btn-warning bi bi-shield-shaded"> {{ $role->name }}</button>
                                             @endforeach
                                         </td>
                                         <td class="text-center"><img class="profile-img" src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->title }}"></td>
                                         <td class="text-center">
-                                            <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-sm btn-info text-white" wire:click="viewUser({{ $user->id }})"><i class="bi bi-eye"></i> View</button>
-                                            <button class="btn btn-sm btn-primary text-dark" wire:click="edit({{ $user->id }})"><i class="bi bi-pencil-square"></i> Edit</button>
-                                            <button class="btn btn-sm btn-danger text-white" 
+                                            <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-sm btn-info text-white bi bi-eye" wire:click="viewUser({{ $user->id }})"> View</button>
+                                            <button class="btn btn-sm btn-primary text-dark bi bi-pencil-square" wire:click="edit({{ $user->id }})"> Edit</button>
+                                            <button class="btn btn-sm btn-danger text-white bi bi-trash3-fill" 
                                             wire:click="destroy({{ $user->id }})" 
-                                            onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"><i class="bi bi-trash3-fill"></i> Delete</button>
+                                            onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"> Delete</button>
                                         <td>
                                             {{$user->created_at->format('d-M-Y H:i:s')}}
                                         </td>

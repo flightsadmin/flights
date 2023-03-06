@@ -14,8 +14,8 @@
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flight">
 						</div>
-						<div class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#dataModal">
-						<i class="bi bi-plus-lg"></i>  Add Flight
+						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
+						 	Add Flight
 						</div>
 					</div>
 				</div>
@@ -51,9 +51,9 @@
 											Actions
 										</a>
 										<ul class="dropdown-menu">
-											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item" wire:click="viewFlight({{ $row->id }})" ><i class="bi bi-eye-fill"></i> View </a></li>
-											<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item" wire:click="edit({{$row->id}})"><i class="bi bi-pencil-square"></i> Edit </a></li>
-											<li><a class="dropdown-item" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"><i class="bi bi-trash3"></i> Delete </a></li>  
+											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-eye-fill" wire:click="viewFlight({{ $row->id }})" > View </a></li>
+											<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
+											<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
 										</ul>
 									</div>								
 								</td>
