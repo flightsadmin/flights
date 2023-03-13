@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Flight;
 use Livewire\Component;
+use Carbon\Carbon;
+use DB;
 use Livewire\WithPagination;
 use App\Models\Registration;
 
@@ -11,7 +13,7 @@ class Flights extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedFlightId;
+    public $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedFlightId, $selectedDate;
 
     protected $rules = [
         'flight_no' => 'required|string',
@@ -23,8 +25,14 @@ class Flights extends Component
         'flight_type' => 'required|in:arrival,departure',
     ];
 
+    public function mount()
+    {
+        $this->selectedDate = Carbon::now()->format('Y-m-d');
+    }
+    
     public function cancel()
     {
+        $this->resetErrorBag();
         $this->reset();
     }
 
@@ -79,11 +87,10 @@ class Flights extends Component
     {
         $registrations = Registration::all();
         $keyWord = '%'. $this->keyWord .'%';
-        $flights = Flight::latest()
-                    ->orWhere('flight_no', 'LIKE', $keyWord)
-                    ->orWhere('registration', 'LIKE', $keyWord)
-                    ->orderBy('scheduled_time_arrival', 'asc')
-                    ->paginate(10);
+        $flights = Flight::whereDate('scheduled_time_departure', $this->selectedDate)
+                    ->where('flight_no', 'LIKE', $keyWord)
+                    ->orderBy('scheduled_time_departure', 'asc')
+                    ->paginate(50);
         return view('livewire.flights.view', [
             'flights' => $flights,
             'registrations' => $registrations,

@@ -30,9 +30,9 @@ return new class extends Migration
 
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
-            $table->string('registration');
+            $table->string('registration')->unique();
             $table->string('aircraft_type');
-            $table->foreignId('airline_id')->constrained('airlines');
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
         });
     }

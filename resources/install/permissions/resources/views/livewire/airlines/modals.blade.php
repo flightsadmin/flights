@@ -9,7 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form class="d-flex gap-2">
                     <div class="form-group">
                         <label for="name">Airline Name</label>
                         <input type="text" class="form-control" id="name" wire:model.lazy="name">
@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label for="iata_code">Airline Code</label>
-                        <input type="text" class="form-control" id="iata_code" wire:model.lazy="iata_code">
+                        <input type="text" maxlength="2" class="form-control" id="iata_code" wire:model.lazy="iata_code">
                         @error('iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">

@@ -83,7 +83,7 @@
     <script type="module">
         const modal = new bootstrap.Modal('#dataModal');
         window.addEventListener('closeModal', () => {
-                modal.hide();
+            modal.hide();
         })
     </script>
 </body>

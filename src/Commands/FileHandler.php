@@ -19,10 +19,20 @@ trait FileHandler
             $routeFile = base_path('routes/web.php');
             $routeData = file_get_contents($routeFile);
             $updatedData = $this->filesystem->get($routeFile);
-            $spatieRoutes = "Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');\nRoute::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');\nRoute::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin|user');\nRoute::view('posts', 'livewire.posts.index')->middleware('auth');\nRoute::view('airlines', 'livewire.airlines.index')->middleware('auth');\nRoute::view('registrations', 'livewire.registrations.index')->middleware('auth');\nRoute::view('flights', 'livewire.flights.index')->middleware('auth');\nRoute::view('schedules', 'livewire.schedules.index')->middleware('auth');";
+            $spatieRoutes = 
+            <<<ROUTES
+            Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('posts', 'livewire.posts.index')->middleware('auth');
+            Route::view('airlines', 'livewire.airlines.index')->middleware('auth');
+            Route::view('registrations', 'livewire.registrations.index')->middleware('auth');
+            Route::view('flights', 'livewire.flights.index')->middleware('auth');
+            Route::view('schedules', 'livewire.schedules.index')->middleware('auth', 'role:super-admin|admin');
+            ROUTES;
             $fileHook = "//Route Hooks - Do not delete//";
 
-            if (!Str::contains($updatedData, $spatieRoutes)) {
+            if (!Str::contains($updatedData, trim($spatieRoutes))) {
                 $UserModelContents = str_replace($fileHook, $fileHook . PHP_EOL . $spatieRoutes, $updatedData);
                 $this->filesystem->put($routeFile, $UserModelContents);
                 $this->warn($routeFile . ' Updated');
@@ -31,13 +41,17 @@ trait FileHandler
             //Updating NavBar
             $layoutsFile = base_path('resources/views/layouts/app.blade.php');
             $layoutsData = $this->filesystem->get($layoutsFile);
-            $spatieNavs  = "\t\t\t\t\t\t<li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/users') }}\" class=\"nav-link\"><i class=\"bi bi-people-fill text-info h5\"></i> Users </a>\n\t\t\t\t\t\t</li>
+            $spatieNavs  = "\t\t\t\t\t\t@role('super-admin|admin')
+                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/users') }}\" class=\"nav-link\"><i class=\"bi bi-people-fill text-info h5\"></i> Users </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/roles') }}\" class=\"nav-link\"><i class=\"bi bi-shield-shaded text-info h5\"></i> Roles </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/permissions') }}\" class=\"nav-link\"><i class=\"bi bi-person-fill-lock text-info h5\"></i> Permissions </a>\n\t\t\t\t\t\t</li>
+                        @endrole
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/airlines') }}\" class=\"nav-link\"><i class=\"bi bi-pc-display text-info h5\"></i> Airlines </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/registrations') }}\" class=\"nav-link\"><i class=\"bi bi-clock-history text-info h5\"></i> Registrations </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/flights') }}\" class=\"nav-link\"><i class=\"bi bi-airplane-engines-fill text-info h5\"></i> Flights </a>\n\t\t\t\t\t\t</li>
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/schedules') }}\" class=\"nav-link\"><i class=\"bi bi-newspaper text-info h5\"></i> Schedules </a>\n\t\t\t\t\t\t</li>";
+                        @role('super-admin|admin')
+                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/schedules') }}\" class=\"nav-link\"><i class=\"bi bi-newspaper text-info h5\"></i> Schedules </a>\n\t\t\t\t\t\t</li>
+                        @endrole";
             $spatieFileHook = "<!--Nav Bar Hooks - Do not delete!!-->";
 
             if (!Str::contains($layoutsData, $spatieNavs)) {
@@ -80,9 +94,9 @@ trait FileHandler
             Artisan::call('vendor:publish', ['--provider' => 'Spatie\Permission\PermissionServiceProvider'], $this->getOutput());
             $this->warn('Seeding the Database. Please wait...');
             Artisan::call('migrate:fresh', [], $this->getOutput());
+            Artisan::call('optimize:clear', [], $this->getOutput());
             Artisan::call('db:seed', ['--class' => 'AdminDatabaseSeeder'], $this->getOutput());
             Artisan::call('db:seed', ['--class' => 'FlightsDatabaseSeeder'], $this->getOutput());
-            Artisan::call('optimize:clear', [], $this->getOutput());
         }
     }
 

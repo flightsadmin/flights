@@ -16,7 +16,7 @@ class Schedules extends Component
 
     public function render()
     {
-        return view('livewire.schedules.create');
+        return view('livewire.schedules.view');
     }
 
     public function mount()
@@ -102,27 +102,65 @@ class Schedules extends Component
         return redirect('/flights');
     }
 
-
     public function downloadSample()
     {
-        $filename = 'sample_flights.csv';
+        $filename = 'flights.csv';
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename={$filename}",
         ];
-
+    
         $callback = function () {
             $file = fopen('php://output', 'w');
-
-            fputcsv($file, ['flight_no', 'registration', 'origin', 'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type']);
-
-            fputcsv($file, ['AC121', '4G-LLM', 'DOH', 'MCT','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
-            fputcsv($file, ['AC122', '4G-LLN', 'DXB', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
-            fputcsv($file, ['AC123', '4G-LLO', 'ISU', 'DOH','2023-03-10 12:00:00', '2023-03-10 14:30:00', 'departure']);
-
+    
+            $headers = [
+                'flight_no',
+                'registration',
+                'origin',
+                'destination',
+                'scheduled_time_arrival',
+                'scheduled_time_departure',
+                'flight_type',
+                // 'ground_time'
+            ];
+    
+            fputcsv($file, $headers);
+    
+            $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];
+            $start_date = Carbon::now();
+            $end_date = $start_date->copy()->addDays(30);
+    
+            while ($start_date <= $end_date) {
+                for ($i = 0; $i < 100; $i++) {
+                    $flightNo = 'QR' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
+                    $registration = 'A7-BF' . chr(rand(65, 90));
+                    $origin = $airports[array_rand($airports)];
+                    $destination = $airports[array_rand($airports)];
+                    while ($destination == $origin) {
+                        $destination = $airports[array_rand($airports)];
+                    }
+                    $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
+                    $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
+                    $flightType = ($i % 2 == 0) ? 'departure' : 'arrival';
+                    // $groundTime = Carbon::parse($arrivalTime)->diff(Carbon::parse($departureTime))->format('%h hours %i minutes');
+    
+                    fputcsv($file, [
+                        $flightNo,
+                        $registration,
+                        $origin,
+                        $destination,
+                        $arrivalTime,
+                        $departureTime,
+                        $flightType,
+                        // $groundTime
+                    ]);
+                }
+                $start_date->addDay();
+            }
+    
             fclose($file);
         };
-
+    
         return new StreamedResponse($callback, 200, $headers);
         session()->flash('message', 'Sample File Downloaded Successfully.');
     }

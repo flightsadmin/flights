@@ -15,17 +15,21 @@ class AdminDatabaseSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
-            'role-list', 'role-create', 'role-edit', 'role-delete',
-            'permission-list', 'permission-create', 'permission-edit', 'permission-delete',
-            'user-list', 'user-create', 'user-edit', 'user-delete',
+            'viewRole', 'createRole', 'editRole', 'deleteRole',
+            'viewPermission', 'createPermission', 'editPermission', 'deletePermission',
+            'viewUser', 'createUser', 'editUser', 'deleteUser',
+            'viewFlights', 'createFlights', 'editFlights', 'deleteFlights',
+            'viewRegistrations', 'createRegistrations', 'editRegistrations', 'deleteRegistrations',
+            'viewAirline', 'createAirline', 'editAirline', 'deleteAirline',
+            'viewSchedule', 'createSchedule', 'editSchedule', 'deleteSchedule',
          ];
          foreach ($permissions as $permission) {
               Permission::create(['name' => $permission]);
          }
 
          // create roles and assign created permissions
-        $role1 = Role::create(['name' => 'user'])->givePermissionTo(['role-list']);
-        $role2 = Role::create(['name' => 'admin'])->givePermissionTo(['role-create','role-list','role-edit',]);
+        $role1 = Role::create(['name' => 'user'])->givePermissionTo(['viewFlights', 'viewRegistrations', 'viewAirline']);
+        $role2 = Role::create(['name' => 'admin'])->givePermissionTo(['viewSchedule', 'createSchedule', 'viewAirline', 'createAirline','viewRegistrations', 'createRegistrations']);
         $role3 = Role::create(['name' => 'super-admin'])->givePermissionTo(Permission::all());
         
         // create demo User

@@ -66,7 +66,7 @@
                                                 @foreach($roles as $role)
                                                 <tr>
                                                     <td class="text-center" width="40">
-                                                        <input type="checkbox" wire:model.lazy="selectedRoles" value="{{ $role->id }}" class="form-check-input"
+                                                        <input type="checkbox" wire:model.lazy"selectedRoles" value="{{ $role->id }}" class="form-check-input"
                                                         @checked(in_array($role->id, $selectedRoles))
                                                     </td>
                                                     <td>

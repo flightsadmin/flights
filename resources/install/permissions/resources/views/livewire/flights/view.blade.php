@@ -12,10 +12,15 @@
 						<div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
 						@endif
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flight">
+							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flights">
+						</div>
+						<div>
+							<input type="date" wire:model="selectedDate" id="datepicker" class="form-control form-control-sm">
 						</div>
 						<div class="d-flex gap-2">
-							<a href="{{ url('/schedules') }}" class="btn btn-sm btn-warning bi bi-newspaper"> Generate Schedule </a>
+							@role('super-admin|admin')
+								<a href="{{ url('/schedules') }}" class="btn btn-sm btn-warning bi bi-newspaper"> Generate Schedule </a>
+							@endrole
 							<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
 								 Add Flight
 							</div>
@@ -63,7 +68,7 @@
 							</tr>
 							@empty
 							<tr>
-								<td class="text-center" colspan="100%">No data Found </td>
+								<td class="text-center" colspan="100%">No Flights Found </td>
 							</tr>
 							@endforelse
 						</tbody>

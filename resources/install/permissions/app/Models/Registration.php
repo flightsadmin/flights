@@ -14,7 +14,7 @@ class Registration extends Model
     protected $fillable = [
         'registration', 
         'aircraft_type', 
-        'airline'
+        'airline_id'
     ];
 
     public function airline()

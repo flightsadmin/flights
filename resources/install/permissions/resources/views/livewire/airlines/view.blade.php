@@ -14,6 +14,16 @@
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
 						</div>
+                        <div class="d-flex gap-1">
+                            <form wire:submit.prevent="import" enctype="multipart/form-data">
+                                <div class="d-flex gap-1">
+                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    @error('file') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
+                                </div>
+                            </form>
+							<button wire:click="downloadAirlines" class="btn btn-warning btn-sm bi bi-cloud-download-fill"> Download Sample</button>
+                        </div>
 						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
 							 Add Registration
 						</div>
@@ -45,7 +55,7 @@
 							</tr>
 							@empty
 							<tr>
-								<td class="text-center" colspan="100%">No data Found </td>
+								<td class="text-center" colspan="100%">No Airlines Found </td>
 							</tr>
 							@endforelse
 						</tbody>

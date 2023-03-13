@@ -62,6 +62,15 @@ class LivewireInstall extends Command
 
             $this->spatiePermissionsInstall();
 
+            // Update Auth Routes
+            $authRoutes = "\nAuth::routes(['register' => false]);\nRoute::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');";
+            $content = file_get_contents($routeFile);
+            $content = str_replace("Auth::routes();\n\nRoute::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');", '', $content);
+            if (strpos($content, $authRoutes) === false) {
+                $content .= $authRoutes;
+            }
+            file_put_contents($routeFile, trim($content));            
+
 		$this->line('');
 		$this->warn('Running: <info>npm install</info> Please wait...');
 		exec('npm install');
@@ -80,7 +89,7 @@ class LivewireInstall extends Command
             $npm->delete(base_path('package-lock.json'));
         });
         $this->line('');
-        $this->warn('All set, run <info>php artisan permission:generate {table-name}</info> to build your CRUD');		
+        $this->warn('All set, Your Flights are ready to take off');		
 	  }
 		else $this->warn('Installation Aborted, No file was changed');
     }

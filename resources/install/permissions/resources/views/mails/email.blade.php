@@ -44,9 +44,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    Dear {{ $name }} <br>
+                    Dear {{ $name }}. <br>
                     An account has been created with below Credentials <br>
-                    Please Reset your Password by clicking <a href="{{ url('/login') }}"> here</a> <br><br>
+                    Please Login by clicking <a href="{{ url('/login') }}"> here</a> and change your password<br><br>
                     Site Name: <a href="{{ url('/') }}"> {{ config('app.name', 'Laravel') }}</a> <br>
                     Email: {{ $email }} <br>
                     Phone: {{ $phone }} <br>
