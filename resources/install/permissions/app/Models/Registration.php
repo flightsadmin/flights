@@ -9,8 +9,6 @@ class Registration extends Model
 {
     use HasFactory;
 
-    protected $table = 'registrations';
-
     protected $fillable = [
         'registration', 
         'aircraft_type', 

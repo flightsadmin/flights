@@ -11,7 +11,7 @@
                         @if (session()->has('message'))
                         <div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
                         @endif
-                        <div class="d-flex gap-1">
+                        <div class="d-flex gap-4">
                             <form wire:submit.prevent="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-1">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">

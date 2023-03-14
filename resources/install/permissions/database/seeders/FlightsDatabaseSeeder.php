@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Airline;
-use App\Models\Registration;
+use App\Models\Service;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
@@ -20,5 +20,14 @@ class FlightsDatabaseSeeder extends Seeder
             $city->base = $faker->city;
             $city->save();
         }
+
+        // for ($i = 0; $i < 100; $i++) {
+        //     $service = new Service;
+        //     $service->service_type = $faker->word;
+        //     $service->start = now();
+        //     $service->finish = now();
+        //     $service->flight_id = rand(1, 10);
+        //     $service->save();
+        // }
     }
 }

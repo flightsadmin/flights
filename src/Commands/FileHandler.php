@@ -24,11 +24,12 @@ trait FileHandler
             Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');
             Route::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');
             Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin');
-            Route::view('posts', 'livewire.posts.index')->middleware('auth');
-            Route::view('airlines', 'livewire.airlines.index')->middleware('auth');
-            Route::view('registrations', 'livewire.registrations.index')->middleware('auth');
-            Route::view('flights', 'livewire.flights.index')->middleware('auth');
+            Route::view('airlines', 'livewire.airlines.index')->middleware('auth', 'role:super-admin|admin|user');
+            Route::view('registrations', 'livewire.registrations.index')->middleware('auth', 'role:super-admin|admin|user');
+            Route::view('flights', 'livewire.flights.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('schedules', 'livewire.schedules.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('services', 'livewire.services.index')->middleware('auth', 'role:super-admin|admin|user');
+            Route::view('posts', 'livewire.posts.index')->middleware('auth');
             ROUTES;
             $fileHook = "//Route Hooks - Do not delete//";
 
@@ -47,6 +48,7 @@ trait FileHandler
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/permissions') }}\" class=\"nav-link\"><i class=\"bi bi-person-fill-lock text-info h5\"></i> Permissions </a>\n\t\t\t\t\t\t</li>
                         @endrole
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/airlines') }}\" class=\"nav-link\"><i class=\"bi bi-pc-display text-info h5\"></i> Airlines </a>\n\t\t\t\t\t\t</li>
+                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/services') }}\" class=\"nav-link\"><i class=\"bi bi-database-add text-info h5\"></i> Services </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/registrations') }}\" class=\"nav-link\"><i class=\"bi bi-clock-history text-info h5\"></i> Registrations </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/flights') }}\" class=\"nav-link\"><i class=\"bi bi-airplane-engines-fill text-info h5\"></i> Flights </a>\n\t\t\t\t\t\t</li>
                         @role('super-admin|admin')

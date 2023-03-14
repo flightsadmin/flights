@@ -14,7 +14,7 @@
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
 						</div>
-                        <div class="d-flex gap-1">
+                        <div class="d-flex gap-4">
                             <form wire:submit.prevent="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-1">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">

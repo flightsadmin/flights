@@ -87,7 +87,8 @@ class Flights extends Component
     {
         $registrations = Registration::all();
         $keyWord = '%'. $this->keyWord .'%';
-        $flights = Flight::whereDate('scheduled_time_departure', $this->selectedDate)
+        $flights = Flight::with('service')
+                    ->whereDate('scheduled_time_departure', $this->selectedDate)
                     ->where('flight_no', 'LIKE', $keyWord)
                     ->orderBy('scheduled_time_departure', 'asc')
                     ->paginate(50);

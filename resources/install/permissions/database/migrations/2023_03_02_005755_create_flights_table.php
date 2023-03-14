@@ -35,6 +35,15 @@ return new class extends Migration
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->string('service_type');
+            $table->dateTime('start');
+            $table->dateTime('finish');
+            $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     public function down()
@@ -42,5 +51,6 @@ return new class extends Migration
         Schema::dropIfExists('flights');
         Schema::dropIfExists('airlines');
         Schema::dropIfExists('registrations');
+        Schema::dropIfExists('services');
     }
 };

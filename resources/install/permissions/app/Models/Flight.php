@@ -9,10 +9,6 @@ class Flight extends Model
 {
     use HasFactory;
 
-    public $timestamps = true;
-
-    protected $table = 'flights';
-
     protected $fillable = [
         'flight_no',
         'registration',
@@ -22,4 +18,9 @@ class Flight extends Model
         'scheduled_time_departure',
         'flight_type'
     ];
+
+    public function service()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

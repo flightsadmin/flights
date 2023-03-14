@@ -74,12 +74,18 @@
             </div>
             <div class="modal-body">
                 @if ($selectedFlightId)
-                    <p>{{ $selectedFlight->flight_no }}</p>
-                    <p>{{ $selectedFlight->registration }}</p>
-                    <p>{{ $selectedFlight->scheduled_time_arrival }}</p>
-                    <p>{{ $selectedFlight->scheduled_time_departure }}</p>
-                    <p>{{ $selectedFlight->origin }}</p>
-                    <p>{{ $selectedFlight->destination }}</p>
+                    <b>Flight Details</b>
+                    <p>{{ $selectedFlight->flight_no }} {{ $selectedFlight->registration }}</p>
+                    <P>STA: {{ $selectedFlight->scheduled_time_arrival }}</p>
+                    <p>STD: {{ $selectedFlight->scheduled_time_departure }}</p>
+                    <p>From: {{ $selectedFlight->origin }} To: {{ $selectedFlight->destination }}</p>
+                    <hr>
+                    <b>Services</b>
+                    @forelse ($selectedFlight->service as $index => $service)
+                        <p>{{ $index + 1 }}. {{ $service->service_type }} ({{ $service->start }} - {{ $service->finish }})</p>
+                    @empty
+                        <P>No Services for this flight Yet</P>
+                    @endforelse
                 @else
                     <p>No Flights selected.</p>
                 @endif
