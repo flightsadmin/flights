@@ -1,5 +1,5 @@
 <!-- Create / Edit Flight Modal -->
-<div wire:ignore.self class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="dataModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -20,7 +20,7 @@
                         <select wire:model.lazy="registration" class="form-select  form-select-sm" id="registration">
                             <option value="">Choose an option...</option>
                             @foreach($registrations as $value)
-                            <option value="{{ $value->registration }}">{{ $value->registration }} - {{ $value->aircraft_type }}</option>
+                            <option value="{{ $value->registration }}">{{ $value->registration }}</option>
                             @endforeach()
                         </select>
                         @error('registration') <span class="text-danger small">{{ $message }}</span> @enderror
@@ -64,34 +64,83 @@
     </div>
 </div>
 
-<!-- View Flight Modal -->
-<div wire:ignore.self class="modal fade" id="viewModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+
+<!-- Create / Edit Sevices Modal -->
+<div wire:ignore.self class="modal fade" id="viewModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel">View Flight</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                <h6 class="modal-title" id="dataModalLabel"> Flight Services </h6>
+                <button type="button" class="btn-close" wire:click="cancel()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                @if ($selectedFlightId)
-                    <b>Flight Details</b>
-                    <p>{{ $selectedFlight->flight_no }} {{ $selectedFlight->registration }}</p>
-                    <P>STA: {{ $selectedFlight->scheduled_time_arrival }}</p>
-                    <p>STD: {{ $selectedFlight->scheduled_time_departure }}</p>
-                    <p>From: {{ $selectedFlight->origin }} To: {{ $selectedFlight->destination }}</p>
-                    <hr>
-                    <b>Services</b>
-                    @forelse ($selectedFlight->service as $index => $service)
-                        <p>{{ $index + 1 }}. {{ $service->service_type }} ({{ $service->start }} - {{ $service->finish }})</p>
-                    @empty
-                        <P>No Services for this flight Yet</P>
-                    @endforelse
-                @else
-                    <p>No Flights selected.</p>
-                @endif
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="card-body border">
+                    @if ($selectedFlightId)
+                        <h5>{{ $selectedFlight->flight_no }}  <span class="text-secondary bi bi-send-check h6"></span>  {{ $selectedFlight->registration }}</h5>
+                        <b class="text-success bi bi-arrow-down-right-circle-fill"></b> {{ $selectedFlight->origin }} {{ $selectedFlight->scheduled_time_departure }}
+                        <b class="text-warning bi bi-arrow-up-right-circle-fill"> </b>{{ $selectedFlight->destination }} {{ $selectedFlight->scheduled_time_arrival }}
+                        <hr >
+                        <b>Services</b>
+                        <table class="table table-sm table-bordered">
+                            <tbody>
+                                @forelse ($selectedFlight->service as $index => $service)
+                                <tr>
+                                    <td>
+                                        <p>{{ $index + 1 }}. {{ $service->service_type }} ({{ $service->start }} - {{ $service->finish }})</p>
+                                    </td>
+                                    <td class="d-flex gap-2">
+                                        <a href="#" wire:click="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3 text-end"></a>
+                                    </td>
+                                </tr>
+                                @empty
+                                <P>No Services for this flight Yet</P>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    @else
+                        <p>No Flights selected.</p>
+                    @endif
+                </div>
+                <div class="card-body border">
+                    <b>Add Services</b>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Start</th>
+                                    <th>Finish</th>
+                                    <th width="30"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($ServiceTypes as $index => $actualService)
+                                <tr>
+                                    <td>
+                                        <select wire:model="flightFields.{{ $actualService }}.service_type" class="form-select  form-select-sm" id="registration">
+                                            <option value="">Select a Service...</option>
+                                            @foreach($serviceList as $value)
+                                            <option value="{{ $value }}">{{ $value }}</option>
+                                            @endforeach()
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control  form-control-sm" type="datetime-local" required wire:model="flightFields.{{ $actualService }}.start">
+                                    </td>
+                                    <td>
+                                        <input class="form-control  form-control-sm" type="datetime-local" required wire:model="flightFields.{{ $actualService }}.finish">
+                                    </td>
+                                    <td>
+                                        <a href="#" wire:click="removeService({{$index}})" class="text-danger bi bi-trash3"></a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <button wire:click.prevent="addService" class="btn btn-sm btn-secondary bi bi-plus-lg"> Add a Service</button>
+                        <button wire:click.prevent="createServices" class="btn btn-sm btn-primary float-end bi bi-check2-circle"> Create Service</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -82,8 +82,10 @@
     @livewireScripts
     <script type="module">
         const modal = new bootstrap.Modal('#dataModal');
+        const servicemodal = new bootstrap.Modal('#viewModal');
         window.addEventListener('closeModal', () => {
             modal.hide();
+            servicemodal.hide();
         })
     </script>
 </body>
