@@ -50,7 +50,7 @@
 								<td>{{ $row->iata_code }}</td>
 								<td>{{ $row->base }}</td>
 								<td width="90">
-									<button class="btn btn-sm btn-danger bi bi-trash3" onclick="confirm('Confirm Delete Registration id {{$row->id}}? \nDeleted Registration cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
+									<button class="btn btn-sm btn-danger custom-btn-sm bi bi-trash3" onclick="confirm('Confirm Delete Registration id {{$row->id}}? \nDeleted Registration cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
 								</td>
 							</tr>
 							@empty

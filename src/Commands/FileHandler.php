@@ -23,7 +23,7 @@ trait FileHandler
             <<<ROUTES
             Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');
             Route::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');
-            Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('airlines', 'livewire.airlines.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('registrations', 'livewire.registrations.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('flights', 'livewire.flights.index')->middleware('auth', 'role:super-admin|admin|user');
@@ -40,8 +40,9 @@ trait FileHandler
             //Updating NavBar
             $layoutsFile = base_path('resources/views/layouts/app.blade.php');
             $layoutsData = $this->filesystem->get($layoutsFile);
-            $spatieNavs  = "\t\t\t\t\t\t@role('super-admin|admin')
+            $spatieNavs  = "\t\t\t\t\t\t
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/users') }}\" class=\"nav-link\"><i class=\"bi bi-people-fill text-info h5\"></i> Users </a>\n\t\t\t\t\t\t</li>
+                        @role('super-admin|admin')
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/roles') }}\" class=\"nav-link\"><i class=\"bi bi-shield-shaded text-info h5\"></i> Roles </a>\n\t\t\t\t\t\t</li>
                         <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/permissions') }}\" class=\"nav-link\"><i class=\"bi bi-person-fill-lock text-info h5\"></i> Permissions </a>\n\t\t\t\t\t\t</li>
                         @endrole

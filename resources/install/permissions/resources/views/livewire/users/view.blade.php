@@ -88,7 +88,7 @@
                     </form>
                     @else()
                     <div class="card-body">
-                        @include('livewire.users.modals')
+                            @include('livewire.users.modals')
                         <div class="table-responsive">
                             <table class="table table-sm table-bordered">
                                 <thead>
@@ -100,7 +100,7 @@
                                         <th>Title</th>
                                         <th>Roles</th>
                                         <th>Picture</th>
-                                        <th width="220">Actions</th>
+                                        <th width="120">Actions</th>
                                         <th>Created</th>
                                     </tr>
                                 </thead>
@@ -114,16 +114,20 @@
                                         <td>{{ $user->title }}</td>
                                         <td>
                                             @foreach($user->roles as $role)
-                                                <button class="btn btn-sm btn-warning bi bi-shield-shaded"> {{ $role->name }}</button>
+                                                <button class="btn btn-sm btn-warning custom-btn-sm bi bi-shield-shaded"> {{ $role->name }}</button>
                                             @endforeach
                                         </td>
                                         <td class="text-center"><img class="profile-img" src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->title }}"></td>
                                         <td class="text-center">
-                                            <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-sm btn-info text-white bi bi-eye" wire:click="viewUser({{ $user->id }})"> View</button>
-                                            <button class="btn btn-sm btn-primary text-dark bi bi-pencil-square" wire:click="edit({{ $user->id }})"> Edit</button>
-                                            <button class="btn btn-sm btn-danger text-white bi bi-trash3-fill" 
+                                            <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-sm btn-info custom-btn-sm text-white bi bi-eye" wire:click="viewUser({{ $user->id }})"> </button>
+                                        @if($user->id == auth()->user()->id || auth()->user()->can('editUser'))
+                                            <button class="btn btn-sm btn-primary custom-btn-sm bi bi-pencil-square" wire:click="edit({{ $user->id }})"> </button>
+                                            @if(auth()->user()->can('deleteUser'))
+                                            <button class="btn btn-sm btn-danger custom-btn-sm text-white bi bi-trash3-fill" 
                                             wire:click="destroy({{ $user->id }})" 
-                                            onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"> Delete</button>
+                                            onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"> </button>
+                                            @endif
+                                        @endif
                                         <td>
                                             {{$user->created_at->format('d-M-Y H:i:s')}}
                                         </td>
@@ -139,4 +143,4 @@
             </div>
         </div>
     </div>
-</div>
+</div

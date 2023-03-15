@@ -38,3 +38,9 @@ p {
     border-radius: 50%;
     object-fit: cover;
 }
+
+.custom-btn-sm {
+    padding: 0.30rem 0.30rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
