@@ -85,7 +85,7 @@
             </div>
             <div class="modal-body">
                 <div class="card-body border">
-                    @if ($selectedFlightId)
+                    @if ($flight_id)
                         <h5>{{ $selectedFlight->flight_no }}  <span class="text-secondary bi bi-send-check h6"></span>  {{ $selectedFlight->registration }}</h5>
                         <b class="text-success bi bi-arrow-down-right-circle-fill"></b> {{ $selectedFlight->origin }} {{ $selectedFlight->scheduled_time_departure }}
                         <b class="text-warning bi bi-arrow-up-right-circle-fill"> </b>{{ $selectedFlight->destination }} {{ $selectedFlight->scheduled_time_arrival }}
