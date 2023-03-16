@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Flight;
+use App\Models\Airline;
 use App\Models\Service;
 use App\Models\Registration;
 use Livewire\Component;
@@ -13,12 +14,13 @@ class Flights extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedFlightId, $selectedDate;
+    public $registrations = [], $selectedAirline, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
     public $ServiceTypes = [], $flightFields = [], $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
     protected $rules = [
+        'selectedAirline'           => 'required|string',
         'flight_no'                 => 'required|string',
         'registration'              => 'required|string',
         'origin'                    => 'required|string',
@@ -30,17 +32,16 @@ class Flights extends Component
 
     public function render()
     {
-        $registrations = Registration::all();
         $keyWord = '%'. $this->keyWord .'%';
         $flights = Flight::with('service')
-                    ->whereDate('scheduled_time_departure', $this->selectedDate)
-                    ->where('flight_no', 'LIKE', $keyWord)
-                    ->orderBy('scheduled_time_departure', 'asc')
-                    ->paginate(50);
+                        ->whereDate('scheduled_time_departure', $this->selectedDate)
+                        ->where('flight_no', 'LIKE', $keyWord)
+                        ->orderBy('scheduled_time_departure', 'asc')
+                        ->paginate(50);
         return view('livewire.flights.view', [
+            'airlines' => Airline::all(),
             'flights' => $flights,
-            'registrations' => $registrations,
-            'selectedFlight' => $this->selectedFlightId ? Flight::findOrFail($this->selectedFlightId) : null,
+            'selectedFlight' => $this->flight_id ? Flight::findOrFail($this->flight_id) : null,
         ]);
     }
 
@@ -53,6 +54,11 @@ class Flights extends Component
     {
         $this->resetErrorBag();
         $this->reset(['flightFields', 'ServiceTypes', 'serviceList']);
+    }
+
+    public function updatedselectedAirline($airline)
+    {
+        $this->registrations = Registration::where('airline_id', $airline)->get();
     }
 
     public function store()
@@ -92,14 +98,14 @@ class Flights extends Component
         session()->flash('message', 'Flight Deleted Successfully.');
     }
 
-    public function viewFlight($flight_id)
+    public function viewFlight($id)
     {
-        $this->selectedFlightId = $flight_id;
+        $this->flight_id = $id;
     }
 
     public function getSelectedFlightProperty()
     {
-        return $this->selectedFlightId ? Flight::findOrFail($this->selectedFlightId) : null;
+        return $this->flight_id ? Flight::findOrFail($this->flight_id) : null;
     }
 
     public function addService()
@@ -118,11 +124,11 @@ class Flights extends Component
     public function createServices()
     {
         foreach ($this->flightFields as $flight) {
-            Service::updateOrCreate(['flight_id' => $this->selectedFlightId, 'service_type' => $flight['service_type']], [
+            Service::updateOrCreate(['flight_id' => $this->flight_id, 'service_type' => $flight['service_type']], [
                 'service_type' => $flight['service_type'],
                 'start' => $flight['start'],
                 'finish' => $flight['finish'],
-                'flight_id' => $this->selectedFlightId,
+                'flight_id' => $this->flight_id,
             ]);
         }
 
@@ -134,7 +140,7 @@ class Flights extends Component
 
     public function destroyService($flight)
     {
-        Service::where([['flight_id', $this->selectedFlightId], ['service_type', $flight]])->delete();
+        Service::where([['flight_id', $this->flight_id], ['service_type', $flight]])->delete();
         session()->flash('message', 'Service Deleted Successfully.');
     }
 }
