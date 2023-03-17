@@ -15,7 +15,7 @@ class Airline extends Model
         'base'
     ];
 
-    public function registrations()
+    public function registration()
     {
         return $this->hasMany(Registration::class);
     }

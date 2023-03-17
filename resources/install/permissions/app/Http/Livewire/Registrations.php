@@ -15,6 +15,16 @@ class Registrations extends Component
     protected $paginationTheme = 'bootstrap';
     public $registration, $aircraft_type, $airline_id, $registration_id, $keyWord, $file;
 
+    
+    public function render()
+    {
+        $keyWord = '%'. $this->keyWord .'%';
+        $registrations = Registration::with('airline')
+        ->orWhere('registration', 'LIKE', $keyWord)
+        ->paginate(50);
+        return view('livewire.registrations.view', compact('registrations'));
+    }
+    
     protected $rules = [
         'registration'  => 'required',
         'aircraft_type' => 'required',
@@ -53,21 +63,6 @@ class Registrations extends Component
     {
         Registration::find($id)->delete();
         session()->flash('message', 'Registration Deleted Successfully.');
-    }
-
-    public function render()
-    {
-        $keyWord = '%'. $this->keyWord .'%';
-        $airlines = Airline::all();
-        $reglists = Registration::distinct('aircraft_type')->pluck('aircraft_type');
-        $registrations = Registration::with('airline')
-                        ->orWhere('registration', 'LIKE', $keyWord)
-                        ->paginate(50);
-        return view('livewire.registrations.view', [
-            'registrations' => $registrations,
-            'airlines' => $airlines,
-            'reglists' => $reglists,
-        ]);
     }
 
     public function registrationSample()

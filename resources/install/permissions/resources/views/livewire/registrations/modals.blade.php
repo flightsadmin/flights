@@ -19,8 +19,8 @@
                         <label for="aircraft_type" class="form-label">Aircraft Type</label>
                         <select wire:model.lazy="aircraft_type" class="form-select" id="aircraft_type">
                             <option value="">Select Aircraft Type</option>
-                            @foreach($reglists as $reglist)
-                                <option value="{{ $reglist }}">{{ $reglist }}</option>
+                            @foreach($registrations->pluck('aircraft_type')->unique()->sort() as $value)
+                                <option value="{{  $value }}">{{  $value }}</option>
                             @endforeach
                         </select>
                         @error('aircraft_type') <span class="text-danger small">{{ $message }}</span> @enderror
@@ -29,8 +29,8 @@
                         <label for="airline_id">Airline:</label>
                         <select class="form-select" id="airline_id" wire:model.lazy="airline_id">
                             <option value="">Select an airline</option>
-                            @foreach($airlines as $airline)
-                                <option value="{{ $airline->id }}">{{ $airline->name }}</option>
+                            @foreach($registrations->pluck('airline')->unique()->sortBy('name') as $airline)
+                                <option value="{{ $airline['id'] }}">{{ $airline['name'] }}</option>
                             @endforeach
                         </select>
                         @error('airline_id') <span class="text-danger small">{{ $message }}</span>@enderror
