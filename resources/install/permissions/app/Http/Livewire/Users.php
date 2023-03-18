@@ -16,17 +16,18 @@ class Users extends Component
 {
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $mode, $form = false, $selectedRoles = [], $user, $selectedUserId;
+    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $selectedRoles = [], $selectedUserId;
 
-    public function mount($userId = null)
+    public function render()
     {
-        if ($userId) {
-            $this->user = User::find($userId);
-        } else {
-            $this->user = new User;
-        }
+        $roles = Role::with('permissions')->get();
+        return view('livewire.users.view', [
+            'users' => User::latest()->paginate(10),
+            'roles' => $roles,
+            'selectedUser' => $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null,
+        ]);
     }
-
+    
     protected function rules()
     {
         return [
@@ -40,32 +41,45 @@ class Users extends Component
         ];
     }
 
-    public function cancel()
+    public function submit()
     {
-        $this->resetErrorBag();
-        $this->form = false;
-    }
+        $this->validate();
+        $user = User::findOrFail($this->userId);
+        if($user->photo){
+            Storage::disk('public')->delete($user->photo);
+        }
+        if ($this->photo) {
+            $photo  = $this->photo->store('users', 'public');
+        }
+        $user = User::updateOrCreate(['id' => $this->userId], 
+        [
+            'name'      => $this->name,
+            'email'     => $this->email,
+            'phone'     => $this->phone,
+            'title'     => $this->title,
+            'photo'     => $this->photo ? $photo : 'image.png',
+            'password'  => Hash::make($this->password),
+        ]);
 
-    public function newUser()
-    {
-        $this->reset();
-        $this->mode = 'add';
-        $this->form = true;
-    }
+        $user->syncRoles($this->selectedRoles);
 
-    public function edit($userId)
-    {
+        $this->dispatchBrowserEvent('closeModal');
         $this->reset();
-        $this->userId = $userId;
-        $user = User::findOrFail($userId);
-        $this->name = $user->name;
-        $this->email = $user->email;
-        $this->phone = $user->phone;
-        $this->photo = $user->photo;
-        $this->title = $user->title;
-        $this->selectedRoles = $user->roles->pluck('id')->toArray();
-        $this->mode = 'edit';
-        $this->form = true;
+        session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
+
+        // if($this->mode === 'add'){
+        // $emailData = [
+        //     'name'      => $this->name,
+        //     'email'     => $this->email,
+        //     'phone'     => $this->phone,
+        //     'password'  => $this->password
+        // ];
+        // Mail::send('mails.email', $emailData, function($message) use($emailData) {
+        //     $message->to($emailData['email'], $emailData['name'])
+        //             ->subject('New Account for '. $emailData['name']);
+        // });
+        // }
+    
     }
 
     public function viewUser($userId)
@@ -78,44 +92,16 @@ class Users extends Component
         return $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null;
     }
 
-    public function submit()
+    public function edit($id)
     {
-        $this->validate();
-        if($this->mode === 'add'){
-            $user = new User();
-        }else {
-            $user = User::find($this->userId);
-            if($user->photo){
-                Storage::disk('public')->delete($user->photo);
-            }
-        }
-        $user->name = $this->name;
-        $user->email = $this->email;
-        $user->phone = $this->phone;
-        if ($this->photo) {
-            $photo  = $this->photo->store('users', 'public');
-            $user->photo = $photo;
-        }
-        $user->title = $this->title;
-        $user->password = Hash::make($this->password);
-        $user->save();
-        $user->syncRoles($this->selectedRoles);
-
-        if($this->mode === 'add'){
-            $emailData = [
-                'name'      => $this->name,
-                'email'     => $this->email,
-                'phone'     => $this->phone,
-                'password'  => $this->password
-            ];
-            Mail::send('mails.email', $emailData, function($message) use($emailData) {
-                $message->to($emailData['email'], $emailData['name'])
-                        ->subject('New Account for '. $emailData['name']);
-            });
-        }
-        $this->reset();
-        $this->form = false;
-        session()->flash('message', 'User successfully updated.');
+        $user = User::findOrFail($id);
+        $this->userId = $id;
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->phone = $user->phone;
+        $this->photo = $user->photo;
+        $this->title = $user->title;
+        $this->selectedRoles = $user->roles->pluck('id')->toArray();
     }
 
     public function destroy($userId)
@@ -125,13 +111,9 @@ class Users extends Component
         $user->delete();
     }
 
-    public function render()
+    public function cancel()
     {
-        $roles = Role::with('permissions')->get();
-        return view('livewire.users.view', [
-            'users' => User::latest()->paginate(10),
-            'roles' => $roles,
-            'selectedUser' => $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null,
-        ]);
+        $this->resetErrorBag();
+        $this->reset();
     }
 }

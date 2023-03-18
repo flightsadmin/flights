@@ -53,7 +53,7 @@ class Flights extends Component
     public function cancel()
     {
         $this->resetErrorBag();
-        $this->reset(['flightFields', 'ServiceTypes', 'serviceList']);
+        $this->reset(['flightFields', 'ServiceTypes', 'serviceList', 'flight_id']);
     }
 
     public function updatedselectedAirline($airline)
