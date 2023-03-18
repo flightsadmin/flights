@@ -59,7 +59,7 @@
 											Actions
 										</a>
 										<ul class="dropdown-menu">
-											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-eye-fill" wire:click="viewFlight({{ $row->id }})" > View </a></li>
+											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-database-add" wire:click="viewFlight({{ $row->id }})" > Services </a></li>
 											<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
 											<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
 										</ul>
