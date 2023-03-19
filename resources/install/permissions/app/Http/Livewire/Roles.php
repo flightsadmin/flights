@@ -46,6 +46,9 @@ class Roles extends Component
         $this->validate();
         $this->role->save();
         $this->role->permissions()->sync($this->permissions_selection);
+        
+        $this->dispatchBrowserEvent('closeModal');
+        session()->flash('message', 'Role created successfully.');
         $this->index();
     }
 

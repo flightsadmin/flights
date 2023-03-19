@@ -47,6 +47,8 @@ class Permissions extends Component
     {
         $this->validate();
         $this->permission->save();
+        $this->dispatchBrowserEvent('closeModal');
+        session()->flash('message', 'Permission created successfully.');
         $this->index();
     }
 

@@ -23,4 +23,9 @@ class Flight extends Model
     {
         return $this->hasMany(Service::class);
     }
+
+    public function movement()
+    {
+        return $this->hasMany(Movement::class);
+    }
 }

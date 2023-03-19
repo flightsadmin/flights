@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Roles')
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -8,3 +9,11 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script type="module">
+    const toast = new bootstrap.Toast('#statusToast');
+    window.addEventListener('closeModal', () => {
+        toast.show();
+    });
+</script>
+@endpush

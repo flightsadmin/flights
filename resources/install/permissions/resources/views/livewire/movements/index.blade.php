@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Users')
+@section('title', __('Flight'))
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @livewire('users')
+            @livewire('movements')
         </div>
     </div>
 </div>
@@ -12,10 +12,8 @@
 @push('scripts')
 <script type="module">
     const modal = new bootstrap.Modal('#dataModal');
-    const servicemodal = new bootstrap.Modal('#viewModal');
     window.addEventListener('closeModal', () => {
         modal.hide();
-        servicemodal.hide();
     });
 
     const toast = new bootstrap.Toast('#statusToast');

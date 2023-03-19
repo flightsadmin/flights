@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use App\Models\Flight;
 use App\Models\Airline;
 use App\Models\Service;
-use App\Models\Registration;
 use Livewire\Component;
+use App\Models\Movement;
+use App\Models\Registration;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Mail;
 
 class Flights extends Component
 {
@@ -16,6 +18,7 @@ class Flights extends Component
     protected $paginationTheme = 'bootstrap';
     public $registrations = [], $selectedAirline, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
     public $ServiceTypes = [], $flightFields = [], $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
+    public $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -33,7 +36,7 @@ class Flights extends Component
     public function render()
     {
         $keyWord = '%'. $this->keyWord .'%';
-        $flights = Flight::with('service')
+        $flights = Flight::with('service', 'movement')
                         ->whereDate('scheduled_time_departure', $this->selectedDate)
                         ->where('flight_no', 'LIKE', $keyWord)
                         ->orderBy('scheduled_time_departure', 'asc')
@@ -142,5 +145,51 @@ class Flights extends Component
     {
         Service::where([['flight_id', $this->flight_id], ['service_type', $flight]])->delete();
         session()->flash('message', 'Service Deleted Successfully.');
+    }
+
+    // Movement Methods
+    public function saveMovements()
+    {
+        $validatedData = $this->validate(
+            [
+                'offblocks'  => 'nullable|date',
+                'airborne'   => 'nullable|date',
+                'touchdown'  => 'nullable|date',
+                'onblocks'   => 'nullable|date',
+                'passengers' => 'nullable|integer|min:0',
+                'remarks'    => 'nullable|string',
+                'flight_id'  => 'required|exists:flights,id',
+            ]
+        );
+        
+        Movement::create($validatedData);
+
+        if (!is_null($validatedData['offblocks']) || !is_null($validatedData['airborne']) || !is_null($validatedData['touchdown']) || !is_null($validatedData['onblocks'])) {
+            $flights = Flight::where('id', $validatedData['flight_id'])->first();
+            $emailData = [
+                'offblocks'  => $validatedData['offblocks'],
+                'airborne'   => $validatedData['airborne'],
+                'touchdown'  => $validatedData['touchdown'],
+                'onblocks'   => $validatedData['onblocks'],
+                'passengers' => $validatedData['passengers'],
+                'remarks'    => $validatedData['remarks'],
+                'flight_id'  => $validatedData['flight_id'],
+                'flight_no'  => $flights->flight_no,
+                'scheduled_time_departure' => $flights->scheduled_time_departure,
+                'registration' => str_replace('-', '', $flights->registration),
+                'destination' => $flights->destination,
+                'flight_type' => $flights->flight_type,
+            ];
+            
+
+            Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
+                $message->to('mctapplications@gmail.com', 'George Chitechi')
+                        ->subject('New Movement');
+            });
+        }
+
+        $this->dispatchBrowserEvent('closeModal');
+        session()->flash('message', 'Movement created successfully.');
+        $this->reset(['touchdown','onblocks','offblocks','airborne','passengers','remarks','flight_id']);
     }
 }

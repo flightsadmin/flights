@@ -7,9 +7,6 @@
 						<div class="float-left">
 							<h4>Flights</h4>
 						</div>
-						<!-- @if (session()->has('message'))
-						<div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
-						@endif -->
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flights">
 						</div>
@@ -27,7 +24,7 @@
 					</div>
 				</div>
 				<div class="card-body">
-					@include('livewire.flights.modals')
+					@include('livewire.movements.modals')
 				<div class="table-responsive">
 					<table class="table table-bordered table-sm">
 						<thead class="thead">
@@ -59,7 +56,6 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-database-add" wire:click="viewFlight({{ $row->id }})" > Services </a></li>
-											<li><a data-bs-toggle="modal" data-bs-target="#mvtModal" class="dropdown-item bi bi-watch" wire:click="viewFlight({{ $row->id }})" > Movements </a></li>
 											<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
 											<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
 										</ul>
@@ -73,7 +69,6 @@
 							@endforelse
 						</tbody>
 					</table>						
-					<div class="float-end">{{ $flights->links() }}</div>
 					</div>
 				</div>
 			</div>

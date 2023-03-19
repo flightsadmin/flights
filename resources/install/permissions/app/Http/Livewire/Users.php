@@ -79,7 +79,6 @@ class Users extends Component
         //             ->subject('New Account for '. $emailData['name']);
         // });
         // }
-    
     }
 
     public function viewUser($userId)

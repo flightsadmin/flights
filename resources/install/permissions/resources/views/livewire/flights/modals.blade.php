@@ -1,6 +1,6 @@
 <!-- Create / Edit Flight Modal -->
 <div wire:ignore.self class="modal fade" id="dataModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dataModalLabel">
@@ -154,4 +154,128 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Create / Edit Movements Modal -->
+<div wire:ignore.self class="modal fade" id="mvtModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="dataModalLabel"> Send Movements Message </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <button class="position-absolute top-0 start-50 translate-middle btn btn-lg btn-success p-2" wire:loading wire:target="saveMovements">
+                    Sending Movement ...
+                </button>
+                @if ($flight_id)
+                    <div class="border px-3 mb-2">
+                        <p>MVT</p>
+                        <p>{{ $selectedFlight->flight_no }}/{{ date("d", strtotime($selectedFlight->scheduled_time_departure)) }}.{{ $selectedFlight->registration }}.{{ $selectedFlight->destination }}</p>                   
+                        @if ($selectedFlight->flight_type == 'arrival')
+                        <p>AA{{ date("Hi", strtotime($touchdown)) }}/{{ date("Hi", strtotime($onblocks)) }}</p>
+                        @else
+                        <p>AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}</p>
+                        <p>PX{{ $passengers }}</p>
+                        <p>SI {{ strtoupper($remarks) }}</p>
+                        @endif
+                    </div>
+
+                    <form>
+                        <div class="row">
+                            <input type="hidden" wire:model="flight_id">
+                            @if ($selectedFlight->flight_type == 'arrival')
+                            <div class="form-group col-md-4">
+                                <label for="touchdown">Touchdown</label>
+                                <input type="datetime-local" class="form-control" id="touchdown" wire:model="touchdown">
+                                @error('touchdown') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="onblocks">On Blocks</label>
+                                <input type="datetime-local" class="form-control" id="onblocks" wire:model="onblocks">
+                                @error('onblocks') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            @else
+                            <div class="form-group col-md-4">
+                                <label for="offblocks">Off Blocks</label>
+                                <input type="datetime-local" class="form-control" id="offblocks" wire:model="offblocks">
+                                @error('offblocks') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="airborne">Airborne</label>
+                                <input type="datetime-local" class="form-control" id="airborne" wire:model="airborne">
+                                @error('airborne') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="passengers">Passengers</label>
+                                <input type="number" class="form-control" id="passengers" wire:model="passengers">
+                                @error('passengers') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+                            @endif
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="remarks">Remarks</label>
+                            <textarea class="form-control" id="remarks" wire:model.lazy="remarks"></textarea>
+                            @error('remarks') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </form>
+
+                @else
+                    <p>No Flight Selected</p>
+                @endif
+            </div>
+            <div class="modal-footer p-0 mx-3 d-flex justify-content-between">
+                <button data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
+                <button wire:loading.attr="disabled" wire:click.prevent="saveMovements" type="button" class="btn btn-sm btn-primary bi bi-clock-history"> Send Movement</button>
+            </div>
+            <div class="card-body border">
+                @if ($flight_id)
+                    <i class="text-warning">History</i>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            @forelse($selectedFlight->movement as $movement)
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-clock-history text-success"></i> Sent: {{ date("d-M-Y H:i:s", strtotime($movement->created_at)) }}
+                                    </td>
+                                    <td>
+                                       <p>MVT</p>
+                                       <p>{{ $selectedFlight->flight_no }}/{{ date("d", strtotime($selectedFlight->scheduled_time_departure)) }}.{{ $selectedFlight->registration }}.{{ $selectedFlight->destination }}</p>
+                                        @if ($selectedFlight->flight_type == 'arrival')
+                                        <p>AA{{ date("Hi", strtotime($movement->touchdown)) }}/{{ date("Hi", strtotime($movement->onblocks)) }}</p>
+                                        @else
+                                        <p>AD{{ date("Hi", strtotime($movement->offblocks)) }}/{{ date("Hi", strtotime($movement->airborne)) }}</p>
+                                        <p>PX{{ $movement->passengers }}</p>
+                                        <p>SI {{ strtoupper($movement->remarks) }}</p>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <P>No Movement message sent for this flight Yet</P>
+                            @endforelse
+                        </tbody>
+                    </table>
+                @else
+                    <p>No Flights selected.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Message Toast  -->
+<div  id="statusToast" class="toast position-fixed top-0 end-0 p-3 text-bg-success" style="margin-top:5px; margin-bottom:0px;" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header text-bg-success">
+    <i class="me-2 bi bi-send-fill"></i>
+    <strong class="me-auto text-black">Success</strong>
+    <small class="text-white">{{ now() }}</small>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body text-black text-center">
+    {{ session('message') }}
+  </div>
 </div>

@@ -43,7 +43,7 @@ class Airlines extends Component
         ]);
 
         $this->dispatchBrowserEvent('closeModal');
-        session()->flash('success', 'Airline created successfully.');
+        session()->flash('message', 'Airline created successfully.');
         $this->reset();
     }
 

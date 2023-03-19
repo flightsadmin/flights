@@ -1,4 +1,3 @@
-@section('title', __('Flight'))
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -8,9 +7,6 @@
                         <div>
                             <h4>Flight Schedules </h4>
                         </div>
-                        @if (session()->has('message'))
-                        <div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
-                        @endif
                         <div class="d-flex gap-4">
                             <form wire:submit.prevent="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-1">
@@ -86,4 +82,17 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Success Message Toast  -->
+<div  id="statusToast" class="toast position-fixed top-0 end-0 p-3 text-bg-success" style="margin-top:5px; margin-bottom:0px;" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header text-bg-success">
+    <i class="me-2 bi bi-send-fill"></i>
+    <strong class="me-auto text-black">Success</strong>
+    <small class="text-white">{{ now() }}</small>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body text-black text-center">
+    {{ session('message') }}
+  </div>
 </div>
