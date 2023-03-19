@@ -11,14 +11,14 @@
             <div class="modal-body">
                 <form>
                     <div class="mb-3">
-                        <label for="selectedAirline" class="form-label">Airline</label>
-                        <select wire:model="selectedAirline" class="form-select  form-select-sm" id="selectedAirline">
+                        <label for="airline_id" class="form-label">Airline</label>
+                        <select wire:model="airline_id" class="form-select  form-select-sm" id="airline_id">
                             <option value="">Choose an option...</option>
                             @foreach($airlines as $value)
                             <option value="{{ $value->id }}">{{ $value->name }}</option>
                             @endforeach()
                         </select>
-                        @error('selectedAirline') <span class="text-danger small">{{ $message }}</span> @enderror
+                        @error('airline_id') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
                         <label for="flight_no" class="form-label">Flight Number</label>

@@ -8,8 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
+        Schema::create('airlines', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('iata_code');
+            $table->string('base');
+            $table->timestamps();
+        });
+
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->string('flight_no');
             $table->string('registration');
             $table->string('origin');
@@ -20,14 +29,6 @@ return new class extends Migration
             $table->timestamps();
         });
         
-        Schema::create('airlines', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('iata_code');
-            $table->string('base');
-            $table->timestamps();
-        });
-
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
             $table->string('registration')->unique();
@@ -56,14 +57,32 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('routes', function (Blueprint $table) {
+            $table->id();
+            $table->string('origin');
+            $table->string('destination');
+            $table->foreignId('airline_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->id();
+            $table->string('email');
+            $table->foreignId('airline_id')->constrained()->onDelete('cascade');
+            $table->foreignId('route_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     public function down()
     {
-        Schema::dropIfExists('flights');
         Schema::dropIfExists('airlines');
+        Schema::dropIfExists('flights');
         Schema::dropIfExists('registrations');
         Schema::dropIfExists('services');
         Schema::dropIfExists('movements');
+        Schema::dropIfExists('routes');
+        Schema::dropIfExists('addresses');
     }
 };

@@ -88,13 +88,14 @@ class Schedules extends Component
             }
 
             $flight = new Flight;
-            $flight->flight_no = $row[0];
-            $flight->registration = $row[1];
-            $flight->origin = $row[2];
-            $flight->destination = $row[3];
-            $flight->scheduled_time_arrival = date('Y-m-d H:s', strtotime($row[4]));
-            $flight->scheduled_time_departure = date('Y-m-d H:s', strtotime($row[5]));
-            $flight->flight_type = $row[6];
+            $flight->airline_id = $row[0];
+            $flight->flight_no = $row[1];
+            $flight->registration = $row[2];
+            $flight->origin = $row[3];
+            $flight->destination = $row[4];
+            $flight->scheduled_time_arrival = date('Y-m-d H:s', strtotime($row[5]));
+            $flight->scheduled_time_departure = date('Y-m-d H:s', strtotime($row[6]));
+            $flight->flight_type = $row[7];
             $flight->save();
         }
 
@@ -114,6 +115,7 @@ class Schedules extends Component
             $file = fopen('php://output', 'w');
     
             $headers = [
+                'airline_id',
                 'flight_no',
                 'registration',
                 'origin',
@@ -132,8 +134,9 @@ class Schedules extends Component
     
             while ($start_date <= $end_date) {
                 for ($i = 0; $i < 100; $i++) {
-                    $flightNo = 'QR' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
-                    $registration = 'A7-BF' . chr(rand(65, 90));
+                    $airlineId = rand(1, 10);
+                    $flightNo = 'XA' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
+                    $registration = 'A7-B' . chr(rand(65, 90)) . chr(rand(65, 90));
                     $origin = $airports[array_rand($airports)];
                     $destination = $airports[array_rand($airports)];
                     while ($destination == $origin) {
@@ -145,6 +148,7 @@ class Schedules extends Component
                     // $groundTime = Carbon::parse($arrivalTime)->diff(Carbon::parse($departureTime))->format('%h hours %i minutes');
     
                     fputcsv($file, [
+                        $airlineId,
                         $flightNo,
                         $registration,
                         $origin,

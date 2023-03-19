@@ -3,7 +3,9 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Route;
 use App\Models\Flight;
+use App\Models\Address;
 use App\Models\Airline;
 use App\Models\Service;
 use Livewire\Component;
@@ -16,14 +18,14 @@ class Flights extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $registrations = [], $selectedAirline, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
+    public $registrations = [], $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
     public $ServiceTypes = [], $flightFields = [], $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
     public $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
     protected $rules = [
-        'selectedAirline'           => 'required|string',
+        'airline_id'           => 'required|string',
         'flight_no'                 => 'required|string',
         'registration'              => 'required|string',
         'origin'                    => 'required|string',
@@ -59,7 +61,7 @@ class Flights extends Component
         $this->reset(['flightFields', 'ServiceTypes', 'serviceList', 'flight_id']);
     }
 
-    public function updatedselectedAirline($airline)
+    public function updatedairlineId($airline)
     {
         $this->registrations = Registration::where('airline_id', $airline)->get();
     }
@@ -68,6 +70,7 @@ class Flights extends Component
     {
         $this->validate();
         Flight::updateOrCreate(['id' => $this->flight_id], [
+            'airline_id' => $this->airline_id,
             'flight_no' => $this->flight_no,
             'registration' => $this->registration,
             'origin' => $this->origin,
@@ -77,7 +80,7 @@ class Flights extends Component
             'flight_type' => $this->flight_type,
         ]);
 
-        $this->reset(['flight_no', 'registration', 'origin', 'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type']);
+        $this->reset(['airline_id', 'flight_no', 'registration', 'origin', 'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type']);
         $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', $this->flight_id ? 'Flight Updated Successfully.' : 'Flight Created Successfully.');
     }
@@ -86,6 +89,7 @@ class Flights extends Component
     {
         $flight = Flight::findOrFail($id);
         $this->flight_id = $id;
+        $this->airline_id = $flight->airline_id;
         $this->flight_no = $flight->flight_no;
         $this->registration = $flight->registration;
         $this->origin = $flight->origin;
@@ -111,6 +115,7 @@ class Flights extends Component
         return $this->flight_id ? Flight::findOrFail($this->flight_id) : null;
     }
 
+    // Services Methods
     public function addService()
     {
         $this->ServiceTypes[] = 'Service '.rand(100, 999);
@@ -161,11 +166,13 @@ class Flights extends Component
                 'flight_id'  => 'required|exists:flights,id',
             ]
         );
-        
-        Movement::create($validatedData);
-
+                
         if (!is_null($validatedData['offblocks']) || !is_null($validatedData['airborne']) || !is_null($validatedData['touchdown']) || !is_null($validatedData['onblocks'])) {
+            
+            Movement::create($validatedData);
+
             $flights = Flight::where('id', $validatedData['flight_id'])->first();
+            $emailAddress = Route::with('emails')->where('airline_id', $flights->airline_id)->first()->emails->pluck('email')->toArray();
             $emailData = [
                 'offblocks'  => $validatedData['offblocks'],
                 'airborne'   => $validatedData['airborne'],
@@ -179,12 +186,14 @@ class Flights extends Component
                 'registration' => str_replace('-', '', $flights->registration),
                 'destination' => $flights->destination,
                 'flight_type' => $flights->flight_type,
+                'recipients'  => $emailAddress
             ];
-            
 
             Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
-                $message->to('mctapplications@gmail.com', 'George Chitechi')
-                        ->subject('New Movement');
+                $message->subject('MVT '. $emailData['flight_no']);
+                foreach ($emailData['recipients'] as $recipient) {
+                    $message->bcc($recipient);
+                }
             });
         }
 
