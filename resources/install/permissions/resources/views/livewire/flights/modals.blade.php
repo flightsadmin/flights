@@ -10,70 +10,71 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <div class="mb-3">
-                        <label for="airline_id" class="form-label">Airline</label>
-                        <select wire:model="airline_id" class="form-select  form-select-sm" id="airline_id">
-                            <option value="">Choose an option...</option>
-                            @foreach($airlines as $value)
-                            <option value="{{ $value->id }}">{{ $value->name }}</option>
-                            @endforeach()
-                        </select>
-                        @error('airline_id') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="flight_no" class="form-label">Flight Number</label>
-                        <input wire:model.lazy="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
-                        @error('flight_no') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="registration" class="form-label">Registration</label>
-                        <select wire:model.lazy="registration" class="form-select  form-select-sm" id="registration">
-                            <option value="">Choose an option...</option>
-                            @foreach($registrations as $value)
-                            <option value="{{ $value->registration }}">{{ $value->registration }}</option>
-                            @endforeach()
-                        </select>
-                        @error('registration') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="origin" class="form-label">Origin</label>
-                        <input wire:model.lazy="origin" type="text" class="form-control form-control-sm" id="origin">
-                        @error('origin') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="destination" class="form-label">Destination</label>
-                        <input wire:model.lazy="destination" type="text" class="form-control form-control-sm" id="destination">
-                        @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="scheduled_time_arrival" class="form-label">Scheduled Time of Arrival</label>
-                        <input wire:model.lazy="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
-                        @error('scheduled_time_arrival') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="scheduled_time_departure" class="form-label">Scheduled Time of Departure</label>
-                        <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
-                        @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="flight_type" class="form-label">Flight Type</label>
-                        <select wire:model.lazy="flight_type" class="form-select form-select-sm" id="flight_type">
-                            <option value="">Select Flight Type</option>
-                            <option value="arrival">Arrival</option>
-                            <option value="departure">Departure</option>
-                        </select>
-                        @error('flight_type') <span class="text-danger small">{{ $message }}</span> @enderror
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="airline_id" class="form-label">Airline</label>
+                            <select wire:model="airline_id" class="form-select  form-select-sm" id="airline_id">
+                                <option value="">Choose an option...</option>
+                                @foreach($airlines as $value)
+                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                @endforeach()
+                            </select>
+                            @error('airline_id') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="flight_no" class="form-label">Flight Number</label>
+                            <input wire:model.lazy="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
+                            @error('flight_no') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="registration" class="form-label">Registration</label>
+                            <select wire:model.lazy="registration" class="form-select  form-select-sm" id="registration">
+                                <option value="">Choose an option...</option>
+                                @foreach($registrations as $value)
+                                <option value="{{ $value->registration }}">{{ $value->registration }}</option>
+                                @endforeach()
+                            </select>
+                            @error('registration') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="flight_type" class="form-label">Flight Type</label>
+                            <select wire:model.lazy="flight_type" class="form-select form-select-sm" id="flight_type">
+                                <option value="">Select Flight Type</option>
+                                <option value="arrival">Arrival</option>
+                                <option value="departure">Departure</option>
+                            </select>
+                            @error('flight_type') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div> 
+                        <div class="col-md-6 mb-3">
+                            <label for="origin" class="form-label">Origin</label>
+                            <input wire:model.lazy="origin" type="text" class="form-control form-control-sm" id="origin">
+                            @error('origin') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="destination" class="form-label">Destination</label>
+                            <input wire:model.lazy="destination" type="text" class="form-control form-control-sm" id="destination">
+                            @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="scheduled_time_arrival" class="form-label">Scheduled Time of Arrival</label>
+                            <input wire:model.lazy="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
+                            @error('scheduled_time_arrival') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="scheduled_time_departure" class="form-label">Scheduled Time of Departure</label>
+                            <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
+                            @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>                                           
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button wire:click.prevent="store" type="button" class="btn btn-primary">Save</button>
+            <div class="modal-footer d-flex align-items-center justify-content-between">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary bi bi-check2-circle">Save</button>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Create / Edit Sevices Modal -->
 <div wire:ignore.self class="modal fade" id="viewModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
@@ -228,7 +229,7 @@
                     <p>No Flight Selected</p>
                 @endif
             </div>
-            <div class="modal-footer p-0 mx-3 d-flex justify-content-between">
+            <div class="modal-footer p-0 mx-3 d-flex align-items-center justify-content-between">
                 <button data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
                 <button wire:loading.attr="disabled" wire:click.prevent="saveMovements" type="button" class="btn btn-sm btn-primary bi bi-clock-history"> Send Movement</button>
             </div>

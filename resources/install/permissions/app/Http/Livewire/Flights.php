@@ -25,7 +25,7 @@ class Flights extends Component
     protected $listeners = ['refreshItems' => '$refresh'];
 
     protected $rules = [
-        'airline_id'           => 'required|string',
+        'airline_id'                => 'required',
         'flight_no'                 => 'required|string',
         'registration'              => 'required|string',
         'origin'                    => 'required|string',

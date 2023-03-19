@@ -32,24 +32,30 @@ class FlightsDatabaseSeeder extends Seeder
         $airlines = Airline::all();
         // Seed Routes and Email Addresses
         $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];
+        $departureAirport = $airports[array_rand($airports)];
         foreach ($airlines as $airline) {
-            $origin = $airports[array_rand($airports)];
-            $destination = $airports[array_rand($airports)];
-            
-            while ($origin === $destination) {
+            for ($i=0; $i < 4; $i++) { 
+
+                $origin = $departureAirport;
                 $destination = $airports[array_rand($airports)];
+                
+                while ($origin === $destination) {
+                    $destination = $airports[array_rand($airports)];
+                }
+            
+                $route = Route::updateOrCreate([
+                    'airline_id' => $airline->id,
+                    'origin' => $origin,
+                    'destination' => $destination,
+                ]);
+            
+                $route->emails()->updateOrCreate([
+                    'email' => 'flightsapps@gmail.com',
+                    'airline_id' => $airline->id,
+                ]);
+            
+                $departureAirport = $destination;
             }
-
-            $route = Route::updateOrCreate([
-                'airline_id' => $airline->id,
-                'origin' => $origin,
-                'destination' => $destination,
-            ]);
-
-            $route->emails()->updateOrCreate([
-                'email' => 'flightsapps@gmail.com',
-                'airline_id' => $airline->id,
-            ]);
         }
     }
 }

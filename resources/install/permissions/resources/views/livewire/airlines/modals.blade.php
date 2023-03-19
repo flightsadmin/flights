@@ -28,8 +28,8 @@
                 </form>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-between">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button wire:click.prevent="saveAirline" type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button wire:click.prevent="saveAirline" type="button" class="btn btn-sm btn-primary bi bi-check2-circle">Save</button>
             </div>
         </div>
     </div>
