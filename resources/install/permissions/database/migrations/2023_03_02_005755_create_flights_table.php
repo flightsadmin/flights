@@ -62,15 +62,15 @@ return new class extends Migration
             $table->id();
             $table->string('origin');
             $table->string('destination');
-            $table->foreignId('airline_id')->constrained()->onDelete('cascade');
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->string('email');
-            $table->foreignId('airline_id')->constrained()->onDelete('cascade');
-            $table->foreignId('route_id')->constrained()->onDelete('cascade');
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
+            $table->foreignId('route_id')->constrained('routes')->onDelete('cascade');
             $table->timestamps();
         });
     }
