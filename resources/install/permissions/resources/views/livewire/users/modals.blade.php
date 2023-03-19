@@ -115,7 +115,7 @@
             </div>
             <div class="modal-footer mt-3 d-flex align-items-center justify-content-between">
                 <button wire:click="cancel()" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Back</button>
-                <button wire:click.prevent="submit()" class="btn btn-sm btn-primary bi bi-check2-circle">{{ $userId ? 'Edit Changes' : 'Add User'}}</button>
+                <button wire:click.prevent="submit()" class="btn btn-sm btn-primary bi bi-check2-circle"> {{ $userId ? 'Edit Changes' : 'Add User'}}</button>
             </div>
         </div>
     </div>

@@ -54,7 +54,7 @@
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-between">
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary bi bi-check2-circle" wire:click.prevent="save">Save</span>
+                <button class="btn btn-sm btn-primary bi bi-check2-circle" wire:click.prevent="save"> Save</span>
                 </button>
             </div>
         </div>
