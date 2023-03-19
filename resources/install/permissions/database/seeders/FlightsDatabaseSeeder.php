@@ -12,39 +12,44 @@ class FlightsDatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $faker = Faker::create();
-        // Seed Airline Names
-        for ($i = 0; $i < 10; $i++) {
-            $city = new Airline;
-            $city->name = $faker->company;
-            $city->iata_code = $faker->unique()->regexify('[A-Z]{2}');
-            $city->base = $faker->city;
-            $city->save();
+        $airlines = [
+            [ "name" => "Flydubai",         "iata_code" => "FZ",    "base" => "Dubai, United Arab Emirates" ],
+            [ "name" => "Air Arabia",       "iata_code" => "G9",    "base" => "Sharjah, United Arab Emirates" ],
+            [ "name" => "Oman Air",         "iata_code" => "WY",    "base" => "Muscat, Oman" ],
+            [ "name" => "Salamair",         "iata_code" => "OV",    "base" => "Muscat, Oman" ],
+            [ "name" => "Qatar Airways",    "iata_code" => "QR",    "base" => "Doha, Qatar" ],
+            [ "name" => "Kenya Airways",    "iata_code" => "KQ",    "base" => "Nairobi, Kenya" ],
+            [ "name" => "Emirates",         "iata_code" => "EK",    "base" => "Dubai, United Arab Emirates" ],
+            [ "name" => "Air India",        "iata_code" => "AI",    "base" => "Bombay, India" ],
+            [ "name" => "Indigo  Airlines", "iata_code" => "6E",    "base" => "Hyderabad, India" ],
+            [ "name" => "Jambojet",         "iata_code" => "JM",    "base" => "Nairobi, Kenya" ],
+        ];
+
+        foreach ($airlines as $airline) {
+            Airline::updateOrCreate($airline);
         }
 
         $airlines = Airline::all();
         // Seed Routes and Email Addresses
         $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];
         foreach ($airlines as $airline) {
-                $origin = $airports[array_rand($airports)];
-                $destination = $airports[array_rand($airports)];
-                
-                while ($origin === $destination) {
-                    $destination = $airports[array_rand($airports)];
-                }
+            $origin = $airports[array_rand($airports)];
+            $destination = $airports[array_rand($airports)];
             
-            for ($i = 0; $i < 5; $i++) {
-                $route = Route::updateOrCreate([
-                    'airline_id' => $airline->id,
-                    'origin' => $origin,
-                    'destination' => $destination,
-                ]);
-
-                $route->emails()->updateOrCreate([
-                    'email' => $faker->unique()->safeEmail(),
-                    'airline_id' => $airline->id,
-                ]);
+            while ($origin === $destination) {
+                $destination = $airports[array_rand($airports)];
             }
+
+            $route = Route::updateOrCreate([
+                'airline_id' => $airline->id,
+                'origin' => $origin,
+                'destination' => $destination,
+            ]);
+
+            $route->emails()->updateOrCreate([
+                'email' => 'flightsapps@gmail.com',
+                'airline_id' => $airline->id,
+            ]);
         }
     }
 }
