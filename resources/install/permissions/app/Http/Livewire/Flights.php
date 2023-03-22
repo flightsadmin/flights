@@ -140,7 +140,7 @@ class Flights extends Component
             ]);
         }
 
-        $this->dispatchBrowserEvent('closeModal');
+        // $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', 'Service Added Successfully.');
 
         $this->reset(['flightFields', 'ServiceTypes', 'serviceList']);

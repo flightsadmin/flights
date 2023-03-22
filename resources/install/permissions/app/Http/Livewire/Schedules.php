@@ -2,8 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Flight;
 use Carbon\Carbon;
+use App\Models\Flight;
+use App\Models\Airline;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -16,7 +17,8 @@ class Schedules extends Component
 
     public function render()
     {
-        return view('livewire.schedules.view');
+        $airlines = Airline::all();
+        return view('livewire.schedules.view', compact('airlines'));
     }
 
     public function mount()
@@ -50,24 +52,21 @@ class Schedules extends Component
             // Create flights for each occurrence of the selected day within the date range
             while ($date->lte($this->endDate)) {
                 $flight = new Flight;
+                $flight->airline_id = strtoupper($this->flightFields[$flightNumber]['airline_id']);
                 $flight->flight_no = strtoupper($this->flightFields[$flightNumber]['flight_no']);
                 $flight->registration = '';
                 $flight->origin = strtoupper($this->flightFields[$flightNumber]['origin'] ?? 'DOH');
                 $flight->destination = strtoupper($this->flightFields[$flightNumber]['destination'] ?? 'MCT');
                 $flight->scheduled_time_arrival = $date->format('Y-m-d '). $this->flightFields[$flightNumber]['arrival'] ?? '00:00';
                 $flight->scheduled_time_departure = $date->format('Y-m-d '). $this->flightFields[$flightNumber]['departure'] ?? '00:00';
-                $flight->flight_type = strtoupper('departure');
+                $flight->flight_type = strtoupper($this->flightFields[$flightNumber]['flight_type'] ?? 'departure');
                 $flight->save();
                 $date = $date->next($day);
             }
         }
         session()->flash('message', 'Schedule Created Successfully.');
         return redirect('/flights');
-
-        // Clear the selected dates after creating the flights
-        $this->selectedDays = [];
-        $this->flightNumbers = [];
-        $this->flightFields = [];
+        $this->reset(['selectedDays', 'flightNumbers', 'flightFields']);
     }
 
     public function import()

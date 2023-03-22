@@ -100,7 +100,7 @@
                                         <p>{{ $index + 1 }}. {{ $service->service_type }} ({{ $service->start }} - {{ $service->finish }})</p>
                                     </td>
                                     <td class="d-flex gap-2">
-                                        <a href="#" wire:click="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3 text-end"></a>
+                                        <a href="" wire:click.prevent="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3 text-end"></a>
                                     </td>
                                 </tr>
                                 @empty

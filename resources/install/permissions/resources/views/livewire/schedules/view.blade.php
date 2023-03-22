@@ -35,10 +35,12 @@
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
+                                    <th width="120">Airline</th>
                                     <th width="120">Flight Number</th>
                                     <th width="220">Timings (Arrival & Departure)</th>
                                     <th width="120">Origin</th>
                                     <th width="120">Destination</th>
+                                    <th width="120">Type</th>
                                     @foreach ($days as $day)
                                     <th>{{ $day }}</th>
                                     @endforeach
@@ -48,6 +50,14 @@
                             <tbody>
                                 @foreach ($flightNumbers as $index => $flightNumber)
                                 <tr>
+                                    <td>
+                                        <select wire:model="flightFields.{{ $flightNumber }}.airline_id" class="form-select  form-select-sm">
+                                            <option value="">Choose an option...</option>
+                                            @foreach($airlines as $value)
+                                                <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                            @endforeach()
+                                        </select>
+                                    </td>
                                     <td>
                                         <input type="text" required size="8" wire:model="flightFields.{{ $flightNumber }}.flight_no">
                                     </td>
@@ -61,6 +71,13 @@
                                     <td>
                                         <input type="text" required size="8" wire:model="flightFields.{{ $flightNumber }}.destination">
                                     </td>
+                                    <td>
+                                        <select wire:model="flightFields.{{ $flightNumber }}.flight_type" class="form-select  form-select-sm">
+                                            <option value="">Choose an option...</option>
+                                            <option value="arrival">Arrival</option>
+                                            <option value="departure">Departure</option>                                            
+                                        </select>
+                                    </td>
                                     @foreach ($days as $day)
                                     <td>
                                         <div class="form-check">
@@ -69,7 +86,7 @@
                                     </td>
                                     @endforeach
                                     <td>
-                                        <a href="#" wire:click="removeFlights({{$index}})" class="text-danger bi bi-trash3"></a>
+                                        <a href="" wire:click.prevent="removeFlights({{$index}})" class="text-danger bi bi-trash3"></a>
                                     </td>
                                 </tr>
                                 @endforeach
