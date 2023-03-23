@@ -14,13 +14,13 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="airline">Airline:</label>
-                                <select class="form-select" wire:model="airlineId">
+                                <select class="form-select" wire:model="airline_id">
                                     <option value="">Select an airline</option>
                                     @foreach ($airlines as $airline)
                                         <option value="{{ $airline->id }}">{{ $airline->name }}</option>
                                     @endforeach
                                 </select>
-                                @error('airlineId') <span class="text-danger small">{{ $message }}</span> @enderror
+                                @error('airline_id') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -33,6 +33,12 @@
                                 <label for="destination">Destination:</label>
                                 <input type="text" class="form-control" wire:model="destination">
                                 @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="flight_time">Flight Time:</label>
+                                <input maxlength="5" class="form-control form-control-sm" type="text" wire:model="flight_time" placeholder="00:00">
+                                @error('flight_time') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">

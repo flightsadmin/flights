@@ -12,9 +12,9 @@
 						</div>
 						<div class="d-flex gap-4">
                             <form wire:submit.prevent="importRegistration" enctype="multipart/form-data">
-                                <div class="d-flex gap-1">
+                                <div class="d-flex gap-4">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
-                                    @error('file') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
                             </form>
@@ -52,7 +52,7 @@
 								<td>{{ $row->airline->base }}</td>
 								<td width="90">
 									<div class="dropdown">
-										<a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										<a class="btn custom-btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 											Actions
 										</a>
 										<ul class="dropdown-menu">

@@ -48,14 +48,14 @@
                                 <td>{{ $permission->name }}</td>
                                 <td>
                                     @foreach($permission->roles as $role)
-                                        <button class="btn btn-sm btn-warning custom-btn-sm mb-1 bi bi-shield-shaded"> {{ $role->name }}</button>
+                                        <button class="btn btn-warning custom-btn-sm mb-1 bi bi-shield-shaded"> {{ $role->name }}</button>
                                     @endforeach
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary custom-btn-sm bi bi-pencil-square" wire:click="form({{$permission}})"> </button>
+                                    <button type="button" class="btn btn-primary custom-btn-sm bi bi-pencil-square" wire:click="form({{$permission}})"> </button>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger custom-btn-sm bi bi-trash" 
+                                    <button type="button" class="btn btn-danger custom-btn-sm bi bi-trash" 
                                         onclick="confirm('Are you shure want to delete permision: {{ $permission->name }}?') || event.stopImmediatePropagation()" 
                                         wire:click="delete({{$permission}})">
                                     </button>

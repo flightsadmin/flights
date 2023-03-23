@@ -9,9 +9,9 @@
                         </div>
                         <div class="d-flex gap-4">
                             <form wire:submit.prevent="import" enctype="multipart/form-data">
-                                <div class="d-flex gap-1">
+                                <div class="d-flex gap-4">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
-                                    @error('file') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
                             </form>
@@ -52,28 +52,28 @@
                                 <tr>
                                     <td>
                                         <select wire:model="flightFields.{{ $flightNumber }}.airline_id" class="form-select  form-select-sm">
-                                            <option value="">Choose an option...</option>
+                                            <option value="">--Select Airline--</option>
                                             @foreach($airlines as $value)
                                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
                                             @endforeach()
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" required size="8" wire:model="flightFields.{{ $flightNumber }}.flight_no">
+                                        <input type="text" size="8" wire:model="flightFields.{{ $flightNumber }}.flight_no">
                                     </td>
                                     <td>
-                                        <input type="time" required wire:model="flightFields.{{ $flightNumber }}.arrival">
-                                        <input type="time" required wire:model="flightFields.{{ $flightNumber }}.departure">
+                                        <input type="time" wire:model="flightFields.{{ $flightNumber }}.arrival">
+                                        <input type="time" wire:model="flightFields.{{ $flightNumber }}.departure">
                                     </td>
                                     <td>
-                                        <input type="text" required size="8" wire:model="flightFields.{{ $flightNumber }}.origin">
+                                        <input type="text" size="8" wire:model="flightFields.{{ $flightNumber }}.origin">
                                     </td>
                                     <td>
-                                        <input type="text" required size="8" wire:model="flightFields.{{ $flightNumber }}.destination">
+                                        <input type="text" size="8" wire:model="flightFields.{{ $flightNumber }}.destination">
                                     </td>
                                     <td>
                                         <select wire:model="flightFields.{{ $flightNumber }}.flight_type" class="form-select  form-select-sm">
-                                            <option value="">Choose an option...</option>
+                                            <option value="">--Select Type--</option>
                                             <option value="arrival">Arrival</option>
                                             <option value="departure">Departure</option>                                            
                                         </select>

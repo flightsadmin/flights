@@ -8,20 +8,20 @@
 							<h4>Airlines </h4>
 						</div>
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
+							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Airline">
 						</div>
                         <div class="d-flex gap-4">
                             <form wire:submit.prevent="import" enctype="multipart/form-data">
-                                <div class="d-flex gap-1">
+                                <div class="d-flex gap-4">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
-                                    @error('file') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
                             </form>
 							<button wire:click="downloadAirlines" class="btn btn-warning btn-sm bi bi-cloud-download-fill"> Download Sample</button>
                         </div>
 						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
-							 Add Registration
+							 Add Airline
 						</div>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
 								<td>{{ $row->iata_code }}</td>
 								<td>{{ $row->base }}</td>
 								<td width="90">
-									<button class="btn btn-sm btn-danger custom-btn-sm bi bi-trash3" onclick="confirm('Confirm Delete Registration id {{$row->id}}? \nDeleted Registration cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
+									<button class="btn btn-danger custom-btn-sm bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
 								</td>
 							</tr>
 							@empty

@@ -1,29 +1,31 @@
 <!-- Create / Edit Airlines Modal -->
 <div wire:ignore.self class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dataModalLabel">
-                    Create New Registration
+                    Create New Airline
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="d-flex gap-2">
-                    <div class="form-group">
-                        <label for="name">Airline Name</label>
-                        <input type="text" class="form-control" id="name" wire:model.lazy="name">
-                        @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="iata_code">Airline Code</label>
-                        <input type="text" maxlength="2" class="form-control" id="iata_code" wire:model.lazy="iata_code">
-                        @error('iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="base">Airline Base</label>
-                        <input type="text" class="form-control" id="base" wire:model.lazy="base">
-                        @error('base') <span class="text-danger small">{{ $message }}</span> @enderror
+                <form>
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-2">
+                            <label for="name">Airline Name</label>
+                            <input type="text" class="form-control" id="name" wire:model.lazy="name">
+                            @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-6 mb-2">
+                            <label for="iata_code">Airline Code</label>
+                            <input type="text" maxlength="2" class="form-control" id="iata_code" wire:model.lazy="iata_code">
+                            @error('iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-group col-md-6 mb-2">
+                            <label for="base">Airline Base</label>
+                            <input type="text" class="form-control" id="base" wire:model.lazy="base">
+                            @error('base') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </form>
             </div>

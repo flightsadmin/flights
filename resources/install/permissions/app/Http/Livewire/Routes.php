@@ -8,13 +8,7 @@ use Livewire\Component;
 
 class Routes extends Component
 {
-    public $airlineId, $origin, $destination, $emails = [], $email;
-
-    protected $rules = [
-        'airlineId'     => 'required|exists:airlines,id',
-        'origin'        => 'required|string|max:20',
-        'destination'   => 'required|string|max:20'
-    ];
+    public $airline_id, $origin, $destination, $flight_time, $emails = [], $email;
 
     public function addEmail($email)
     {
@@ -33,17 +27,19 @@ class Routes extends Component
 
     public function save()
     {
-        $validatedData = $this->validate();
-        $route = Route::updateOrCreate([
-            'airline_id' => $validatedData['airlineId'],
-            'origin' => $validatedData['origin'],
-            'destination' => $validatedData['destination'],
-        ]);
-        
+        $validatedData = $this->validate([
+                'airline_id'    => 'required|exists:airlines,id',
+                'origin'        => 'required|string|min:3|max:20',
+                'destination'   => 'required|string|min:3|max:20',
+            ]);
+        $route = Route::updateOrCreate($validatedData);
+        $route->flight_time = date("H:i", strtotime($this->flight_time));
+        $route->save();
+
         foreach ($this->emails as $email) {
             $route->emails()->updateOrCreate([
                 'email' => $email,
-                'airline_id' => $validatedData['airlineId'],
+                'airline_id' => $validatedData['airline_id'],
             ]);
         }
 

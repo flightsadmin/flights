@@ -18,14 +18,15 @@ return new class extends Migration
 
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->string('flight_no');
             $table->string('registration');
             $table->string('origin');
             $table->string('destination');
-            $table->dateTime('scheduled_time_arrival');
-            $table->dateTime('scheduled_time_departure');
+            $table->timestamp('scheduled_time_arrival');
+            $table->timestamp('scheduled_time_departure');
             $table->enum('flight_type', ['arrival', 'departure']);
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
+            $table->foreignId('linked_flight_id')->nullable()->references('id')->on('flights')->onDelete('set null');
             $table->timestamps();
         });
         
@@ -40,8 +41,8 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('service_type');
-            $table->dateTime('start');
-            $table->dateTime('finish');
+            $table->timestamp('start');
+            $table->timestamp('finish');
             $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
             $table->timestamps();
         });
@@ -54,6 +55,18 @@ return new class extends Migration
             $table->timestamp('touchdown')->nullable();
             $table->timestamp('onblocks')->nullable();
             $table->integer('passengers')->nullable();
+            $table->string('delaycode1')->nullable();
+            $table->string('delaycode2')->nullable();
+            $table->string('delaycode3')->nullable();
+            $table->string('delaycode4')->nullable();
+            $table->string('delayduration1')->nullable();
+            $table->string('delayduration2')->nullable();
+            $table->string('delayduration3')->nullable();
+            $table->string('delayduration4')->nullable();
+            $table->string('delaydescription1')->nullable();
+            $table->string('delaydescription2')->nullable();
+            $table->string('delaydescription3')->nullable();
+            $table->string('delaydescription4')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
@@ -62,6 +75,7 @@ return new class extends Migration
             $table->id();
             $table->string('origin');
             $table->string('destination');
+            $table->time('flight_time')->nullable();
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
         });

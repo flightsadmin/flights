@@ -16,7 +16,7 @@
 						<div>
 							<input type="date" wire:model="selectedDate" id="datepicker" class="form-control form-control-sm">
 						</div>
-						<div class="d-flex gap-2">
+						<div class="d-flex gap-4">
 							@role('super-admin|admin')
 								<a href="{{ url('/schedules') }}" class="btn btn-sm btn-warning bi bi-newspaper"> Generate Schedule </a>
 							@endrole
@@ -32,7 +32,8 @@
 					<table class="table table-bordered table-sm">
 						<thead class="thead">
 							<tr> 
-								<td>#</td> 
+								<td>#</td>
+								<td></td>
 								<th>Flight No</th>
 								<th>Registration</th>
 								<th>STA</th>
@@ -45,7 +46,8 @@
 						<tbody>
 							@forelse($flights as $row)
 							<tr>
-								<td>{{ $loop->iteration }}</td> 
+								<td>{{ $loop->iteration }}</td>
+								<td class="text-center px-0"><span class="{{ ($row->flight_type == 'arrival') ? 'text-secondary h5 bi bi-arrow-down-right-circle-fill' : 'text-info h5 bi bi-arrow-up-right-circle-fill'}}"></span></td>
 								<td>{{ $row->flight_no }}</td>
 								<td>{{ $row->registration }}</td>
 								<td>{{ $row->scheduled_time_arrival }}</td>
@@ -54,7 +56,7 @@
 								<td>{{ $row->destination }}</td>
 								<td width="90">
 									<div class="dropdown">
-										<a class="btn btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										<a class="btn custom-btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 											Actions
 										</a>
 										<ul class="dropdown-menu">

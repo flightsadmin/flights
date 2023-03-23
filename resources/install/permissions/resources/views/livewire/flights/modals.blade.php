@@ -64,7 +64,17 @@
                             <label for="scheduled_time_departure" class="form-label">Scheduled Time of Departure</label>
                             <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
                             @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
-                        </div>                                           
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="linked_flight_id" class="form-label">Linked Flight</label>
+                            <select name="linked_flight_id" wire:model="linked_flight_id" class="form-select  form-select-sm">
+                                <option value="">-- Select a flight --</option>
+                                @foreach ($linked as $flight)
+                                    <option value="{{ $flight->id }}">{{ $flight->flight_no }} ({{ $flight->origin }} to {{ $flight->destination }}) - {{ $flight->scheduled_time_departure }}</option>
+                                @endforeach
+                            </select>
+                            @error('linked_flight_id') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </form>
             </div>
@@ -142,7 +152,7 @@
                                         <input class="form-control  form-control-sm" type="datetime-local" required wire:model="flightFields.{{ $actualService }}.finish">
                                     </td>
                                     <td>
-                                        <a href="#" wire:click="removeService({{$index}})" class="text-danger bi bi-trash3"></a>
+                                        <a href="" wire:click.prevent="removeService({{$index}})" class="text-danger bi bi-trash3-fill"></a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -172,11 +182,14 @@
                 @if ($flight_id)
                     <div class="border px-3 mb-2">
                         <p>MVT</p>
-                        <p>{{ $selectedFlight->flight_no }}/{{ date("d", strtotime($selectedFlight->scheduled_time_departure)) }}.{{ $selectedFlight->registration }}.{{ $selectedFlight->destination }}</p>                   
+                        {{ $selectedFlight->flight_no }}/{{ ($selectedFlight->flight_type == 'arrival') ? 
+                            date("d", strtotime($selectedFlight->scheduled_time_arrival)) . "." . $selectedFlight->registration . "." . $selectedFlight->destination : 
+                            date("d", strtotime($selectedFlight->scheduled_time_departure)) . "." . $selectedFlight->registration . "." . $selectedFlight->origin }}</p>
                         @if ($selectedFlight->flight_type == 'arrival')
                         <p>AA{{ date("Hi", strtotime($touchdown)) }}/{{ date("Hi", strtotime($onblocks)) }}</p>
                         @else
-                        <p>AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}</p>
+                        <p>AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}
+                            EA{{ date("Hi", strtotime($airborne)+strtotime($airborne)) }} {{ $selectedFlight->destination }}</p>
                         <p>PX{{ $passengers }}</p>
                         <p>SI {{ strtoupper($remarks) }}</p>
                         @endif
@@ -189,42 +202,56 @@
                             <div class="form-group col-md-4">
                                 <label for="touchdown">Touchdown</label>
                                 <input type="datetime-local" class="form-control" id="touchdown" wire:model="touchdown">
-                                @error('touchdown') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('touchdown') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="onblocks">On Blocks</label>
                                 <input type="datetime-local" class="form-control" id="onblocks" wire:model="onblocks">
-                                @error('onblocks') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('onblocks') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
                             @else
                             <div class="form-group col-md-4">
                                 <label for="offblocks">Off Blocks</label>
                                 <input type="datetime-local" class="form-control" id="offblocks" wire:model="offblocks">
-                                @error('offblocks') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('offblocks') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="airborne">Airborne</label>
                                 <input type="datetime-local" class="form-control" id="airborne" wire:model="airborne">
-                                @error('airborne') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('airborne') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label for="passengers">Passengers</label>
                                 <input type="number" class="form-control" id="passengers" wire:model="passengers">
-                                @error('passengers') <span class="text-danger">{{ $message }}</span> @enderror
+                                @error('passengers') <span class="text-danger small">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="remarks">Remarks</label>
+                                <textarea class="form-control" id="remarks" wire:model.lazy="remarks"></textarea>
+                                @error('remarks') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
                             @endif
                         </div>
 
-                        <div class="form-group col-md-12">
-                            <label for="remarks">Remarks</label>
-                            <textarea class="form-control" id="remarks" wire:model.lazy="remarks"></textarea>
-                            @error('remarks') <span class="text-danger">{{ $message }}</span> @enderror
+                        @if ($selectedFlight->flight_type == 'departure')
+                        <div class="form-group col-md-12 my-3">
+                            <label>Delay Codes</label>
+                            @foreach ($delaycodes as $index => $delaycode)
+                                <div class="d-flex gap-1 mb-1">
+                                    <input class="form-control form-control-sm" type="text" wire:model="delaycodes.{{ $index }}" placeholder="Delay Code">
+                                    <input maxlength="4" class="form-control form-control-sm" type="text" wire:model="delaydurations.{{ $index }}" placeholder="0000">
+                                    <input class="form-control form-control-sm" type="text" wire:model="delaydescriptions.{{ $index }}" placeholder="Decription">
+                                    <a href="" class="bi bi-trash3-fill text-danger text-center px-4" wire:click.prevent="removeDelay({{ $index }})"></a>
+                                </div>
+                                @error('delaydurations.'.$index) <span class="text-danger small">{{ $message }}</span> @enderror
+                            @endforeach
+                            <button class="btn custom-btn-sm btn-secondary" type="button" wire:click.prevent="addDelay">Add Delay</button>
                         </div>
+                        @endif
                     </form>
-
                 @else
                     <p>No Flight Selected</p>
                 @endif
@@ -244,12 +271,15 @@
                                         <i class="bi bi-clock-history text-success"></i> Sent: {{ date("d-M-Y H:i:s", strtotime($movement->created_at)) }}
                                     </td>
                                     <td>
-                                       <p>MVT</p>
-                                       <p>{{ $selectedFlight->flight_no }}/{{ date("d", strtotime($selectedFlight->scheduled_time_departure)) }}.{{ $selectedFlight->registration }}.{{ $selectedFlight->destination }}</p>
+                                        <p>MVT</p>
+                                        {{ $selectedFlight->flight_no }}/{{ ($selectedFlight->flight_type == 'arrival') ? 
+                                            date("d", strtotime($selectedFlight->scheduled_time_arrival)) . "." . $selectedFlight->registration . "." . $selectedFlight->destination : 
+                                            date("d", strtotime($selectedFlight->scheduled_time_departure)) . "." . $selectedFlight->registration . "." . $selectedFlight->origin }}</p>
                                         @if ($selectedFlight->flight_type == 'arrival')
                                         <p>AA{{ date("Hi", strtotime($movement->touchdown)) }}/{{ date("Hi", strtotime($movement->onblocks)) }}</p>
                                         @else
-                                        <p>AD{{ date("Hi", strtotime($movement->offblocks)) }}/{{ date("Hi", strtotime($movement->airborne)) }}</p>
+                                        <p>AD{{ date("Hi", strtotime($movement->offblocks)) }}/{{ date("Hi", strtotime($movement->airborne)) }}
+                                            EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->airborne)) }} {{ $selectedFlight->destination }}</p>
                                         <p>PX{{ $movement->passengers }}</p>
                                         <p>SI {{ strtoupper($movement->remarks) }}</p>
                                         @endif

@@ -12,6 +12,7 @@ class Route extends Model
     protected $fillable = [
         'origin',
         'destination',
+        'flight_time',
         'airline_id'
     ];
 

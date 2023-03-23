@@ -8,11 +8,14 @@
 <body>
     <div>
         MVT</br>
-        {{ $flight_no }}/{{ date("d", strtotime($scheduled_time_departure)) }}.{{ $registration }}.{{ $destination }}</br>
+        {{ $flight_no }}/{{ ($flight_type == 'arrival') ? 
+            date("d", strtotime($scheduled_time_arrival)) . "." . $registration . "." . $destination : 
+            date("d", strtotime($scheduled_time_departure)) . "." . $registration . "." . $origin }}</br>
         @if ($flight_type == 'arrival')
         AA{{ date("Hi", strtotime($touchdown)) }}/{{ date("Hi", strtotime($onblocks)) }}</br>
         @else
-        AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}</br>
+        AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}
+        EA{{ date("Hi", strtotime($airborne)+strtotime($airborne)) }} {{ $destination }}</br>
         PX{{ $passengers }}</br>
         SI {{ strtoupper($remarks) }}
         @endif
