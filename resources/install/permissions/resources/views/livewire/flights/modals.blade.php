@@ -248,7 +248,9 @@
                                 </div>
                                 @error('delaydurations.'.$index) <span class="text-danger small">{{ $message }}</span> @enderror
                             @endforeach
+                            @if (count($delaycodes) < 4 )
                             <button class="btn custom-btn-sm btn-secondary" type="button" wire:click.prevent="addDelay">Add Delay</button>
+                            @endif
                         </div>
                         @endif
                     </form>

@@ -25,7 +25,7 @@ class Flights extends Component
     protected $listeners = ['refreshItems' => '$refresh'];
 
     protected $rules = [
-        'airline_id'                => 'required',
+        'airline_id'                => 'required|int',
         'flight_no'                 => 'required|string',
         'registration'              => 'required|string',
         'origin'                    => 'required|string',
@@ -33,6 +33,7 @@ class Flights extends Component
         'scheduled_time_arrival'    => 'required|date',
         'scheduled_time_departure'  => 'required|date',
         'flight_type'               => 'required|in:arrival,departure',
+        'linked_flight_id'          => 'nullable|int'
     ];
 
     public function render()
@@ -53,7 +54,7 @@ class Flights extends Component
     public function mount()
     {
         $this->selectedDate = Carbon::now()->format('Y-m-d');
-        $this->linked = Flight::whereBetween('scheduled_time_departure', [Carbon::now(), Carbon::now()->copy()->addDay()])->get();
+        $this->linked = Flight::whereDate('scheduled_time_departure',  $this->selectedDate)->get();
     }
     
     public function cancel()
@@ -65,25 +66,15 @@ class Flights extends Component
     public function updatedairlineId($airline)
     {
         $this->registrations = Registration::where('airline_id', $airline)->get();
-        $this->linked = Flight::whereBetween('scheduled_time_departure', [Carbon::now(), Carbon::now()->copy()->addDay()])
+        $this->linked = Flight::whereDate('scheduled_time_departure', $this->selectedDate)
                         ->where('airline_id', $airline)
                         ->where('flight_type', 'departure')->get();
     }
 
     public function store()
     {
-        $this->validate();
-        $flight = Flight::updateOrCreate(['id' => $this->flight_id], [
-            'airline_id' => $this->airline_id,
-            'flight_no' => $this->flight_no,
-            'registration' => $this->registration,
-            'origin' => $this->origin,
-            'destination' => $this->destination,
-            'scheduled_time_arrival' => $this->scheduled_time_arrival,
-            'scheduled_time_departure' => $this->scheduled_time_departure,
-            'flight_type' => $this->flight_type,
-            'linked_flight_id' => $this->linked_flight_id
-        ]);
+        $validatedData = $this->validate();
+        $flight = Flight::updateOrCreate(['id' => $this->flight_id], $validatedData);
 
         if ($this->linked_flight_id) {
             $arrFlight = Flight::findOrFail($this->linked_flight_id);
@@ -238,12 +229,12 @@ class Flights extends Component
                 'recipients'                => $emailAddress
             ];
 
-            // Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
-            //     $message->subject('MVT '. $emailData['flight_no']);
-            //     foreach ($emailData['recipients'] as $recipient) {
-            //         $message->bcc($recipient);
-            //     }
-            // });
+            Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
+                $message->subject('MVT '. $emailData['flight_no']);
+                foreach ($emailData['recipients'] as $recipient) {
+                    $message->bcc($recipient);
+                }
+            });
         }
 
         $this->dispatchBrowserEvent('closeModal');
