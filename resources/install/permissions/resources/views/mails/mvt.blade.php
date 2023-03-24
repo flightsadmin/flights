@@ -8,16 +8,18 @@
 <body>
     <div>
         MVT</br>
-        {{ $flight_no }}/{{ ($flight_type == 'arrival') ? 
-            date("d", strtotime($scheduled_time_arrival)) . "." . $registration . "." . $destination : 
-            date("d", strtotime($scheduled_time_departure)) . "." . $registration . "." . $origin }}</br>
-        @if ($flight_type == 'arrival')
-        AA{{ date("Hi", strtotime($touchdown)) }}/{{ date("Hi", strtotime($onblocks)) }}</br>
+        {{ $flt->flight_no }}/{{ ($flt->flight_type == 'arrival') ? 
+            date("d", strtotime($flt->scheduled_time_arrival)) . "." . $flt->registration . "." . $flt->destination : 
+            date("d", strtotime($flt->scheduled_time_departure)) . "." . $flt->registration . "." . $flt->origin }}</br>
+        @if ($flt->flight_type == 'arrival')
+        AA{{ date("Hi", strtotime($mvt->touchdown)) }}/{{ date("Hi", strtotime($mvt->onblocks)) }}</br>
         @else
-        AD{{ date("Hi", strtotime($offblocks)) }}/{{ date("Hi", strtotime($airborne)) }}
-        EA{{ date("Hi", strtotime($airborne)+strtotime($airborne)) }} {{ $destination }}</br>
-        PX{{ $passengers }}</br>
-        SI {{ strtoupper($remarks) }}
+        AD{{ date("Hi", strtotime($mvt->offblocks)) }}/{{ date("Hi", strtotime($mvt->airborne)) }}
+        EA{{ date("Hi", strtotime($mvt->airborne)+strtotime($flightTime ?? 0)) }} {{ $flt->destination }}</br>
+        {{ !is_null($delays) ? "DL". $delays : null }}</br>
+        PX{{ $mvt->passengers }}</br>
+        SI {{ strtoupper($mvt->remarks) }}</br>
+        SI EET {{ date("Hi", strtotime($flightTime ?? 0)) }} HRS
         @endif
     </div>
 </body>

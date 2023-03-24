@@ -16,7 +16,7 @@
 					@include('livewire.routes.modals')
 					<div class="row">
 						@forelse($airlines as $airline)
-							<div class="col-md-4 border p-2">
+							<div class="col-md-3 border px-2">
 								<p><b>{{ $airline->name }}</b></p>
 								<ol>
 									@foreach($airline->routes as $route)

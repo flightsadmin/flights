@@ -37,7 +37,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="flight_time">Flight Time:</label>
-                                <input maxlength="5" class="form-control form-control-sm" type="text" wire:model="flight_time" placeholder="00:00">
+                                <input maxlength="4" class="form-control form-control-sm" type="text" wire:model="flight_time" placeholder="0000">
                                 @error('flight_time') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 

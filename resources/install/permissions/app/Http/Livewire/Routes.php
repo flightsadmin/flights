@@ -13,7 +13,7 @@ class Routes extends Component
     public function addEmail($email)
     {
         $this->validate(['email' => 'required|email']);
-        $this->emails[] = $email;
+        $this->emails[] = strtolower($email);
     }
 
     public function removeEmail($email)
@@ -33,12 +33,12 @@ class Routes extends Component
                 'destination'   => 'required|string|min:3|max:20',
             ]);
         $route = Route::updateOrCreate($validatedData);
-        $route->flight_time = date("H:i", strtotime($this->flight_time));
+        $route->flight_time = date("H:i", strtotime(str_pad(trim($this->flight_time), 4, '0', STR_PAD_LEFT))); 
         $route->save();
 
         foreach ($this->emails as $email) {
             $route->emails()->updateOrCreate([
-                'email' => $email,
+                'email' => strtolower($email),
                 'airline_id' => $validatedData['airline_id'],
             ]);
         }

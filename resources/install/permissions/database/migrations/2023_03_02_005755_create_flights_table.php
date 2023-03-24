@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('iata_code');
             $table->string('base');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('flights', function (Blueprint $table) {
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->foreignId('linked_flight_id')->nullable()->references('id')->on('flights')->onDelete('set null');
             $table->timestamps();
+            $table->softDeletes();
         });
         
         Schema::create('registrations', function (Blueprint $table) {
@@ -36,6 +38,7 @@ return new class extends Migration
             $table->string('aircraft_type');
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('services', function (Blueprint $table) {
@@ -45,6 +48,7 @@ return new class extends Migration
             $table->timestamp('finish');
             $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('movements', function (Blueprint $table) {
@@ -69,6 +73,7 @@ return new class extends Migration
             $table->string('delaydescription4')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('routes', function (Blueprint $table) {
@@ -78,6 +83,7 @@ return new class extends Migration
             $table->time('flight_time')->nullable();
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('addresses', function (Blueprint $table) {
@@ -86,6 +92,18 @@ return new class extends Migration
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->foreignId('route_id')->constrained('routes')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('delays', function (Blueprint $table) {
+            $table->id();
+            $table->string('numeric_code');
+            $table->string('alpha_numeric_code')->nullable();
+            $table->string('description');
+            $table->string('accountable')->nullable();
+            $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -98,5 +116,6 @@ return new class extends Migration
         Schema::dropIfExists('movements');
         Schema::dropIfExists('routes');
         Schema::dropIfExists('addresses');
+        Schema::dropIfExists('delays');
     }
 };

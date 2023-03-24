@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Registration extends Model
+class Delay extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'registration', 
-        'aircraft_type', 
+        'numeric_code', 
+        'alpha_numeric_code', 
+        'description',
+        'accountable',
         'airline_id'
     ];
 

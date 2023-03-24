@@ -34,7 +34,7 @@ class FlightsDatabaseSeeder extends Seeder
         $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];
         $departureAirport = $airports[array_rand($airports)];
         foreach ($airlines as $airline) {
-            for ($i=0; $i < 4; $i++) { 
+            for ($i=0; $i < 2; $i++) { 
 
                 $origin = $departureAirport;
                 $destination = $airports[array_rand($airports)];
@@ -48,6 +48,8 @@ class FlightsDatabaseSeeder extends Seeder
                     'origin' => $origin,
                     'destination' => $destination,
                 ]);
+                $route->flight_time = date('H:i', strtotime('+'. rand(2, 3) .' hours'));
+                $route->save();
             
                 $route->emails()->updateOrCreate([
                     'email' => 'flightsapps@gmail.com',
