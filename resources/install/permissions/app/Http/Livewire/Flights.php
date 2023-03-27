@@ -10,7 +10,7 @@ use App\Models\Airline;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Movement;
-use App\Models\Flightdelay;
+use App\Models\FlightDelay;
 use App\Models\Registration;
 use Livewire\WithPagination;
 use App\Models\AirlineDelayCode;
