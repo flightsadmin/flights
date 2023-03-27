@@ -185,7 +185,7 @@ class Flights extends Component
 
     public function removeDelay($index)
     {
-        
+        FlightDelay::where([['flight_id', $this->flight_id], ['code', $this->delayCodes[$index]['code']]])->delete();
         unset($this->delayCodes[$index]);
         $this->delayCodes = array_values($this->delayCodes);
     }
@@ -212,7 +212,7 @@ class Flights extends Component
                 [
                     'code'          => $delay['code'],
                     'duration'      => date("H:i", strtotime(str_pad(trim($delay['duration']), 4, '0', STR_PAD_LEFT))),
-                    'description'   => $delay['description'],
+                    'description'   => strtoupper($delay['description']),
                     'flight_id'     => $validatedData['flight_id']
                 ]);
             };
@@ -232,6 +232,8 @@ class Flights extends Component
             'flt'           => $this->mvt->flight,
             'flightTime'    => $address->flight_time,
             'recipients'    => $emailAddresses,
+            'dlcodes'       => $this->outputdl,
+            'dldescription' => $this->outputde,
         ];
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
             $message->subject('MVT '. $emailData['flt']['flight_no']);

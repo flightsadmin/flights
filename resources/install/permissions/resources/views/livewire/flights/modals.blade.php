@@ -178,8 +178,8 @@
                         EA{{ date("Hi", strtotime($flightMvt->airborne ?? null)+strtotime($flightMvt->airborne ?? null)) }} {{ $selectedFlight->destination }}</p>
                         @if (empty($outputdl))  @else {{ "DL" .$outputdl ?? null }} @endif
                         <p>PX{{ $flightMvt->passengers ?? null }}</p>
-                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($flightMvt->remarks ?? null) }} @endif</p>
                         @if (empty($outputde))  @else {!! "SI ". nl2br(e($outputde)) ?? null !!} @endif
+                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($flightMvt->remarks ?? null) }} @endif</p>
                         @endif                     
                     </div>
 
@@ -286,8 +286,8 @@
                                         EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->airborne)) }} {{ $selectedFlight->destination }}</p>
                                         @if (empty($outputdl))  @else {{ "DL" .$outputdl ?? null }} @endif
                                         <p>PX{{ $movement->passengers ?? null }}</p>
-                                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($movement->remarks ?? null) }} @endif</p>
                                         @if (empty($outputde))  @else {!! "SI ". nl2br(e($outputde)) ?? null !!} @endif
+                                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($movement->remarks ?? null) }} @endif</p>
                                     @endif
                                     </div>
                             @empty

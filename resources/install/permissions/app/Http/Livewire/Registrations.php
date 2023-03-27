@@ -40,7 +40,7 @@ class Registrations extends Component
     {
         $this->validate();
         Registration::updateOrCreate(['id' => $this->registration_id], [
-            'registration' => $this->registration,
+            'registration' => strtoupper(str_replace('-','', $this->registration)),
             'aircraft_type' => $this->aircraft_type,
             'airline_id' => $this->airline_id,
         ]);
@@ -81,7 +81,7 @@ class Registrations extends Component
             fputcsv($file, ['registration', 'aircraft_type', 'airline_id']);
     
             for ($i = 0; $i < 50; $i++) {
-                $registration = 'A7-BF' . chr(rand(65, 90));
+                $registration = 'A7F' . chr(rand(65, 90)) . chr(rand(65, 90));
                 $aircraftType = $aircraft_types[array_rand($aircraft_types)];
                 $airlineId = rand(1, 10);
     

@@ -72,7 +72,7 @@ class Airlines extends Component
     
             fputcsv($file, ['name', 'iata_code', 'base']);
     
-            for ($i = 0; $i < 50; $i++) {
+            for ($i = 0; $i < 10; $i++) {
                 $name = 'Airline ' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
                 $iataCode = chr(rand(65, 90)) . chr(rand(65, 90));
                 $base = $cities[array_rand($cities)];

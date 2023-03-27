@@ -71,7 +71,7 @@ class FlightsDatabaseSeeder extends Seeder
         for ($i = 0; $i < 50; $i++) {
             $registration = '';
             do {
-                $registration = 'A7-B' . chr(rand(65, 90)) . chr(rand(65, 90));
+                $registration = 'A7B' . chr(rand(65, 90)) . chr(rand(65, 90));
             } while (in_array($registration, $used_registrations));
             $used_registrations[] = $registration;
 
