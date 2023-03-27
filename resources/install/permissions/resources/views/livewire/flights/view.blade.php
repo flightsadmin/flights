@@ -55,17 +55,17 @@
 								<td>{{ $row->origin }}</td>
 								<td>{{ $row->destination }}</td>
 								<td width="90">
-									<div class="dropdown">
+								<div class="dropdown">
 										<a class="btn custom-btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 											Actions
 										</a>
 										<ul class="dropdown-menu">
-											<li><a data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-database-add" wire:click="viewFlight({{ $row->id }})" > Services </a></li>
-											<li><a data-bs-toggle="modal" data-bs-target="#mvtModal" class="dropdown-item bi bi-watch" wire:click="viewFlight({{ $row->id }})" > Movements </a></li>
-											<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
-											<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
+											<li><a href="" data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-database-add" wire:click.prevent="viewFlight({{ $row->id }})" > Services </a></li>
+											<li><a href="" data-bs-toggle="modal" data-bs-target="#mvtModal" class="dropdown-item bi bi-watch" wire:click.prevent="viewFlight({{ $row->id }})" > Movements </a></li>
+											<li><a href="" data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click.prevent="edit({{$row->id}})"> Edit </a></li>
+											<li><a href="" class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click.prevent="destroy({{$row->id}})"> Delete </a></li>  
 										</ul>
-									</div>								
+									</div>
 								</td>
 							</tr>
 							@empty
@@ -74,7 +74,7 @@
 							</tr>
 							@endforelse
 						</tbody>
-					</table>						
+					</table>
 					<div class="float-end">{{ $flights->links() }}</div>
 					</div>
 				</div>

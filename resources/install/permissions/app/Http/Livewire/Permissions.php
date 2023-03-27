@@ -22,12 +22,7 @@ class Permissions extends Component
             'permission.guard_name'  => 'required',
         ];
     }
-
-    public function mount()
-    {
-        
-    }
-
+    
     public function index()
     {
         $this->resetErrorBag();

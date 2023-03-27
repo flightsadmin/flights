@@ -16,7 +16,6 @@
         @else
         AD{{ date("Hi", strtotime($mvt->offblocks)) }}/{{ date("Hi", strtotime($mvt->airborne)) }}
         EA{{ date("Hi", strtotime($mvt->airborne)+strtotime($flightTime ?? 0)) }} {{ $flt->destination }}</br>
-        {{ !is_null($delays) ? "DL". $delays : null }}</br>
         PX{{ $mvt->passengers }}</br>
         SI {{ strtoupper($mvt->remarks) }}</br>
         SI EET {{ date("Hi", strtotime($flightTime ?? 0)) }} HRS

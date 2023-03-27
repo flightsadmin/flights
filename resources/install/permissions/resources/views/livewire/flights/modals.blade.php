@@ -65,16 +65,6 @@
                             <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
                             @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="linked_flight_id" class="form-label">Linked Flight</label>
-                            <select name="linked_flight_id" wire:model="linked_flight_id" class="form-select  form-select-sm">
-                                <option value="">-- Select a flight --</option>
-                                @foreach ($linked as $flight)
-                                    <option value="{{ $flight->id }}">{{ $flight->flight_no }} ({{ $flight->origin }} to {{ $flight->destination }}) - {{ $flight->scheduled_time_departure }}</option>
-                                @endforeach
-                            </select>
-                            @error('linked_flight_id') <span class="text-danger small">{{ $message }}</span> @enderror
-                        </div>
                     </div>
                 </form>
             </div>
@@ -106,11 +96,9 @@
                             <tbody>
                                 @forelse ($selectedFlight->service as $index => $service)
                                 <tr>
-                                    <td>
+                                    <td class="d-flex align-items-center justify-content-between">
                                         <p>{{ $index + 1 }}. {{ $service->service_type }} ({{ $service->start }} - {{ $service->finish }})</p>
-                                    </td>
-                                    <td class="d-flex gap-2">
-                                        <a href="" wire:click.prevent="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3 text-end"></a>
+                                        <a href="" wire:click.prevent="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3 text-end px-2"></a>
                                     </td>
                                 </tr>
                                 @empty
@@ -176,9 +164,6 @@
                 <button type="button" wire:click.prevent="emptyFields()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <button class="position-absolute top-0 start-50 translate-middle btn btn-lg btn-success p-2" wire:loading wire:target="saveMovements">
-                    Sending Movement ...
-                </button>
                 @if ($flight_id)
                     <div class="border px-3 mb-2">
                         <i class="text-warning bi bi-clock-history"> Last Saved Movement</i>
@@ -191,7 +176,6 @@
                         @else
                         <p>AD{{ date("Hi", strtotime($flightMvt->offblocks ?? null)) }}/{{ date("Hi", strtotime($flightMvt->airborne ?? null)) }}
                         EA{{ date("Hi", strtotime($flightMvt->airborne ?? null)+strtotime($flightMvt->airborne ?? null)) }} {{ $selectedFlight->destination }}</p>
-                        {{ !is_null($delayCodes ?? null) ? "DL". $delayCodes : null }}
                         <p>PX{{ $flightMvt->passengers ?? null }}</p>
                         <p>SI {{ strtoupper($flightMvt->remarks ?? null) }}</p>
                         @endif                     
@@ -239,33 +223,42 @@
                         </div>
 
                         @if ($selectedFlight->flight_type == 'departure')
-                        <div class="form-group col-md-12 my-3">
-                            <label>Delay Codes</label>
-                            @foreach ($delaycodes as $index => $delaycode)
-                                <div class="d-flex gap-1 mb-1">
-                                    <select wire:model="delaycodes.{{ $index }}" class="form-select  form-select-sm">
-                                        <option value="">Choose an option...</option>
-                                        @foreach($delays as $value)
-                                        <option value="{{ $value->numeric_code }}">{{ $value->alpha_numeric_code }} {{ $value->numeric_code }} - {{ Str::limit($value->description, 50) }} </option>
-                                        @endforeach()
-                                    </select>
-                                    <input maxlength="4" class="form-control form-control-sm" type="text" wire:model="delaydurations.{{ $index }}" placeholder="0000">
-                                    <input class="form-control form-control-sm" type="text" wire:model="delaydescriptions.{{ $index }}" placeholder="Decription">
-                                    <a href="" class="bi bi-trash3-fill text-danger text-center px-4" wire:click.prevent="removeDelay({{ $index }})"></a>
+                            <div>
+                                <div class="form-group col-md-12 my-3">
+                                    <label>Delay Codes</label>
+                                    @foreach ($delayCodes as $index => $delayCode)
+                                        <div class="d-flex gap-1 mb-1">
+                                            <select wire:model="delayCodes.{{ $index }}.code" class="form-select  form-select-sm">
+                                                <option value="">Choose an option...</option>
+                                                @foreach($delays as $value)
+                                                    <option value="{{ $value->numeric_code }}"> {{ $value->alpha_numeric_code }} - {{ Str::limit($value->description, 50) }} </option>
+                                                @endforeach
+                                            </select>
+                                            <input maxlength="5" class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.duration" placeholder="0000">
+                                            <input class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.description" placeholder="Decription">
+                                            <a href="" class="bi bi-trash3-fill text-danger text-center px-4" wire:click.prevent="removeDelay({{ $index }})"></a>
+                                        </div>
+                                        @error('delayCodes.'.$index.'.duration') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    @endforeach
+                                    @if (count($delayCodes) < 4 )
+                                        <button class="btn custom-btn-sm btn-secondary bi bi-plus-circle" type="button" wire:click.prevent="addDelay"> Add Delay</button>
+                                    @endif
                                 </div>
-                                @error('delaycodes.'.$index) <span class="text-danger small">{{ $message }}</span> @enderror
-                                @error('delaydurations.'.$index) <span class="text-danger small">{{ $message }}</span> @enderror
-                                @error('delaydescriptions.'.$index) <span class="text-danger small">{{ $message }}</span> @enderror
-                            @endforeach
-                            @if (count($delaycodes) < 4 )
-                            <button class="btn custom-btn-sm btn-secondary bi bi-plus-circle" type="button" wire:click.prevent="addDelay"> Add Delay</button>
-                            @endif
-                        </div>
+                            </div>
                         @endif
                     </form>
                 @else
                     <p>No Flight Selected</p>
                 @endif
+            </div>
+            <div wire:loading wire:target="sendMovement">
+                <div class="custom-spin-overlay">
+                    <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
+                        <div class="spinner-border" style="width: 6rem; height: 6rem;" role="status">
+                            <span class="visually-hidden">Sending Movement ...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer p-0 mx-3 d-flex align-items-center justify-content-between">
                 <button wire:click.prevent="emptyFields" data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>

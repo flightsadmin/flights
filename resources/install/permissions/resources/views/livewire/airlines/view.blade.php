@@ -27,37 +27,32 @@
 				</div>
 				<div class="card-body">
 					@include('livewire.airlines.modals')
-				<div class="table-responsive">
-					<table class="table table-bordered table-sm">
-						<thead class="thead">
-							<tr> 
-								<td>#</td> 
-								<th>Airline</th>
-								<th>IATA Code</th>
-								<th>Base</th>
-								<td>ACTIONS</td>
-							</tr>
-						</thead>
-						<tbody>
-							@forelse($airlines as $row)
-							<tr>
-								<td>{{ $loop->iteration }}</td> 
-								<td>{{ $row->name }}</td>
-								<td>{{ $row->iata_code }}</td>
-								<td>{{ $row->base }}</td>
-								<td width="90">
-									<button class="btn btn-danger custom-btn-sm bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
-								</td>
-							</tr>
-							@empty
-							<tr>
-								<td class="text-center" colspan="100%">No Airlines Found </td>
-							</tr>
-							@endforelse
-						</tbody>
-					</table>						
-					<div class="float-end">{{ $airlines->links() }}</div>
+					<div class="row">
+						@forelse($airlines as $row)
+						<div class="col-md-4 border d-flex justify-content-between">
+							<div class="p-2">
+								<b><i class="bi bi-building-check text-success"></i> {{ $row->name }} - {{ $row->iata_code }}</b>
+								<p> <i class="bi bi-house-gear text-info"> </i> {{ $row->base }}</p>
+							</div>
+							<div>
+								<div class="dropdown p-2">
+									<a class="btn custom-btn-sm text-white btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Actions
+									</a>
+									<ul class="dropdown-menu">
+										<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
+										<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
+									</ul>
+								</div>
+							</div>
+						</div>
+						@empty
+						<div class="col-md-12">
+							<h5 class="text-center">No Airlines Created Yet</h5>
+						</div>
+						@endforelse
 					</div>
+					<div class="float-end mt-2 mb-0">{{ $airlines->links() }}</div>
 				</div>
 			</div>
 		</div>

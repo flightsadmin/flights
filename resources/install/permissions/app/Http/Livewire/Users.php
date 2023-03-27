@@ -22,7 +22,7 @@ class Users extends Component
     {
         $roles = Role::with('permissions')->get();
         return view('livewire.users.view', [
-            'users' => User::latest()->paginate(10),
+            'users' => User::latest()->paginate(),
             'roles' => $roles,
             'selectedUser' => $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null,
         ]);

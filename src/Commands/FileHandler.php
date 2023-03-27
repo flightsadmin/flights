@@ -100,7 +100,9 @@ trait FileHandler
             Artisan::call('migrate:fresh', [], $this->getOutput());
             Artisan::call('optimize:clear', [], $this->getOutput());
             Artisan::call('db:seed', ['--class' => 'AdminDatabaseSeeder'], $this->getOutput());
-            Artisan::call('db:seed', ['--class' => 'FlightsDatabaseSeeder'], $this->getOutput());
+            if ($this->confirm('Do you want to Seed Testing Data?', true, true)) {
+                Artisan::call('db:seed', ['--class' => 'FlightsDatabaseSeeder'], $this->getOutput());
+            }
         }
     }
 

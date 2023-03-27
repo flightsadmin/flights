@@ -40,11 +40,12 @@
                             <label for="accountable" class="form-label">Accountable</label>
                             <select wire:model="accountable" class="form-select  form-select-sm" id="accountable">
                                 <option value="">Choose an option...</option>
-                                <option value="Ground Handling Company">Ground Handling Company</option>
+                                <option value="Ground Handling">Ground Handling</option>
                                 <option value="Airline">Airline</option>
                                 <option value="Airport">Airport</option>
-                                <option value="Airport">Immigration</option>
-                                <option value="Airport">Police / Customs</option>
+                                <option value="Immigration">Immigration</option>
+                                <option value="Customs">Customs</option>
+                                <option value="Police">Police</option>
                             </select>
                             @error('accountable') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>

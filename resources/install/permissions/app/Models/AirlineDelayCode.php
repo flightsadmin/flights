@@ -6,19 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Service extends Model
+class AirlineDelayCode extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'service_type',
-        'start',
-        'finish',
-        'flight_id',
+        'numeric_code',
+        'alpha_numeric_code',
+        'description',
+        'accountable',
+        'airline_id'
     ];
 
-    public function flight()
+    public function airline()
     {
-        return $this->belongsTo(Flight::class);
+        return $this->belongsTo(Airline::class);
     }
 }

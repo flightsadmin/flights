@@ -3,11 +3,11 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
-use App\Models\Delay;
 use App\Models\Airline;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use App\Models\AirlineDelayCode;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
@@ -15,12 +15,12 @@ class Delays extends Component
 { 
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $numeric_code, $alpha_numeric_code, $description, $accountable, $airline_id, $keyWord, $file;
+    public $numeric_code, $alpha_numeric_code, $description, $accountable, $delay_id, $airline_id, $keyWord, $file;
 
     public function render()
     {
         $keyWord = '%'. $this->keyWord .'%';
-        $delays = Delay::with('airline')
+        $delays = AirlineDelayCode::with('airline')
                     ->orWhere('airline_id', 'LIKE', $keyWord)
                     ->orderBy('numeric_code', 'asc')
                     ->paginate();
@@ -40,17 +40,28 @@ class Delays extends Component
             'airline_id'            => 'required',
         ]);
 
-        Delay::create($validatedData);
+        AirlineDelayCode::create($validatedData);
 
         $this->dispatchBrowserEvent('closeModal');
-        session()->flash('message', 'Delay created successfully.');
+        session()->flash('message', 'Delay Code Created successfully.');
         $this->reset();
+    }
+
+    public function edit($id)
+    {
+        $delay = AirlineDelayCode::findOrFail($id);
+        $this->delay_id = $id;
+        $this->numeric_code = $delay->numeric_code;
+        $this->alpha_numeric_code = $delay->alpha_numeric_code;
+        $this->description = $delay->description;
+        $this->accountable = $delay->accountable;
+        $this->airline_id = $delay->airline_id;
     }
 
     public function destroy($id)
     {
-        Delay::find($id)->delete();
-        session()->flash('message', 'Delay Deleted Successfully.');
+        AirlineDelayCode::find($id)->delete();
+        session()->flash('message', 'Delay Code Deleted Successfully.');
     }
 
     public function downloadDelays()
@@ -61,7 +72,7 @@ class Delays extends Component
             'Content-Disposition' => "attachment; filename={$filename}",
         ];
     
-        $responsible = ['Ground Handling Company', 'Airport', 'Airline', 'Police', 'Immigration'];
+        $responsible = ['Ground Handling', 'Airport', 'Airline', 'Police', 'Immigration'];
     
         $callback = function () use ($responsible) {
             $file = fopen('php://output', 'w');
@@ -101,7 +112,7 @@ class Delays extends Component
                 continue;
             }
 
-            $delay = new Delay;
+            $delay = new AirlineDelayCode;
             $delay->numeric_code          = $row[0];
             $delay->alpha_numeric_code    = $row[1];
             $delay->description           = $row[2];

@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Airline;
 use App\Models\Route;
+use App\Models\Airline;
 use Livewire\Component;
 
 class Routes extends Component

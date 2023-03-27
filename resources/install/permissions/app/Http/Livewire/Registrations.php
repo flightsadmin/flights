@@ -21,7 +21,7 @@ class Registrations extends Component
         $keyWord = '%'. $this->keyWord .'%';
         $registrations = Registration::with('airline')
         ->orWhere('registration', 'LIKE', $keyWord)
-        ->paginate(50);
+        ->paginate();
         return view('livewire.registrations.view', compact('registrations'));
     }
     

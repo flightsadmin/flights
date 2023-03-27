@@ -27,7 +27,6 @@ return new class extends Migration
             $table->timestamp('scheduled_time_departure');
             $table->enum('flight_type', ['arrival', 'departure']);
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
-            $table->foreignId('linked_flight_id')->nullable()->references('id')->on('flights')->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -59,18 +58,6 @@ return new class extends Migration
             $table->timestamp('touchdown')->nullable();
             $table->timestamp('onblocks')->nullable();
             $table->integer('passengers')->nullable();
-            $table->string('delaycode1')->nullable();
-            $table->string('delaycode2')->nullable();
-            $table->string('delaycode3')->nullable();
-            $table->string('delaycode4')->nullable();
-            $table->string('delayduration1')->nullable();
-            $table->string('delayduration2')->nullable();
-            $table->string('delayduration3')->nullable();
-            $table->string('delayduration4')->nullable();
-            $table->string('delaydescription1')->nullable();
-            $table->string('delaydescription2')->nullable();
-            $table->string('delaydescription3')->nullable();
-            $table->string('delaydescription4')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -95,7 +82,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('delays', function (Blueprint $table) {
+        Schema::create('airline_delay_codes', function (Blueprint $table) {
             $table->id();
             $table->string('numeric_code');
             $table->string('alpha_numeric_code')->nullable();
@@ -105,17 +92,28 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('flight_delays', function (Blueprint $table) {
+            $table->id();
+            $table->string('code');
+            $table->string('duration');
+            $table->string('description')->nullable();
+            $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     public function down()
     {
-        Schema::dropIfExists('airlines');
-        Schema::dropIfExists('flights');
-        Schema::dropIfExists('registrations');
-        Schema::dropIfExists('services');
-        Schema::dropIfExists('movements');
-        Schema::dropIfExists('routes');
+        Schema::dropIfExists('flight_delays');
+        Schema::dropIfExists('airline_delay_codes');
         Schema::dropIfExists('addresses');
-        Schema::dropIfExists('delays');
+        Schema::dropIfExists('routes');
+        Schema::dropIfExists('movements');
+        Schema::dropIfExists('services');
+        Schema::dropIfExists('registrations');
+        Schema::dropIfExists('flights');
+        Schema::dropIfExists('airlines');
     }
 };

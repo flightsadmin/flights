@@ -55,7 +55,15 @@
 								<td>{{ $row->accountable }}</td>
 								<td>{{ $row->airline->name }}</td>
 								<td width="90">
-									<button class="btn btn-danger custom-btn-sm bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> </button>  
+									<div class="dropdown">
+										<a class="btn custom-btn-sm btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+											Actions
+										</a>
+										<ul class="dropdown-menu">
+											<li><a href="" data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click.prevent="edit({{$row->id}})"> Edit </a></li>
+											<li><a href="" class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click.prevent="destroy({{$row->id}})"> Delete </a></li>  
+										</ul>
+									</div>
 								</td>
 							</tr>
 							@empty

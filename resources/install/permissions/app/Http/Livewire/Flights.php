@@ -3,7 +3,6 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
-use App\Models\Delay;
 use App\Models\Route;
 use App\Models\Flight;
 use App\Models\Address;
@@ -11,8 +10,10 @@ use App\Models\Airline;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Movement;
+use App\Models\Flightdelay;
 use App\Models\Registration;
 use Livewire\WithPagination;
+use App\Models\AirlineDelayCode;
 use Illuminate\Support\Facades\Mail;
 
 class Flights extends Component
@@ -21,7 +22,7 @@ class Flights extends Component
     protected $paginationTheme = 'bootstrap';
     public $registrations = [], $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
     public $ServiceTypes = [], $flightFields = [], $mvt, $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
-    public $touchdown, $showHistory = false, $onblocks, $offblocks, $airborne, $passengers, $remarks, $linked_flight_id, $linked, $delaycodes = [], $delaydurations = [], $delaydescriptions = [];
+    public $showHistory = false, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks, $delayCodes = [];
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -39,7 +40,7 @@ class Flights extends Component
             'flights'   => $flights,
             'flightMvt' => $this->flight_id ? $selectedFlight->movement()->latest()->first() : null,
             'selectedFlight' => $selectedFlight,
-            'delays' => $this->flight_id ? Delay::where('airline_id', $selectedFlight->airline_id)->get() : null,
+            'delays' => $this->flight_id ? AirlineDelayCode::where('airline_id', $selectedFlight->airline_id)->get() : null,
 
         ]);
     }
@@ -47,7 +48,6 @@ class Flights extends Component
     public function mount()
     {
         $this->selectedDate = Carbon::now()->format('Y-m-d');
-        $this->linked = Flight::whereDate('scheduled_time_departure',  $this->selectedDate)->get();
     }
     
     public function emptyFields()
@@ -56,10 +56,10 @@ class Flights extends Component
             //Service Fields
             'flightFields', 'ServiceTypes', 'serviceList', 'flight_id',
             //Flight Fields
-            'linked_flight_id', 'airline_id', 'flight_no', 'registration', 'origin', 
+            'airline_id', 'flight_no', 'registration', 'origin', 
             'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type',
             //MVT Fields
-            'touchdown','onblocks','offblocks','airborne','passengers','remarks','flight_id', 'delaycodes', 'delaydurations', 'delaydescriptions'
+            'touchdown','onblocks','offblocks','airborne','passengers','remarks','flight_id', 'delayCodes'
             ])];
     }
 
@@ -71,9 +71,6 @@ class Flights extends Component
     public function updatedairlineId($airline)
     {
         $this->registrations = Registration::where('airline_id', $airline)->get();
-        $this->linked = Flight::whereDate('scheduled_time_departure', $this->selectedDate)
-                        ->where('airline_id', $airline)
-                        ->where('flight_type', 'departure')->get();
     }
 
     public function store()
@@ -86,21 +83,9 @@ class Flights extends Component
             'destination'               => 'required|string',
             'scheduled_time_arrival'    => 'required|date',
             'scheduled_time_departure'  => 'required|date',
-            'flight_type'               => 'required|in:arrival,departure',
-            'linked_flight_id'          => 'nullable|int'
+            'flight_type'               => 'required|in:arrival,departure'
         ]);
         $flight = Flight::updateOrCreate(['id' => $this->flight_id], $validatedData);
-
-        if ($this->linked_flight_id) {
-            $arrFlight = Flight::findOrFail($this->linked_flight_id);
-            $depFlight = Flight::findOrFail($flight->id);
-            
-            if ($arrFlight) {
-                $flight->linkedFlight()->associate($arrFlight)->save();
-
-                $arrFlight->linkedFlight()->associate($depFlight)->save();
-            }
-        }
         
         $this->emptyFields();
         $this->dispatchBrowserEvent('closeModal');
@@ -119,7 +104,6 @@ class Flights extends Component
         $this->scheduled_time_arrival = $flight->scheduled_time_arrival;
         $this->scheduled_time_departure = $flight->scheduled_time_departure;
         $this->flight_type = $flight->flight_type;
-        $this->linked_flight_id = $flight->linked_flight_id;
     }
 
     public function destroy($id)
@@ -131,6 +115,21 @@ class Flights extends Component
     public function viewFlight($id)
     {
         $this->flight_id = $id;
+
+        $flight = Movement::where('flight_id', $id)->latest()->first();
+        $delays = FlightDelay::where('flight_id', $id)->latest()->take(4)->get();
+        $this->passengers = $flight->passengers ?? null;
+        $this->touchdown = $flight->touchdown ?? null;
+        $this->offblocks = $flight->offblocks ?? null;
+        $this->onblocks = $flight->onblocks ?? null;
+        $this->airborne = $flight->airborne ?? null;
+        $this->remarks = $flight->remarks ?? null;
+
+        foreach ($delays as $index => $delay) {
+            $this->delayCodes[$index]['code'] = $delay->code;
+            $this->delayCodes[$index]['duration'] = $delay->duration ?? '';
+            $this->delayCodes[$index]['description'] = $delay->description ?? '';
+        }
     }
 
     public function getSelectedFlightProperty()
@@ -162,10 +161,7 @@ class Flights extends Component
                 'flight_id' => $this->flight_id,
             ]);
         }
-
-        // $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', 'Service Added Successfully.');
-
         $this->reset(['flightFields', 'ServiceTypes', 'serviceList']);
     }
 
@@ -178,19 +174,13 @@ class Flights extends Component
     // Movement Methods
     public function addDelay()
     {
-        $this->delaycodes[] = '';
-        $this->delaydurations[] = null;
-        $this->delaydescriptions[] = '';
+        $this->delayCodes[] = ['code' => '', 'duration' => '', 'description' => ''];
     }
 
     public function removeDelay($index)
     {
-        unset($this->delaycodes[$index]);
-        $this->delaycodes = array_values($this->delaycodes);
-        unset($this->delaydurations[$index]);
-        $this->delaydurations = array_values($this->delaydurations);
-        unset($this->delaydescriptions[$index]);
-        $this->delaydescriptions = array_values($this->delaydescriptions);
+        unset($this->delayCodes[$index]);
+        $this->delayCodes = array_values($this->delayCodes);
     }
 
     public function saveMovement()
@@ -205,56 +195,23 @@ class Flights extends Component
                 'remarks'               => 'nullable|string',
                 'flight_id'             => 'required|exists:flights,id',
             ]
-        );        
-            // Pad the delay codes and durations arrays with null values if necessary
-            $splitCodes         = array_pad($this->delaycodes ?? [], 4, null);
-            $splitDurations     = array_pad($this->delaydurations ?? [], 4, null);
-            $splitDescriptions  = array_pad($this->delaydescriptions ?? [], 4, null);
+        );
 
         if (!is_null($validatedData['offblocks']) || !is_null($validatedData['airborne']) || !is_null($validatedData['touchdown']) || !is_null($validatedData['onblocks'])) {
             
-            $movement = Movement::updateOrCreate($validatedData);
-            
-            for ($i = 1; $i <= 4; $i++) {
-                $movement->{"delaycode$i"} = $splitCodes[$i - 1];
-                $movement->{"delayduration$i"} = !is_null($splitDurations[$i - 1]) ? date("H:i",strtotime(str_pad(trim($splitDurations[$i - 1]), 4, '0', STR_PAD_LEFT))) : null;
-                $movement->{"delaydescription$i"} = !is_null($splitDescriptions[$i - 1]) ? $splitDescriptions[$i - 1] : null;
-            }
-            $movement->save();
-            // Arrange delay codes
-            if ($movement) {
-                $delayCodes = [];
-
-                for ($i = 1; $i <= 4; $i++) {
-                    $code = $movement->{"delaycode{$i}"};
-                    $description = $movement->{"delaydescription{$i}"};
-                    $duration = $movement->{"delayduration{$i}"};
-
-                    if ($code && $duration) {
-                        $delayCodes["dl{$i}"] = $code;
-                        $delayCodes["duration{$i}"] = str_replace(':','',$duration);
-                    } else {
-                        $delayCodes["dl{$i}"] = "";
-                        $delayCodes["duration{$i}"] = "";
-                    }
-                }
-
-                $mergedDelayCodes = implode('/', [
-                $delayCodes['dl1'],
-                $delayCodes['dl2'],
-                $delayCodes['dl3'],
-                $delayCodes['dl4'],
-                $delayCodes['duration1'],
-                $delayCodes['duration2'],
-                $delayCodes['duration3'],
-                $delayCodes['duration4']
-            ]);
+            $movement = Movement::updateOrCreate(['flight_id' => $validatedData['flight_id']], $validatedData);
+            foreach ($this->delayCodes as $delay) {
+                $movement->flight->delays()->updateOrCreate(['code' => $delay['code'], 'flight_id' => $validatedData['flight_id']],
+                [
+                    'code'          => $delay['code'],
+                    'duration'      => date("H:i", strtotime(str_pad(trim($delay['duration']), 4, '0', STR_PAD_LEFT))),
+                    'description'   => $delay['description'],
+                    'flight_id'     => $validatedData['flight_id']
+                ]);
+            };
             $this->mvt = $movement;
-            $mergedDelayCodes = rtrim(preg_replace('/\/+/', '/', $mergedDelayCodes),'/');
-            $this->delayCodes = $mergedDelayCodes;
-            }
         }
-        session()->flash('message', 'Movement created successfully.');
+        $this->viewFlight($this->flight_id);
     }
     
     public function sendMovement()
@@ -268,7 +225,6 @@ class Flights extends Component
             'flt'           => $this->mvt->flight,
             'flightTime'    => $address->flight_time,
             'recipients'    => $emailAddresses,
-            'delays'        => $this->delayCodes,
         ];
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
             $message->subject('MVT '. $emailData['flt']['flight_no']);
@@ -277,6 +233,7 @@ class Flights extends Component
             }
         });
         $this->dispatchBrowserEvent('closeModal');
+        session()->flash('message', 'Movement Sent successfully.');
         $this->emptyFields();
     }
 }

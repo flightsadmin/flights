@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Airline extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'name', 
@@ -28,6 +28,6 @@ class Airline extends Model
 
     public function delays()
     {
-        return $this->hasMany(Delay::class);
+        return $this->hasMany(AirlineDelayCode::class);
     }
 }

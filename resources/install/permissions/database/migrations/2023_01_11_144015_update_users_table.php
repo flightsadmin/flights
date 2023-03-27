@@ -16,8 +16,8 @@ return new class extends Migration
                 $table->string('phone')->nullable();
                 $table->string('title')->nullable();
                 $table->string('photo')->nullable();
-                $table->softDeletes();
             });
+            $table->softDeletes();
         });
     }
 

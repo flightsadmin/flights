@@ -20,11 +20,11 @@
                         <div class="row float-end">
                             <div class="col-md">
                                 <label for="start_date">Start Date:</label>
-                                <input type="date" wire:model="startDate" id="start_date" class="form-control form-control-sm">
+                                <input type="date" wire:model="startDate" id="start_date" min="{{ date('Y-m-d', strtotime('-1 days')) }}" class="form-control form-control-sm">
                             </div>
                             <div class="col-md">
                                 <label for="end_date">End Date:</label>
-                                <input type="date" wire:model="endDate" id="end_date" class="form-control form-control-sm">
+                                <input type="date" wire:model="endDate" id="end_date" min="{{ date('Y-m-d', strtotime('+2 days')) }}" class="form-control form-control-sm">
                             </div>
                         </div>
                     </div>

@@ -2,19 +2,18 @@
 
 namespace App\Http\Livewire;
 
+use Carbon\Carbon;
 use App\Models\Airline;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
 
 class Airlines extends Component
 { 
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $name, $iata_code, $base, $keyWord, $file;
+    public $name, $iata_code, $base, $airline_id, $keyWord, $file;
 
     public function render()
     {
@@ -22,7 +21,7 @@ class Airlines extends Component
         $airlines = Airline::latest()
                     ->orWhere('name', 'LIKE', $keyWord)
                     ->orWhere('iata_code', 'LIKE', $keyWord)
-                    ->paginate(10);
+                    ->paginate();
         return view('livewire.airlines.view', [
             'airlines' => $airlines
         ]);
@@ -30,21 +29,26 @@ class Airlines extends Component
     
     public function saveAirline()
     {
-        $this->validate([
+        $validatedData = $this->validate([
             'name' => 'required',
-            'iata_code' => 'required|unique:airlines|max:2',
+            'iata_code' => 'required|max:2|unique:airlines,id,'. $this->airline_id,
             'base' => 'required',
         ]);
 
-        Airline::create([
-            'name' => $this->name,
-            'iata_code' => $this->iata_code,
-            'base' => $this->base,
-        ]);
+        Airline::updateOrCreate(['id' => $this->airline_id], $validatedData);
 
         $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', 'Airline created successfully.');
         $this->reset();
+    }
+
+    public function edit($id)
+    {
+        $airline = Airline::findOrFail($id);
+        $this->airline_id = $id;
+        $this->name = $airline->name;
+        $this->iata_code = $airline->iata_code;
+        $this->base = $airline->base;
     }
 
     public function destroy($id)

@@ -18,8 +18,7 @@ class Flight extends Model
         'destination',
         'scheduled_time_arrival',
         'scheduled_time_departure',
-        'flight_type',
-        'linked_flight_id'
+        'flight_type'
     ];
 
     public function service()
@@ -32,13 +31,8 @@ class Flight extends Model
         return $this->hasMany(Movement::class);
     }
 
-    public function linkedFlight()
+    public function delays()
     {
-        return $this->belongsTo(Flight::class, 'linked_flight_id');
-    }
-
-    public function linkedFlights()
-    {
-        return $this->belongsTo(Flight::class, 'id');
+        return $this->hasMany(FlightDelay::class);
     }
 }
