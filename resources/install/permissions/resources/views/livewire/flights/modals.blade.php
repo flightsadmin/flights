@@ -176,8 +176,10 @@
                         @else
                         <p>AD{{ date("Hi", strtotime($flightMvt->offblocks ?? null)) }}/{{ date("Hi", strtotime($flightMvt->airborne ?? null)) }}
                         EA{{ date("Hi", strtotime($flightMvt->airborne ?? null)+strtotime($flightMvt->airborne ?? null)) }} {{ $selectedFlight->destination }}</p>
+                        @if (empty($outputdl))  @else {{ "DL" .$outputdl ?? null }} @endif
                         <p>PX{{ $flightMvt->passengers ?? null }}</p>
-                        <p>SI {{ strtoupper($flightMvt->remarks ?? null) }}</p>
+                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($flightMvt->remarks ?? null) }} @endif</p>
+                        @if (empty($outputde))  @else {!! "SI ". nl2br(e($outputde)) ?? null !!} @endif
                         @endif                     
                     </div>
 
@@ -282,9 +284,11 @@
                                     @else
                                     <p>AD{{ date("Hi", strtotime($movement->offblocks)) }}/{{ date("Hi", strtotime($movement->airborne)) }}
                                         EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->airborne)) }} {{ $selectedFlight->destination }}</p>
-                                        <p>PX{{ $movement->passengers }}</p>
-                                        <p>SI {{ strtoupper($movement->remarks) }}</p>
-                                        @endif
+                                        @if (empty($outputdl))  @else {{ "DL" .$outputdl ?? null }} @endif
+                                        <p>PX{{ $movement->passengers ?? null }}</p>
+                                        <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($movement->remarks ?? null) }} @endif</p>
+                                        @if (empty($outputde))  @else {!! "SI ". nl2br(e($outputde)) ?? null !!} @endif
+                                    @endif
                                     </div>
                             @empty
                                 <h5 class="text-center">No Movements Sent for this flight </h5>

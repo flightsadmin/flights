@@ -22,7 +22,7 @@ class Flights extends Component
     protected $paginationTheme = 'bootstrap';
     public $registrations = [], $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
     public $ServiceTypes = [], $flightFields = [], $mvt, $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
-    public $showHistory = false, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks, $delayCodes = [];
+    public $showHistory = false, $outputde, $outputdl, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks, $delayCodes = [];
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -124,6 +124,12 @@ class Flights extends Component
         $this->onblocks = $flight->onblocks ?? null;
         $this->airborne = $flight->airborne ?? null;
         $this->remarks = $flight->remarks ?? null;
+        
+        $formattedDelay = $delays->pluck('duration', 'code')->toArray();
+        $formattedDesc  = $delays->pluck('description')->toArray();
+
+        $this->outputdl =  str_replace(':','', implode('/', array_merge(array_keys($formattedDelay), array_values($formattedDelay))));
+        $this->outputde =  strtoupper(implode("\nSI ", array_values($formattedDesc)));
 
         foreach ($delays as $index => $delay) {
             $this->delayCodes[$index]['code'] = $delay->code;
@@ -179,6 +185,7 @@ class Flights extends Component
 
     public function removeDelay($index)
     {
+        
         unset($this->delayCodes[$index]);
         $this->delayCodes = array_values($this->delayCodes);
     }
