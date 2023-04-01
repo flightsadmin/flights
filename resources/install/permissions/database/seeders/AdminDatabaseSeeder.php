@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -32,32 +35,40 @@ class AdminDatabaseSeeder extends Seeder
         $role2 = Role::create(['name' => 'admin'])->givePermissionTo(['viewSchedule', 'createSchedule', 'viewAirline', 'createAirline','viewRegistrations', 'createRegistrations']);
         $role3 = Role::create(['name' => 'super-admin'])->givePermissionTo(Permission::all());
         
-        // create demo User
-        $user1 = \App\Models\User::factory()->create([ 
-            'name'      => 'Site User',
-            'email'     => 'user@example.com',
-            'phone'     => '+2547000002',
-            'title'     => 'Developer',
-            'photo'     => 'image.jpg',
+        // create User
+        $user1 = User::create([
+            'name'              => 'Site User',
+            'email'             => 'user@flightadmin.info',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'remember_token'    => Str::random(10),
+            'phone'             => '+2547000002',
+            'title'             => 'Developer',
+            'photo'             => 'image.jpg',
         ])->assignRole($role1);
 
-        // create demo Admin
-        $user2 = \App\Models\User::factory()->create([
-            'name'      => 'Site Admin',
-            'email'     => 'admin@example.com',
-            'phone'     => '+2547000001',
-            'title'     => 'Developer',
-            'photo'     => 'avatar.jpg',
+        // create Admin
+        $user2 = User::create([
+            'name'              => 'Site Admin',
+            'email'             => 'admin@flightadmin.info',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'remember_token'    => Str::random(10),
+            'phone'             => '+2547000001',
+            'title'             => 'Developer',
+            'photo'             => 'avatar.jpg',
         ])->assignRole($role2);
         
-        // create demo Super-admin
-        $user3 = \App\Models\User::factory()->create([
-            'name'      => 'Super Admin',
-            'email'     => 'super-admin@example.com',
-            'phone'     => '+2547000000',
-            'title'     => 'Developer',
-            'photo'     => 'image.jpg',
-
+        // create Super-admin
+        $user3 = User::create([
+            'name'              => 'Super Admin',
+            'email'             => 'super-admin@flightadmin.info',
+            'password'          => Hash::make('password'),
+            'email_verified_at' => now(),
+            'remember_token'    => Str::random(10),
+            'phone'             => '+2547000000',
+            'title'             => 'Developer',
+            'photo'             => 'image.jpg',
         ])->assignRole($role3);
     }
 }

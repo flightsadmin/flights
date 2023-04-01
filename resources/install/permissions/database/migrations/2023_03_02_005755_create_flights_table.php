@@ -114,6 +114,7 @@ return new class extends Migration
 
     public function down()
     {
+        Schema::dropIfExists('service_lists');
         Schema::dropIfExists('flight_delays');
         Schema::dropIfExists('airline_delay_codes');
         Schema::dropIfExists('addresses');
