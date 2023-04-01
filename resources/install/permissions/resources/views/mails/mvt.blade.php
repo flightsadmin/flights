@@ -16,10 +16,10 @@
         @else
         AD{{ date("Hi", strtotime($mvt->offblocks)) }}/{{ date("Hi", strtotime($mvt->airborne)) }}
         EA{{ date("Hi", strtotime($mvt->airborne)+strtotime($flightTime ?? 0)) }} {{ $flt->destination }}</br>
-        @if (empty($dlcodes))  @else {{ "DL" .$dlcodes ?? null }} @endif</br>
-        PX{{ $mvt->passengers ?? 0 }}</br>
-        @if (empty($dldescription))  @else {!! "SI ". nl2br(e($dldescription)) ?? null !!} @endif</br>
-        @if (empty($mvt->remarks))  @else SI {{ strtoupper($mvt->remarks ?? null) }} @endif</br>
+        @if (empty($outputdelay))  @else {{ "DL" .$outputdelay ?? null }}</br> @endif
+        PX{{ $mvt->passengers ?? 00 }}</br>
+        @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!}</br> @endif
+        @if (empty($mvt->remarks))  @else SI {{ strtoupper($mvt->remarks ?? null) }}</br> @endif
         SI EET {{ date("Hi", strtotime($flightTime ?? 0)) }} HRS
         @endif
     </div>

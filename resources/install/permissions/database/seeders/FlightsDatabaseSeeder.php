@@ -7,6 +7,7 @@ use App\Models\Route;
 use App\Models\Flight;
 use App\Models\Address;
 use App\Models\Airline;
+use App\Models\ServiceList;
 use Faker\Factory as Faker;
 use App\Models\Registration;
 use Illuminate\Database\Seeder;
@@ -32,6 +33,23 @@ class FlightsDatabaseSeeder extends Seeder
 
         foreach ($airlines as $airline) {
             Airline::updateOrCreate($airline);
+        }
+
+        // Seed Services
+        $services = [
+            [ 'service' => 'PAX Bus',   'price' => 120],
+            [ 'service' => 'Crew Bus',  'price' => 100],
+            [ 'service' => 'Pushback',  'price' => 200],
+            [ 'service' => 'Towing',    'price' => 220],
+            [ 'service' => 'Cleaning',  'price' => 150],
+            [ 'service' => 'Lavatory',  'price' => 170],
+            [ 'service' => 'Check-in',  'price' => 300],
+            [ 'service' => 'Photocopy', 'price' => 20],
+            [ 'service' => 'Printing',  'price' => 20],
+        ];
+
+        foreach ($services as $service ) {
+           ServiceList::updateOrCreate($service);
         }
 
         // Seed Routes and Email Addresses
@@ -86,13 +104,13 @@ class FlightsDatabaseSeeder extends Seeder
         }
 
         // Seed Flights
-        $start_date = Carbon::now();
+        $start_date = Carbon::now('Asia/Qatar');
         $end_date = $start_date->copy()->addDays(30);
 
         while ($start_date <= $end_date) {
-            for ($i = 0; $i < 10; $i++) {
-                $airlineId = rand(1, $airlines->count());
-                $flightNo = 'XA' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
+            foreach ($airlines as $key => $value) {
+                $airlineId = $value->id;
+                $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
                 $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
                 $origin = $airports[array_rand($airports)];
                 $destination = $airports[array_rand($airports)];
@@ -101,7 +119,7 @@ class FlightsDatabaseSeeder extends Seeder
                 }
                 $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
                 $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
-                $flightType = ($i % 2 == 0) ? 'departure' : 'arrival';
+                $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
 
                 Flight::updateOrCreate([
                     'airline_id'                => $airlineId,
@@ -119,13 +137,13 @@ class FlightsDatabaseSeeder extends Seeder
 
         // Seed Delay Codes
         $responsible = ['Ground Handling', 'Airport', 'Airline', 'Police', 'Immigration'];
-        for ($j = 0; $j < 10; $j++) {
+        foreach ($airlines as $key => $value) {
             for ($i = 0; $i < 99; $i++) {
                 $numericCode      = str_pad($i+1, 2, '0', STR_PAD_LEFT);
                 $alphaNumericCode = $numericCode. chr(rand(65, 90));
                 $description      = strtoupper(substr(str_shuffle(str_repeat($x='abcdefghijklmnopqrstuvwxyz', ceil( 20/strlen($x)))), 1, 70));
                 $accountable      = $responsible[array_rand($responsible)];
-                $airlineId        = rand(1, $airlines->count());
+                $airlineId        = $value->id;
             
                 AirlineDelayCode::updateOrCreate([
                     'numeric_code'          => $numericCode,
@@ -134,7 +152,7 @@ class FlightsDatabaseSeeder extends Seeder
                     'accountable'           => $accountable,
                     'airline_id'            => $airlineId,
                 ]);
-            }
+            }            
         }
     }
 }

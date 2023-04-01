@@ -11,6 +11,7 @@ use App\Models\Service;
 use Livewire\Component;
 use App\Models\Movement;
 use App\Models\FlightDelay;
+use App\Models\ServiceList;
 use App\Models\Registration;
 use Livewire\WithPagination;
 use App\Models\AirlineDelayCode;
@@ -20,9 +21,8 @@ class Flights extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    public $registrations = [], $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate;
-    public $ServiceTypes = [], $flightFields = [], $mvt, $serviceList = ["Pax Bus", "Crew Bus", "Pushback", "Cleaning", "Lavatory Service", "Passenger Steps"];
-    public $showHistory = false, $outputde, $outputdl, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks, $delayCodes = [];
+    public $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate, $mvt;
+    public $ServiceTypes = [], $flightFields = [],$registrations = [], $delayCodes = [], $showHistory = false, $outputdelay, $outputedelay, $outputdescription, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -36,25 +36,26 @@ class Flights extends Component
                         ->orderBy('scheduled_time_departure', 'asc')
                         ->paginate();
         return view('livewire.flights.view', [
-            'airlines'  => Airline::all(),
-            'flights'   => $flights,
-            'flightMvt' => $this->flight_id ? $selectedFlight->movement()->latest()->first() : null,
-            'selectedFlight' => $selectedFlight,
-            'delays' => $this->flight_id ? AirlineDelayCode::where('airline_id', $selectedFlight->airline_id)->get() : null,
+            'airlines'          => Airline::orderBy('name', 'asc')->get(),
+            'serviceList'       => ServiceList::orderBy('service', 'asc')->get(),
+            'flights'           => $flights,
+            'flightMvt'         => $this->flight_id ? $selectedFlight->movement()->latest()->first() : null,
+            'selectedFlight'    => $selectedFlight,
+            'airlineDelays'     => $this->flight_id ? AirlineDelayCode::where('airline_id', $selectedFlight->airline_id)->get() : null,
 
         ]);
     }
 
     public function mount()
     {
-        $this->selectedDate = Carbon::now()->format('Y-m-d');
+        $this->selectedDate = Carbon::now('Asia/Qatar')->format('Y-m-d');
     }
     
     public function emptyFields()
     {
         return [$this->resetErrorBag(), $this->reset([
             //Service Fields
-            'flightFields', 'ServiceTypes', 'serviceList', 'flight_id',
+            'flightFields', 'ServiceTypes', 'flight_id',
             //Flight Fields
             'airline_id', 'flight_no', 'registration', 'origin', 
             'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type',
@@ -125,11 +126,15 @@ class Flights extends Component
         $this->airborne = $flight->airborne ?? null;
         $this->remarks = $flight->remarks ?? null;
         
-        $formattedDelay = $delays->pluck('duration', 'code')->toArray();
+        $allDelays = $delays->pluck('duration', 'code')->toArray();
         $formattedDesc  = $delays->pluck('description')->toArray();
+        
+        $formattedDelay = array_chunk($allDelays, 2, true)[0] ?? [];
+        $formattedeDelay = array_chunk($allDelays, 2, true)[1] ?? [];
 
-        $this->outputdl =  str_replace(':','', implode('/', array_merge(array_keys($formattedDelay), array_values($formattedDelay))));
-        $this->outputde =  strtoupper(implode("\nSI ", array_values($formattedDesc)));
+        $this->outputdelay =  str_replace(':','', implode('/', array_merge(array_keys($formattedDelay), array_values($formattedDelay))));
+        $this->outputedelay =  str_replace(':','', implode('/', array_merge(array_keys($formattedeDelay), array_values($formattedeDelay))));
+        $this->outputdescription =  strtoupper(implode("\nSI ", array_values($formattedDesc)));
 
         foreach ($delays as $index => $delay) {
             $this->delayCodes[$index]['code'] = $delay->code;
@@ -168,7 +173,7 @@ class Flights extends Component
             ]);
         }
         session()->flash('message', 'Service Added Successfully.');
-        $this->reset(['flightFields', 'ServiceTypes', 'serviceList']);
+        $this->reset(['flightFields', 'ServiceTypes']);
     }
 
     public function destroyService($flight)
@@ -188,6 +193,7 @@ class Flights extends Component
         FlightDelay::where([['flight_id', $this->flight_id], ['code', $this->delayCodes[$index]['code']]])->delete();
         unset($this->delayCodes[$index]);
         $this->delayCodes = array_values($this->delayCodes);
+        $this->viewFlight($this->flight_id);
     }
 
     public function saveMovement()
@@ -228,12 +234,12 @@ class Flights extends Component
         $emailAddresses = $address->emails->pluck('email')->toArray();
 
         $emailData = [
-            'mvt'           => $this->mvt,
-            'flt'           => $this->mvt->flight,
-            'flightTime'    => $address->flight_time,
-            'recipients'    => $emailAddresses,
-            'dlcodes'       => $this->outputdl,
-            'dldescription' => $this->outputde,
+            'mvt'               => $this->mvt,
+            'flt'               => $this->mvt->flight,
+            'flightTime'        => $address->flight_time,
+            'recipients'        => $emailAddresses,
+            'outputdelay'       => $this->outputdelay,
+            'outputdescription' => $this->outputdescription,
         ];
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
             $message->subject('MVT '. $emailData['flt']['flight_no']);

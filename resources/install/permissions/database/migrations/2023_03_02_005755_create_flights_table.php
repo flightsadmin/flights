@@ -102,6 +102,14 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+    
+        Schema::create('service_lists', function (Blueprint $table) {
+            $table->id();
+            $table->string('service');
+            $table->string('price');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     public function down()
