@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use App\Models\Route;
 use App\Models\Flight;
 use App\Models\Address;
@@ -119,12 +120,12 @@ class Flights extends Component
 
         $flight = Movement::where('flight_id', $id)->latest()->first();
         $delays = FlightDelay::where('flight_id', $id)->latest()->take(4)->get();
-        $this->passengers = $flight->passengers ?? null;
-        $this->touchdown = $flight->touchdown ?? null;
-        $this->offblocks = $flight->offblocks ?? null;
-        $this->onblocks = $flight->onblocks ?? null;
-        $this->airborne = $flight->airborne ?? null;
-        $this->remarks = $flight->remarks ?? null;
+        $this->passengers   = $flight->passengers ?? null;
+        $this->touchdown    = $flight->touchdown ?? null;
+        $this->offblocks    = $flight->offblocks ?? null;
+        $this->onblocks     = $flight->onblocks ?? null;
+        $this->airborne     = $flight->airborne ?? null;
+        $this->remarks      = $flight->remarks ?? null;
         
         $allDelays = $delays->pluck('duration', 'code')->toArray();
         $formattedDesc  = $delays->pluck('description')->toArray();
@@ -250,5 +251,25 @@ class Flights extends Component
         $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', 'Movement Sent successfully.');
         $this->emptyFields();
+    }
+
+    public function generatePDF()
+    {
+        $selectedFlight =  Flight::findOrFail($this->flight_id);
+
+        $pdf = new Dompdf();
+        $pdf->loadHtml(view('livewire.services.download', compact('selectedFlight'))->render());
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
+        $pdfData = $pdf->output();
+
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="services.pdf"',
+        ];
+
+        return response()->streamDownload(function() use ($pdfData) {
+            echo $pdfData;
+        }, 'services.pdf', $headers);
     }
 }

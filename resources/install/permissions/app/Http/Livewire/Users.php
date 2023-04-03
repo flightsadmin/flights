@@ -63,22 +63,21 @@ class Users extends Component
 
         $user->syncRoles($this->selectedRoles);
 
+        if($user->wasRecentlyCreated){
+            $emailData = [
+                'name'      => $this->name,
+                'email'     => $this->email,
+                'phone'     => $this->phone,
+                'password'  => $this->password
+            ];
+            Mail::send('mails.email', $emailData, function($message) use($emailData) {
+                $message->to($emailData['email'], $emailData['name'])
+                ->subject('New Account for '. $emailData['name']);
+            });
+        }
         $this->dispatchBrowserEvent('closeModal');
         $this->reset();
         session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
-
-        // if($this->mode === 'add'){
-        // $emailData = [
-        //     'name'      => $this->name,
-        //     'email'     => $this->email,
-        //     'phone'     => $this->phone,
-        //     'password'  => $this->password
-        // ];
-        // Mail::send('mails.email', $emailData, function($message) use($emailData) {
-        //     $message->to($emailData['email'], $emailData['name'])
-        //             ->subject('New Account for '. $emailData['name']);
-        // });
-        // }
     }
 
     public function viewUser($userId)

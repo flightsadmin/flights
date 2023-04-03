@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="dataModalLabel">
                     {{ $flight_id ? 'Edit Flight' : 'Create New Flight' }}  
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button wire:click.prevent="emptyFields" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -69,7 +69,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-between">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button wire:click.prevent="emptyFields" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary bi bi-check2-circle"> Save</button>
             </div>
         </div>
@@ -82,7 +82,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="dataModalLabel"> Flight Services </h6>
-                <button type="button" class="btn-close" wire:click.prevent="emptyFields()" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" wire:click.prevent="emptyFields" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card-body border py-0">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="text-center">
                                 <p> {{ config('app.name', 'Laravel') }} </p>
-                                <img src="{{ asset('storage/users/S6W2BOORw17JiNrbmB1G0bIerv6KgyMPLpAzSStt.png') }}" alt="Logo" width="100">
+                                <img src="https://picsum.photos/id/0/100" alt="Logo" style="border-radius: 5px;">
                             </div>
                             <div class="text-end">
                                 <h5> Work-Oder No: {{ preg_replace('/\b(\w)\w*\s*/', '$1', ucwords(config('app.name', 'Laravel'))) }}{{ str_pad($selectedFlight->id, 6, '0', STR_PAD_LEFT) }}</h5>
@@ -179,8 +179,11 @@
                             </tbody>
                         </table>
                         @endif
-                        <button wire:click.prevent="addService" class="btn btn-sm btn-secondary bi bi-plus-lg"> Add a Service</button>
-                        <button wire:click.prevent="createServices" class="btn btn-sm btn-primary float-end bi bi-check2-circle"> Create Service</button>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <button wire:click.prevent="addService" class="btn btn-sm btn-secondary bi bi-plus-lg"> Add a Service</button>
+                            <button wire:click.prevent="generatePDF" class="btn btn-sm btn-warning bi bi-file-earmark-pdf-fill"> Generate PDF</button>
+                            <button wire:click.prevent="createServices" class="btn btn-sm btn-primary float-end bi bi-check2-circle"> Create Service</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -193,8 +196,8 @@
     <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="dataModalLabel"> Send Movements Message </h6>
-                <button type="button" wire:click.prevent="emptyFields()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h6 class="modal-title" id="dataModalLabel"> Send Movements </h6>
+                <button type="button" wire:click.prevent="emptyFields" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                     @if ($flight_id)
@@ -320,7 +323,7 @@
                 <div wire:loading wire:target="sendMovement">
                     <div class="custom-spin-overlay">
                         <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
-                            <div class="spinner-border" style="width: 6rem; height: 6rem;" role="status">
+                            <div class="spinner-border" style="width: 6rem; height: 6rem; border-width: 0.7rem;" role="status">
                                 <span class="visually-hidden">Sending Movement ...</span>
                             </div>
                         </div>
