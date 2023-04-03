@@ -24,12 +24,6 @@ class Registrations extends Component
         ->paginate();
         return view('livewire.registrations.view', compact('registrations'));
     }
-    
-    protected $rules = [
-        'registration'  => 'required',
-        'aircraft_type' => 'required',
-        'airline_id'    => 'required',
-    ];
 
     public function cancel()
     {
@@ -38,7 +32,11 @@ class Registrations extends Component
 
     public function store()
     {
-        $this->validate();
+        $this->validate([
+            'registration'  => 'required',
+            'aircraft_type' => 'required',
+            'airline_id'    => 'required',
+        ]);
         Registration::updateOrCreate(['id' => $this->registration_id], [
             'registration' => strtoupper(str_replace('-','', $this->registration)),
             'aircraft_type' => $this->aircraft_type,
@@ -61,7 +59,7 @@ class Registrations extends Component
 
     public function destroy($id)
     {
-        Registration::find($id)->delete();
+        Registration::findOrFail($id)->delete();
         session()->flash('message', 'Registration Deleted Successfully.');
     }
 
@@ -74,20 +72,26 @@ class Registrations extends Component
         ];
     
         $aircraft_types = ['Airbus A320', 'Airbus A330', 'Airbus A350', 'Airbus A380', 'Boeing 737', 'Boeing 777', 'Boeing 747', 'Boeing 787'];
-
+        
         $callback = function () use ($aircraft_types) {
             $file = fopen('php://output', 'w');
-    
+            
             fputcsv($file, ['registration', 'aircraft_type', 'airline_id']);
-    
+            
+            $airlines = Airline::all();
+            $used_registrations = Registration::all()->pluck('registration')->toArray();
             for ($i = 0; $i < 50; $i++) {
-                $registration = 'A7F' . chr(rand(65, 90)) . chr(rand(65, 90));
+                $registration = '';
+                do {
+                    $registration = 'A7B' . chr(rand(65, 90)) . chr(rand(65, 90));
+                } while (in_array($registration, $used_registrations));
+                $used_registrations[] = $registration;
+    
                 $aircraftType = $aircraft_types[array_rand($aircraft_types)];
-                $airlineId = rand(1, 10);
-    
+                $airlineId = rand(1, $airlines->count());
+
                 fputcsv($file, [$registration, $aircraftType, $airlineId]);
-            }
-    
+            }    
             fclose($file);
         };
     

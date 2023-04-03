@@ -113,9 +113,18 @@
                     </div>
                 </form>            
             </div>
+            <div wire:loading wire:target="submit">
+                <div class="custom-spin-overlay">
+                    <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
+                        <div class="spinner-border" style="width: 6rem; height: 6rem; border-width: 0.7rem;" role="status">
+                            <span class="visually-hidden">Sending User Details</span>
+                        </div>
+                    </div>
+                </div>
+            </div>            
             <div class="modal-footer mt-3 d-flex align-items-center justify-content-between">
-                <button wire:click="cancel()" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Back</button>
-                <button wire:click.prevent="submit()" class="btn btn-sm btn-primary bi bi-check2-circle"> {{ $userId ? 'Edit Changes' : 'Add User'}}</button>
+                <button wire:loading.attr="disabled" wire:click="cancel" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Back</button>
+                <button wire:loading.attr="disabled" wire:click.prevent="submit" class="btn btn-sm btn-primary bi bi-check2-circle"> {{ $userId ? 'Edit Changes' : 'Add User'}}</button>
             </div>
         </div>
     </div>

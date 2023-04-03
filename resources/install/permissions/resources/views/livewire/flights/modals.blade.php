@@ -320,7 +320,7 @@
                         @else
                             <p>Loading Flight...</p>
                         @endif
-                <div wire:loading wire:target="sendMovement">
+                <div wire:loading wire:target="sendMovement, saveMovement">
                     <div class="custom-spin-overlay">
                         <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
                             <div class="spinner-border" style="width: 6rem; height: 6rem; border-width: 0.7rem;" role="status">

@@ -6,19 +6,23 @@ use Carbon\Carbon;
 use App\Models\Flight;
 use App\Models\Airline;
 use Livewire\Component;
+use App\Models\Registration;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Schedules extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    public $flightNumbers = [], $selectedDays = [], $flightFields = [], $startDate, $endDate, $file;
+    public $flightNumbers = [], $selectedDays = [], $flightFields = [], $startDate, $endDate, $file, $selectedFlights = [];
 
     public function render()
     {
         $airlines = Airline::all();
-        return view('livewire.schedules.view', compact('airlines'));
+        $flights = Flight::latest()->paginate();
+        return view('livewire.schedules.view', compact('airlines', 'flights'));
     }
 
     public function mount()
@@ -36,6 +40,13 @@ class Schedules extends Component
     {
         unset($this->flightNumbers[$index]);
         $this->flightNumbers = array_values($this->flightNumbers);
+    }
+
+    public function deleteSelected()
+    {
+        $deletedFlights = Flight::whereIn('flight_no', $this->selectedFlights)->delete();
+        $this->reset(['selectedFlights']);
+        session()->flash('message', 'Selected flights deleted successfully.');
     }
 
     public function createFlights()
@@ -122,20 +133,20 @@ class Schedules extends Component
                 'scheduled_time_arrival',
                 'scheduled_time_departure',
                 'flight_type',
-                // 'ground_time'
             ];
     
             fputcsv($file, $headers);
     
-            $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];
-            $start_date = Carbon::now();
+            $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];    
+            $start_date = Carbon::now('Asia/Qatar');
             $end_date = $start_date->copy()->addDays(30);
-    
+            $airlines = Airline::all();
+            
             while ($start_date <= $end_date) {
-                for ($i = 0; $i < 100; $i++) {
-                    $airlineId = rand(1, 10);
-                    $flightNo = 'XA' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
-                    $registration = 'A7-B' . chr(rand(65, 90)) . chr(rand(65, 90));
+                foreach ($airlines as $key => $value) {
+                    $airlineId = $value->id;
+                    $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
+                    $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
                     $origin = $airports[array_rand($airports)];
                     $destination = $airports[array_rand($airports)];
                     while ($destination == $origin) {
@@ -143,8 +154,7 @@ class Schedules extends Component
                     }
                     $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
                     $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
-                    $flightType = ($i % 2 == 0) ? 'departure' : 'arrival';
-                    // $groundTime = Carbon::parse($arrivalTime)->diff(Carbon::parse($departureTime))->format('%h hours %i minutes');
+                    $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
     
                     fputcsv($file, [
                         $airlineId,
@@ -155,7 +165,6 @@ class Schedules extends Component
                         $arrivalTime,
                         $departureTime,
                         $flightType,
-                        // $groundTime
                     ]);
                 }
                 $start_date->addDay();

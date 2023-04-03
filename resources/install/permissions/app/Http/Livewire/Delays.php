@@ -76,15 +76,16 @@ class Delays extends Component
     
         $callback = function () use ($responsible) {
             $file = fopen('php://output', 'w');
-    
+            $airlines = Airline::all();
+            
             fputcsv($file, ['numeric_code', 'alpha_numeric_code', 'description', 'accountable', 'airline_id']);
-            for ($j = 0; $j < 10; $j++) {
+            foreach ($airlines as $key => $value) {
                 for ($i = 0; $i < 99; $i++) {
-                    $numericCode        = str_pad($i+1, 2, '0', STR_PAD_LEFT);
-                    $alphaNumericCode   = $numericCode. chr(rand(65, 90));
-                    $description        = strtoupper(substr(str_shuffle(str_repeat($x='abcdefghijklmnopqrstuvwxyz', ceil( 20/strlen($x)))), 1, 70));
-                    $accountable        = $responsible[array_rand($responsible)];
-                    $airlineId          = rand(1, 10);
+                    $numericCode      = str_pad($i+1, 2, '0', STR_PAD_LEFT);
+                    $alphaNumericCode = $numericCode. chr(rand(65, 90));
+                    $description      = strtoupper(substr(str_shuffle(str_repeat($x='abcdefghijklmnopqrstuvwxyz', ceil( 20/strlen($x)))), 1, 70));
+                    $accountable      = $responsible[array_rand($responsible)];
+                    $airlineId        = $value->id;
                 
                     fputcsv($file, [$numericCode, $alphaNumericCode, $description, $accountable, $airlineId]);
                 }

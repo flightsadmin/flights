@@ -38,7 +38,7 @@
 						</div>
 						@empty
 						<div class="col-md-12">
-							<h5 class="text-center">No Services Created Yet</h5>
+							<p class="text-center">No Services Created Yet</p>
 						</div>
 						@endforelse
 					</div>

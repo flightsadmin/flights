@@ -28,7 +28,7 @@
 								</ol>
 							</div>
 						@empty
-							<h3 class="text-center">No Airlines Found </h3>
+							<p class="text-center">Create Airlines First, then come back to add Addresses </p>
 						@endforelse
 					</div>
 				</div>

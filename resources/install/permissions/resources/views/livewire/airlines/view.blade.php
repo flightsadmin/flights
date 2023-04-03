@@ -48,7 +48,7 @@
 						</div>
 						@empty
 						<div class="col-md-12">
-							<h5 class="text-center">No Airlines Created Yet</h5>
+							<p class="text-center">No Airlines Created Yet</p>
 						</div>
 						@endforelse
 					</div>

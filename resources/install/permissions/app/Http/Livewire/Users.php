@@ -27,10 +27,10 @@ class Users extends Component
             'selectedUser' => $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null,
         ]);
     }
-    
-    protected function rules()
+
+    public function submit()
     {
-        return [
+       $validatedData = $this->validate([
             'name'          => 'required|min:6',
             'email'         => 'required|email',
             'password'      => 'required|confirmed',
@@ -38,20 +38,11 @@ class Users extends Component
             'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title'         => 'nullable|min:6',
             'selectedRoles' => 'required',
-        ];
-    }
-
-    public function submit()
-    {
-        $this->validate();
-        $user = User::findOrFail($this->userId);
-        if($user->photo){
-            Storage::disk('public')->delete($user->photo);
-        }
+        ]);
         if ($this->photo) {
             $photo  = $this->photo->store('users', 'public');
         }
-        $user = User::updateOrCreate(['id' => $this->userId], 
+        $user = User::updateOrCreate(['id' => $this->userId],
         [
             'name'      => $this->name,
             'email'     => $this->email,
@@ -60,9 +51,8 @@ class Users extends Component
             'photo'     => $this->photo ? $photo : 'image.png',
             'password'  => Hash::make($this->password),
         ]);
-
         $user->syncRoles($this->selectedRoles);
-
+        
         if($user->wasRecentlyCreated){
             $emailData = [
                 'name'      => $this->name,
@@ -70,6 +60,7 @@ class Users extends Component
                 'phone'     => $this->phone,
                 'password'  => $this->password
             ];
+            
             Mail::send('mails.email', $emailData, function($message) use($emailData) {
                 $message->to($emailData['email'], $emailData['name'])
                 ->subject('New Account for '. $emailData['name']);
@@ -94,7 +85,7 @@ class Users extends Component
     {
         $user = User::findOrFail($id);
         $this->userId = $id;
-        $this->name = $user->name;
+        $this->name  = $user->name;
         $this->email = $user->email;
         $this->phone = $user->phone;
         $this->photo = $user->photo;

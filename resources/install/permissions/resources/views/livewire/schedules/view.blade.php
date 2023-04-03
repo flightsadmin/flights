@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body border">
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
@@ -95,6 +95,45 @@
                     </div>
                     <button wire:click.prevent="addFlights" class="btn btn-sm btn-secondary">+ Add a Schedule</button>
                     <button wire:click="createFlights" class="btn btn-sm btn-primary float-end">Create Flights</button>
+                </div>
+                <hr>
+                <div class="card-body border">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead class="thead">
+                                <tr> 
+                                    <td>#</td>
+                                    <td><a href="" wire:click.prevent="deleteSelected" class="text-danger bi bi-trash3-fill"></a></td>
+                                    <th>Flight No</th>
+                                    <th>Registration</th>
+                                    <th>STA</th>
+                                    <th>STD</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($flights as $row)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td><input type="checkbox" wire:model="selectedFlights" value="{{ $row->flight_no }}"></td>
+                                    <td>{{ $row->flight_no }}</td>
+                                    <td>{{ $row->registration }}</td>
+                                    <td>{{ $row->scheduled_time_arrival }}</td>
+                                    <td>{{ $row->scheduled_time_departure }}</td>
+                                    <td>{{ $row->origin }}</td>
+                                    <td>{{ $row->destination }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td class="text-center" colspan="100%">No Flights Found </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <div class="float-end">{{ $flights->links() }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
