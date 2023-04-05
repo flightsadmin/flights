@@ -181,7 +181,9 @@
                         @endif
                         <div class="d-flex align-items-center justify-content-between">
                             <button wire:click.prevent="addService" class="btn btn-sm btn-secondary bi bi-plus-lg"> Add a Service</button>
+                            @role('super-admin|admin')
                             <button wire:click.prevent="generatePDF" class="btn btn-sm btn-warning bi bi-file-earmark-pdf-fill"> Generate PDF</button>
+                            @endrole
                             <button wire:click.prevent="createServices" class="btn btn-sm btn-primary float-end bi bi-check2-circle"> Create Service</button>
                         </div>
                     </div>
