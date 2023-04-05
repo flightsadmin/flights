@@ -16,7 +16,7 @@ class Users extends Component
 {
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $selectedRoles = [], $selectedUserId;
+    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $selectedRoles = [], $changePassword;
 
     public function render()
     {
@@ -24,31 +24,32 @@ class Users extends Component
         return view('livewire.users.view', [
             'users' => User::latest()->paginate(),
             'roles' => $roles,
-            'selectedUser' => $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null,
+            'selectedUser' => $this->userId ? User::findOrFail($this->userId) : null,
         ]);
     }
 
     public function submit()
     {
-       $validatedData = $this->validate([
+        $validatedData = $this->validate([
             'name'          => 'required|min:6',
             'email'         => 'required|email',
-            'password'      => 'required|confirmed',
             'phone'         => 'nullable|min:9|numeric',
-            'photo'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title'         => 'nullable|min:6',
             'selectedRoles' => 'required',
+            'password'      => $this->userId ? 'nullable' : 'required|confirmed',
+            'photo'         => $this->userId ? 'nullable' : 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        if ($this->photo) {
-            $photo  = $this->photo->store('users', 'public');
-        }
+        $photo = ($this->photo && !is_string($this->photo)) ?
+                $this->photo->storeAs('users', explode('@', $validatedData['email'])[0] . '.'.$this->photo->getClientOriginalExtension() , 'public') : 
+                'users/noimage.jpg';
+        
         $user = User::updateOrCreate(['id' => $this->userId],
         [
             'name'      => $this->name,
             'email'     => $this->email,
             'phone'     => $this->phone,
             'title'     => $this->title,
-            'photo'     => $this->photo ? $photo : 'image.png',
+            'photo'     => $photo,
             'password'  => Hash::make($this->password),
         ]);
         $user->syncRoles($this->selectedRoles);
@@ -71,14 +72,9 @@ class Users extends Component
         session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
     }
 
-    public function viewUser($userId)
+    public function viewUser($id)
     {
-        $this->selectedUserId = $userId;
-    }
-
-    public function getSelectedUserProperty()
-    {
-        return $this->selectedUserId ? User::findOrFail($this->selectedUserId) : null;
+        $this->userId = $id;
     }
 
     public function edit($id)
@@ -96,7 +92,10 @@ class Users extends Component
     public function destroy($userId)
     {
         $user = User::findOrFail($userId);
-        Storage::disk('public')->delete($user->photo);
+
+        if($user->photo != 'users/noimage.jpg') {
+            Storage::disk('public')->delete($user->photo);
+        }
         $user->delete();
     }
 

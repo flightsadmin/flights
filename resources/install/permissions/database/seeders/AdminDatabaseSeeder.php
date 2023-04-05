@@ -44,7 +44,7 @@ class AdminDatabaseSeeder extends Seeder
             'remember_token'    => Str::random(10),
             'phone'             => '+2547000002',
             'title'             => 'Developer',
-            'photo'             => 'image.jpg',
+            'photo'             => 'users/noimage.jpg',
         ])->assignRole($role1);
 
         // create Admin
@@ -56,7 +56,7 @@ class AdminDatabaseSeeder extends Seeder
             'remember_token'    => Str::random(10),
             'phone'             => '+2547000001',
             'title'             => 'Developer',
-            'photo'             => 'avatar.jpg',
+            'photo'             => 'users/noimage.jpg',
         ])->assignRole($role2);
         
         // create Super-admin
@@ -68,7 +68,7 @@ class AdminDatabaseSeeder extends Seeder
             'remember_token'    => Str::random(10),
             'phone'             => '+2547000000',
             'title'             => 'Developer',
-            'photo'             => 'image.jpg',
+            'photo'             => 'users/noimage.jpg',
         ])->assignRole($role3);
     }
 }

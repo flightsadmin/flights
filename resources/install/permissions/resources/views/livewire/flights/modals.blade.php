@@ -223,8 +223,8 @@
                                 @endif                     
                             </div>
                             <div>
-                                <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> <a href="" wire:click.prevent="History" class="bi bi-eye-fill h5 text-primary"></a>
-                                @if($showHistory)
+                                <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> <input wire:model="History" class="form-check-input mt-0 ms-2" type="checkbox">
+                                @if($History)
                                 @forelse($selectedFlight->movement->take(2) as $movement)
                                 <div class="row border">
                                     <div class="col-md p-2 border">

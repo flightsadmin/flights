@@ -7,7 +7,7 @@
                 <button wire:click.prevent="cancel()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                @if ($selectedUserId)
+                @if ($userId)
                 <div class="col-12 bg-white px-3 mb-3 pb-3">
                     <div class="d-flex flex-column align-items-center border-bottom">
                         <img class="profile-img mb-2" src="{{ asset('storage/' . $selectedUser->photo) }}"  style="height:100px; width:100px;"  alt="{{ $selectedUser->title }}">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 @else
-                    <p>No Users selected.</p>
+                    <p>Loading User...</p>
                 @endif
             </div>
             <div class="modal-footer">
@@ -74,9 +74,23 @@
                         <div class="col-md-6 mb-3">
                             <label for="photo">Photo</label>
                             <input type="file" wire:model="photo" placeholder="Photo" class="form-control">
+                            @if ($photo)
+                            @endif
                             @error('photo') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
-
+                        @if ($photo)
+                        <div class="col-md-2 text-center" style="position: relative;">
+                            <img class="profile-img mb-2" src="{{ $userId ? asset('storage/' . $photo) : $photo->temporaryUrl() }}" style="height:70px; width:70px;">
+                            <a href="" wire:click.prevent="$set('photo', null)" class="bi bi-trash3-fill text-danger" style="position: absolute;"></a>
+                        </div>
+                        @endif
+                        @if ($userId)
+                        <div class="col-md-4 mb-3 d-flex align-items-center justify-content-evenly">
+                            <label for="photo">Change Password?</label>
+                            <input wire:model="changePassword" class="form-check-input mt-0 ms-2" type="checkbox">
+                        </div>
+                        @endif
+                        @if ($changePassword || !$userId)
                         <div class="col-md-6 mb-3">
                             <label for="password">Password</label>
                             <input type="password" wire:model.lazy="password" placeholder="Password" class="form-control">
@@ -87,6 +101,7 @@
                             <input type="password" wire:model.lazy="password_confirmation" placeholder="Confirm Password" class="form-control">
                             @error('password_confirmation') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
+                        @endif
                         @can('editUser')
                         <div class="col-md-12">
                             <div class="col-md-12 mb-3">

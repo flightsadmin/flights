@@ -23,7 +23,7 @@ class Flights extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate, $mvt;
-    public $ServiceTypes = [], $flightFields = [],$registrations = [], $delayCodes = [], $showHistory = false, $outputdelay, $outputedelay, $outputdescription, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
+    public $ServiceTypes = [], $flightFields = [],$registrations = [], $delayCodes = [], $History, $outputdelay, $outputedelay, $outputdescription, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -58,16 +58,11 @@ class Flights extends Component
             //Service Fields
             'flightFields', 'ServiceTypes', 'flight_id',
             //Flight Fields
-            'airline_id', 'flight_no', 'registration', 'origin', 
+            'airline_id', 'flight_no', 'registration', 'origin',
             'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type',
             //MVT Fields
-            'touchdown','onblocks','offblocks','airborne','passengers','remarks','flight_id', 'delayCodes'
+            'touchdown', 'onblocks', 'offblocks', 'airborne', 'passengers', 'remarks', 'delayCodes'
             ])];
-    }
-
-    public function History()
-    {
-        $this->showHistory = !$this->showHistory;
     }
 
     public function updatedairlineId($airline)
@@ -143,12 +138,7 @@ class Flights extends Component
             $this->delayCodes[$index]['description'] = $delay->description ?? '';
         }
     }
-
-    public function getSelectedFlightProperty()
-    {
-        return $this->flight_id ? Flight::findOrFail($this->flight_id) : null;
-    }
-
+    
     // Services Methods
     public function addService()
     {
