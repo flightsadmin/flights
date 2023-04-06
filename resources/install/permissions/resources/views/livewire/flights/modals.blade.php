@@ -240,6 +240,7 @@
                                             EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->airborne)) }} {{ $selectedFlight->destination }}</p>
                                             @if (empty($outputdelay))  @else {{ "DL" .$outputdelay ?? null }} @endif
                                             <p>PX{{ $movement->passengers ?? null }}</p>
+                                            <p>@if (empty($outputedelay))  @else {{ "DL" .$outputedelay ?? null }} @endif</p>
                                             @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!} @endif
                                             <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($movement->remarks ?? null) }} @endif</p>
                                         @endif

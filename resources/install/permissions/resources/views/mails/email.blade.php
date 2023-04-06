@@ -45,15 +45,13 @@
             <div class="card">
                 <div class="card-body">
                     Dear {{ $name }}. <br>
-                    An account has been created with below Credentials <br>
+                    An account has been on <a href="{{ url('/') }}"> {{ config('app.name', 'Laravel') }}</a> created with below Credentials <br>
                     Please Login by clicking <a href="{{ url('/login') }}"> here</a> and change your password<br><br>
-                    Site Name: <a href="{{ url('/') }}"> {{ config('app.name', 'Laravel') }}</a> <br>
                     Email: {{ $email }} <br>
                     Phone: {{ $phone }} <br>
                     Password: {{ $password }} <br><br>
                     Regards, <br>
-                    Site Admin <br>
-                    {{ config('app.name', 'Laravel') }} <br>
+                    {{ config('app.name', 'Laravel') }} Site Administrator<br>
                     <small class="text-danger"><i>This is an automated message, Do not reply</i></small>
                 </div>
             </div>

@@ -230,6 +230,7 @@ class Flights extends Component
             'flightTime'        => $address->flight_time,
             'recipients'        => $emailAddresses,
             'outputdelay'       => $this->outputdelay,
+            'outputedelay'      => $this->outputedelay,
             'outputdescription' => $this->outputdescription,
         ];
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
