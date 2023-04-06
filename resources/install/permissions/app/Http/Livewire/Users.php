@@ -16,14 +16,13 @@ class Users extends Component
 {
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $selectedRoles = [], $changePassword;
+    public $userId, $name, $email, $photo, $phone, $title, $password, $password_confirmation, $changePassword, $selectedRoles = [];
 
     public function render()
     {
-        $roles = Role::with('permissions')->get();
         return view('livewire.users.view', [
             'users' => User::latest()->paginate(),
-            'roles' => $roles,
+            'roles' => Role::with('permissions')->get(),
             'selectedUser' => $this->userId ? User::findOrFail($this->userId) : null,
         ]);
     }

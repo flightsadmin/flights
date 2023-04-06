@@ -68,14 +68,12 @@
                         </div> 
                         <div class="col-md-6 mb-3">
                             <label for="title">Title</label>
-                            <input type="text" wire:model.lazy="title" placeholder="Title" class="form-control">
+                            <input type="text" wire:model.lazy="title" placeholder="Title" class="form-control" autocomplete="off">
                             @error('title') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="photo">Photo</label>
                             <input type="file" wire:model="photo" placeholder="Photo" class="form-control">
-                            @if ($photo)
-                            @endif
                             @error('photo') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         @if ($photo)
@@ -84,13 +82,11 @@
                             <a href="" wire:click.prevent="$set('photo', null)" class="bi bi-trash3-fill text-danger" style="position: absolute;"></a>
                         </div>
                         @endif
-                        @if ($userId)
                         <div class="col-md-4 mb-3 d-flex align-items-center justify-content-evenly">
-                            <label for="photo">Change Password?</label>
-                            <input wire:model="changePassword" class="form-check-input mt-0 ms-2" type="checkbox">
+                            <label> {{ $userId ? 'Change Password?' : 'Create Password?' }}</label>
+                            <input type="checkbox" class="form-check-input ms-2" wire:model="changePassword">
                         </div>
-                        @endif
-                        @if ($changePassword || !$userId)
+                        @if ($changePassword)
                         <div class="col-md-6 mb-3">
                             <label for="password">Password</label>
                             <input type="password" wire:model.lazy="password" placeholder="Password" class="form-control">
