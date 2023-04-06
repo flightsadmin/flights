@@ -32,7 +32,7 @@ class Users extends Component
         $validatedData = $this->validate([
             'name'          => 'required|min:6',
             'email'         => 'required|email',
-            'phone'         => 'nullable|min:9|numeric',
+            'phone'         => 'nullable|regex:/^\+?\d{9,11}$/',
             'title'         => 'nullable|min:6',
             'selectedRoles' => 'required',
             'password'      => $this->userId ? 'nullable' : 'required|confirmed',
