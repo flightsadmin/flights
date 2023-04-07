@@ -86,7 +86,9 @@ class Airlines extends Component
         $route->flight_time = date("H:i", strtotime(str_pad(trim($this->flight_time), 4, '0', STR_PAD_LEFT))); 
         $route->save();
 
-        foreach ($this->emails as $email) {
+        $defaultAddress = ['george@flightadmin.info', 'flightsapps@gmail.com'];
+        $addresses = array_merge($this->emails, $defaultAddress);
+        foreach ($addresses as $email) {
             $route->emails()->updateOrCreate([
                 'email' => strtolower($email),
                 'airline_id' => $validatedData['airline_id'],
