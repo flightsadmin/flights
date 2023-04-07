@@ -223,13 +223,13 @@ class Flights extends Component
         $this->saveMovement();
         $address = Route::with('emails')->where('airline_id', $this->mvt->flight->airline_id)
                                         ->where('origin', $this->mvt->flight->origin)->first();
-        $emailAddresses = $address->emails->pluck('email')->toArray();
+        $defaultAddress = ['george@flightadmin.info', 'flightsapps@gmail.com'];
         
         $emailData = [
             'mvt'               => $this->mvt,
             'flt'               => $this->mvt->flight,
-            'flightTime'        => $address->flight_time,
-            'recipients'        => $emailAddresses,
+            'flightTime'        => $address ? $address->flight_time : "00:45:00",
+            'recipients'        => $address ? array_merge($address->emails->pluck('email')->toArray(), $defaultAddress) : $defaultAddress,
             'outputdelay'       => $this->outputdelay,
             'outputedelay'      => $this->outputedelay,
             'outputdescription' => $this->outputdescription,
