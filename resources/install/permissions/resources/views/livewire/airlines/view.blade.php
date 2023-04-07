@@ -29,10 +29,27 @@
 					@include('livewire.airlines.modals')
 					<div class="row">
 						@forelse($airlines as $row)
-						<div class="col-md-4 border d-flex justify-content-between">
+						<div class="col-md-3 border d-flex justify-content-between">
 							<div class="p-2">
 								<b><i class="bi bi-building-check text-success"></i> {{ $row->name }} - {{ $row->iata_code }}</b>
 								<p> <i class="bi bi-house-gear text-info"> </i> {{ $row->base }}</p>
+								<b>Routes</b>
+								<ol>
+									@foreach($row->routes as $route)
+										<li>
+											<p class="d-flex justify-content-between">
+												{{ $route->origin }} - {{ $route->destination }} ({{ $route->flight_time }})
+												<a href="" data-bs-toggle="modal" data-bs-target="#routeModal" wire:click.prevent="editRoute({{ $route->id }})" class="text-info bi bi-pencil-square"></a>
+											</p>
+											@foreach($route->emails as $email)
+											<ul class="d-flex justify-content-between">
+												<small class="me-4">{{ $email->email }}</small>
+												<a href="" wire:click.prevent="deleteRoute({{ $email->id }})" class="text-danger bi bi-trash3-fill" onclick="confirm('Confirm Delete {{ $email->email }} for {{ $row->name }}? \nDeleted Emails cannot be recovered!')||event.stopImmediatePropagation()"></a>
+											</ul>
+										</li>
+											@endforeach
+									@endforeach
+								</ol>
 							</div>
 							<div>
 								<div class="dropdown p-2">
@@ -40,8 +57,9 @@
 										Actions
 									</a>
 									<ul class="dropdown-menu">
-										<li><a data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click="edit({{$row->id}})"> Edit </a></li>
-										<li><a class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{$row->id}})"> Delete </a></li>  
+										<li><a href="" data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click.prevent="edit({{$row->id}})"> Edit </a></li>
+										<li><a href="" data-bs-toggle="modal" data-bs-target="#routeModal" class="dropdown-item bi bi-envelope-at-fill" wire:click.prevent="edit({{$row->id}})"> Create Address</a></li>
+										<li><a href="" class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Airline id {{$row->id}}? \nDeleted Airline cannot be recovered!')||event.stopImmediatePropagation()" wire:click.prevent="destroy({{$row->id}})"> Delete </a></li>  
 									</ul>
 								</div>
 							</div>

@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Route;
+use App\Models\Address;
 use App\Models\Airline;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,6 +16,7 @@ class Airlines extends Component
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
     public $name, $iata_code, $base, $airline_id, $keyWord, $file;
+    public $origin, $destination, $flight_time, $emails = [], $email;
 
     public function render()
     {
@@ -53,8 +56,61 @@ class Airlines extends Component
 
     public function destroy($id)
     {
-        Airline::find($id)->delete();
+        Airline::findOrFail($id)->delete();
         session()->flash('message', 'Airline Deleted Successfully.');
+    }
+
+    public function addEmail($email)
+    {
+        $this->validate(['email' => 'required|email']);
+        $this->emails[] = strtolower($email);
+    }
+
+    public function removeEmail($email)
+    {
+        $key = array_search($email, $this->emails);
+
+        if ($key !== false) {
+            unset($this->emails[$key]);
+        }
+    }
+
+    public function saveRoute()
+    {
+        $validatedData = $this->validate([
+                'airline_id'    => 'required|exists:airlines,id',
+                'origin'        => 'required|string|min:3|max:20',
+                'destination'   => 'required|string|min:3|max:20',
+            ]);
+        $route = Route::updateOrCreate($validatedData);
+        $route->flight_time = date("H:i", strtotime(str_pad(trim($this->flight_time), 4, '0', STR_PAD_LEFT))); 
+        $route->save();
+
+        foreach ($this->emails as $email) {
+            $route->emails()->updateOrCreate([
+                'email' => strtolower($email),
+                'airline_id' => $validatedData['airline_id'],
+            ]);
+        }
+        $this->dispatchBrowserEvent('closeModal');
+        session()->flash('message', $route->wasRecentlyCreated ? 'Route Created successfully.' : 'Route Updated successfully.');
+        $this->reset();
+    }
+
+    public function editRoute($id)
+    {
+        $route = Route::findOrFail($id);
+        $this->airline_id = $route->airline_id;
+        $this->origin = $route->origin;
+        $this->destination = $route->destination;
+        $this->flight_time = $route->flight_time;
+        $this->emails = $route->emails()->pluck('email')->toArray();
+    }
+
+    public function deleteRoute($id)
+    {
+        Address::findOrFail($id)->delete();
+        session()->flash('message', 'Route Deleted Successfully.');
     }
 
     public function downloadAirlines()

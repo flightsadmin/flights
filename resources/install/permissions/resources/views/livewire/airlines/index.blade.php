@@ -12,8 +12,10 @@
 @push('scripts')
 <script type="module">
     const modal = new bootstrap.Modal('#dataModal');
+    const routemodal = new bootstrap.Modal('#routeModal');
     window.addEventListener('closeModal', () => {
         modal.hide();
+        routemodal.hide();
     });
 
     const toast = new bootstrap.Toast('#statusToast');
