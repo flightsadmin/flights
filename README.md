@@ -3,7 +3,8 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/flightsadmin/flights.svg?style=flat-square)](https://packagist.org/packages/flightsadmin/flights)
 [![Total Downloads](https://img.shields.io/packagist/dt/flightsadmin/flights.svg?style=flat-square)](https://packagist.org/packages/flightsadmin/flights)
 
-A Laravel Livewire Package to scaffold basic User Management Dashboard using Spatie Laravel Permission, Laravel Livewire and Bootstrap. Package is autoloaded as per PSR-4 autoloading in any laravel version `^9.19` so no extra config required.
+A Laravel Livewire Flight Management Module with User Management Dashboard using Spatie Laravel Permission.
+Package is autoloaded as per PSR-4 autoloading in any laravel version `^9.19` so no extra config required.
 It uses ***auth*** middleware thus installs `laravel/ui` just incase you don't have any other auth mechanism, this does not mean you have to use `laravel/ui`.
 
 ## Installation
@@ -19,7 +20,7 @@ composer require flightsadmin/flights
 After running `composer require flightsadmin/flights` command just run:
 
 ```bash
-php artisan permission:install
+php artisan flight:install
 ```
 **This command will perfom below actions:
 
@@ -51,7 +52,6 @@ Level | Email | Password
 Super-admin| super-admin@example.com | password
 Admin| admin@example.com | password
 User| user@example.com | password
-    
 
 ### Changelog
 
