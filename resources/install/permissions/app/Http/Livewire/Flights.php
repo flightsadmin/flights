@@ -221,9 +221,10 @@ class Flights extends Component
     public function sendMovement()
     {
         $this->saveMovement();
-        $address = Route::with('emails')->where('airline_id', $this->mvt->flight->airline_id)->first();
+        $address = Route::with('emails')->where('airline_id', $this->mvt->flight->airline_id)
+                                        ->where('origin', $this->mvt->flight->origin)->first();
         $emailAddresses = $address->emails->pluck('email')->toArray();
-
+        
         $emailData = [
             'mvt'               => $this->mvt,
             'flt'               => $this->mvt->flight,
