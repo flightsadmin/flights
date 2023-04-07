@@ -85,6 +85,7 @@
                         <div class="col-md-4 mb-3 d-flex align-items-center justify-content-evenly">
                             <label> {{ $userId ? 'Change Password?' : 'Create Password?' }}</label>
                             <input type="checkbox" class="form-check-input ms-2" wire:model="changePassword">
+                            @error('password') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         @if ($changePassword)
                         <div class="col-md-6 mb-3">

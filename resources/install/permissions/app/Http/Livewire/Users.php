@@ -58,6 +58,7 @@ class Users extends Component
                 'name'      => $this->name,
                 'email'     => $this->email,
                 'phone'     => $this->phone,
+                'roles'     => $user->roles->pluck('name')->toArray(),
                 'password'  => $this->password
             ];
             
