@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('iata_code');
             $table->string('base');
+            $table->string('base_iata_code');
             $table->timestamps();
             $table->softDeletes();
         });

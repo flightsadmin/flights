@@ -15,7 +15,7 @@ class Airlines extends Component
 { 
     use WithPagination, WithFileUploads;
     protected $paginationTheme = 'bootstrap';
-    public $name, $iata_code, $base, $airline_id, $keyWord, $file;
+    public $name, $iata_code, $base, $base_iata_code, $airline_id, $keyWord, $file;
     public $origin, $destination, $flight_time, $emails = [], $email;
 
     public function render()
@@ -36,6 +36,7 @@ class Airlines extends Component
             'name' => 'required',
             'iata_code' => 'required|max:2|unique:airlines,id,'. $this->airline_id,
             'base' => 'required',
+            'base_iata_code' => 'required',
         ]);
 
         Airline::updateOrCreate(['id' => $this->airline_id], $validatedData);
@@ -52,6 +53,7 @@ class Airlines extends Component
         $this->name = $airline->name;
         $this->iata_code = $airline->iata_code;
         $this->base = $airline->base;
+        $this->base_iata_code = $airline->base_iata_code;
     }
 
     public function destroy($id)
@@ -122,20 +124,31 @@ class Airlines extends Component
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename={$filename}",
         ];
-    
-        $cities = ['New York', 'London', 'Tokyo', 'Paris', 'Sydney', 'Los Angeles', 'Moscow', 'Shanghai', 'Dubai', 'Mumbai'];
-    
-        $callback = function () use ($cities) {
+        $airlines = [
+            [ "name" => "Flydubai",         "iata_code" => "FZ",  "base_iata_code" => "DXB", "base" => "Dubai, United Arab Emirates"],
+            [ "name" => "Air Arabia",       "iata_code" => "G9",  "base_iata_code" => "SHJ", "base" => "Sharjah, United Arab Emirates"],
+            [ "name" => "Oman Air",         "iata_code" => "WY",  "base_iata_code" => "MCT", "base" => "Muscat, Oman"],
+            [ "name" => "Salamair",         "iata_code" => "OV",  "base_iata_code" => "MCT", "base" => "Muscat, Oman"],
+            [ "name" => "Qatar Airways",    "iata_code" => "QR",  "base_iata_code" => "DOH", "base" => "Doha, Qatar"],
+            [ "name" => "Kenya Airways",    "iata_code" => "KQ",  "base_iata_code" => "NBO", "base" => "Nairobi, Kenya"],
+            [ "name" => "Emirates",         "iata_code" => "EK",  "base_iata_code" => "DXB", "base" => "Dubai, United Arab Emirates"],
+            [ "name" => "Air India",        "iata_code" => "AI",  "base_iata_code" => "BOM", "base" => "Bombay, India"],
+            [ "name" => "Indigo  Airlines", "iata_code" => "6E",  "base_iata_code" => "HYD", "base" => "Hyderabad, India"],
+            [ "name" => "Jambojet",         "iata_code" => "JM",  "base_iata_code" => "NBO", "base" => "Nairobi, Kenya"],
+        ];
+
+        $callback = function () use ($airlines) {
             $file = fopen('php://output', 'w');
     
-            fputcsv($file, ['name', 'iata_code', 'base']);
+            fputcsv($file, ['name', 'iata_code', 'base', 'base_iata_code']);
     
-            for ($i = 0; $i < 10; $i++) {
-                $name = 'Airline ' . str_pad($i+1, 4, '0', STR_PAD_LEFT);
-                $iataCode = chr(rand(65, 90)) . chr(rand(65, 90));
-                $base = $cities[array_rand($cities)];
-    
-                fputcsv($file, [$name, $iataCode, $base]);
+            foreach ($airlines as $key => $value) {
+                    $name = $value['name'];
+                    $iataCode = $value['iata_code'];
+                    $base = $value['base'];
+                    $baseIataCode = $value['base_iata_code'];
+        
+                    fputcsv($file, [$name, $iataCode, $base, $baseIataCode]);
             }
     
             fclose($file);

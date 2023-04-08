@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
+use App\Models\Route;
 use App\Models\Flight;
 use App\Models\Airline;
 use Livewire\Component;
@@ -136,36 +137,34 @@ class Schedules extends Component
             ];
     
             fputcsv($file, $headers);
-    
-            $airports = ['DOH', 'JFK', 'LHR', 'NBO', 'MCT', 'KWI', 'SYD', 'JED', 'DXB', 'SIN'];    
+            
             $start_date = Carbon::now('Asia/Qatar');
             $end_date = $start_date->copy()->addDays(30);
             $airlines = Airline::all();
             
             while ($start_date <= $end_date) {
                 foreach ($airlines as $key => $value) {
-                    $airlineId = $value->id;
-                    $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
-                    $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
-                    $origin = $airports[array_rand($airports)];
-                    $destination = $airports[array_rand($airports)];
-                    while ($destination == $origin) {
-                        $destination = $airports[array_rand($airports)];
-                    }
-                    $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
-                    $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
-                    $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
+                    foreach (Route::latest()->where('airline_id', $value->id)->get() as $sector) {
+                        $airlineId = $value->id;
+                        $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
+                        $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
+                        $origin = $sector->origin;
+                        $destination = $sector->destination;
+                        $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
+                        $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
+                        $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
     
-                    fputcsv($file, [
-                        $airlineId,
-                        $flightNo,
-                        $registration,
-                        $origin,
-                        $destination,
-                        $arrivalTime,
-                        $departureTime,
-                        $flightType,
-                    ]);
+                        fputcsv($file, [
+                            $airlineId,
+                            $flightNo,
+                            $registration,
+                            $origin,
+                            $destination,
+                            $arrivalTime,
+                            $departureTime,
+                            $flightType,
+                        ]);
+                    }
                 }
                 $start_date->addDay();
             }

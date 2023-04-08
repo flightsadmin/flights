@@ -19,16 +19,16 @@ class FlightsDatabaseSeeder extends Seeder
     {
         //Seed Airlines
         $airlines = [
-            [ "name" => "Flydubai",         "iata_code" => "FZ",    "base" => "Dubai, United Arab Emirates" ],
-            [ "name" => "Air Arabia",       "iata_code" => "G9",    "base" => "Sharjah, United Arab Emirates" ],
-            [ "name" => "Oman Air",         "iata_code" => "WY",    "base" => "Muscat, Oman" ],
-            [ "name" => "Salamair",         "iata_code" => "OV",    "base" => "Muscat, Oman" ],
-            [ "name" => "Qatar Airways",    "iata_code" => "QR",    "base" => "Doha, Qatar" ],
-            [ "name" => "Kenya Airways",    "iata_code" => "KQ",    "base" => "Nairobi, Kenya" ],
-            [ "name" => "Emirates",         "iata_code" => "EK",    "base" => "Dubai, United Arab Emirates" ],
-            [ "name" => "Air India",        "iata_code" => "AI",    "base" => "Bombay, India" ],
-            [ "name" => "Indigo  Airlines", "iata_code" => "6E",    "base" => "Hyderabad, India" ],
-            [ "name" => "Jambojet",         "iata_code" => "JM",    "base" => "Nairobi, Kenya" ],
+            [ "name" => "Flydubai",         "iata_code" => "FZ",  "base_iata_code" => "DXB", "base" => "Dubai, United Arab Emirates"],
+            [ "name" => "Air Arabia",       "iata_code" => "G9",  "base_iata_code" => "SHJ", "base" => "Sharjah, United Arab Emirates"],
+            [ "name" => "Oman Air",         "iata_code" => "WY",  "base_iata_code" => "MCT", "base" => "Muscat, Oman"],
+            [ "name" => "Salamair",         "iata_code" => "OV",  "base_iata_code" => "MCT", "base" => "Muscat, Oman"],
+            [ "name" => "Qatar Airways",    "iata_code" => "QR",  "base_iata_code" => "DOH", "base" => "Doha, Qatar"],
+            [ "name" => "Kenya Airways",    "iata_code" => "KQ",  "base_iata_code" => "NBO", "base" => "Nairobi, Kenya"],
+            [ "name" => "Emirates",         "iata_code" => "EK",  "base_iata_code" => "DXB", "base" => "Dubai, United Arab Emirates"],
+            [ "name" => "Air India",        "iata_code" => "AI",  "base_iata_code" => "BOM", "base" => "Bombay, India"],
+            [ "name" => "Indigo  Airlines", "iata_code" => "6E",  "base_iata_code" => "HYD", "base" => "Hyderabad, India"],
+            [ "name" => "Jambojet",         "iata_code" => "JM",  "base_iata_code" => "NBO", "base" => "Nairobi, Kenya"],
         ];
 
         foreach ($airlines as $airline) {
@@ -109,28 +109,27 @@ class FlightsDatabaseSeeder extends Seeder
 
         while ($start_date <= $end_date) {
             foreach ($airlines as $key => $value) {
-                $airlineId = $value->id;
-                $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
-                $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
-                $origin = $airports[array_rand($airports)];
-                $destination = $airports[array_rand($airports)];
-                while ($destination == $origin) {
-                    $destination = $airports[array_rand($airports)];
-                }
-                $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
-                $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
-                $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
+                foreach (Route::latest()->where('airline_id', $value->id)->get() as $sector) {
+                    $airlineId = $value->id;
+                    $flightNo = $value->iata_code . str_pad(rand(1, 999), 4, '0', STR_PAD_LEFT);
+                    $registration =  Registration::where('airline_id', $airlineId)->pluck('registration')->first();
+                    $origin = $sector->origin;
+                    $destination = $sector->destination;
+                    $arrivalTime = $start_date->copy()->addMinutes(rand(0, 1440))->format('Y-m-d H:i:s');
+                    $departureTime = date('Y-m-d H:i:s', strtotime($arrivalTime . ' + ' . rand(60, 180) . ' minutes'));
+                    $flightType = ($key % 2 == 0) ? 'departure' : 'arrival';
 
-                Flight::updateOrCreate([
-                    'airline_id'                => $airlineId,
-                    'flight_no'                 => $flightNo,
-                    'registration'              => $registration,
-                    'origin'                    => $origin,
-                    'destination'               => $destination,
-                    'scheduled_time_arrival'    => $arrivalTime,
-                    'scheduled_time_departure'  => $departureTime,
-                    'flight_type'               => $flightType,
-                ]);
+                    Flight::updateOrCreate([
+                        'airline_id'                => $airlineId,
+                        'flight_no'                 => $flightNo,
+                        'registration'              => $registration,
+                        'origin'                    => $origin,
+                        'destination'               => $destination,
+                        'scheduled_time_arrival'    => $arrivalTime,
+                        'scheduled_time_departure'  => $departureTime,
+                        'flight_type'               => $flightType,
+                    ]);
+                }
             }
             $start_date->addDay();
         }

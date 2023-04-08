@@ -26,6 +26,11 @@
                             <input type="text" class="form-control" id="base" wire:model.lazy="base">
                             @error('base') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
+                        <div class="form-group col-md-6 mb-2">
+                            <label for="base_iata_code">Airline Base Iata Code</label>
+                            <input type="text" class="form-control" id="base_iata_code" wire:model.lazy="base_iata_code">
+                            @error('base_iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </form>
             </div>

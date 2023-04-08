@@ -13,7 +13,8 @@ class Airline extends Model
     protected $fillable = [
         'name', 
         'iata_code', 
-        'base'
+        'base',
+        'base_iata_code'
     ];
 
     public function registration()
