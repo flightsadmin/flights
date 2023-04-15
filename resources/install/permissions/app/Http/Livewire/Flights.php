@@ -236,9 +236,7 @@ class Flights extends Component
         ];
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
             $message->subject('MVT '. $emailData['flt']['flight_no']);
-            foreach ($emailData['recipients'] as $recipient) {
-                $message->bcc($recipient);
-            }
+            $message->to(array_unique($emailData['recipients']));
         });
         $this->dispatchBrowserEvent('closeModal');
         session()->flash('message', 'Movement Sent successfully.');
