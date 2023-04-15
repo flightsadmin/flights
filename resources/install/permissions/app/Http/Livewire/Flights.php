@@ -233,7 +233,7 @@ class Flights extends Component
             'outputdelay'       => $this->outputdelay,
             'outputedelay'      => $this->outputedelay,
             'outputdescription' => $this->outputdescription,
-        ];
+        ];        
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
             $message->subject('MVT '. $emailData['flt']['flight_no']);
             $message->to(array_unique($emailData['recipients']));
@@ -258,6 +258,29 @@ class Flights extends Component
             'Content-Disposition' => 'attachment; filename="services.pdf"',
         ];
 
+        // Send email with PDF attachment
+        $emailData = [
+            'recipients' => ['george@flightadmin.info', 'flightsapps@gmail.com'],
+            'subject' => 'Work-order for ' . $selectedFlight->flight_no,
+            'message' => '
+                    Dear ' . $selectedFlight->airline->name . ' Team.</br>
+                    Find Attached Work-order for ' . $selectedFlight->flight_no .' '.
+                    $selectedFlight->origin . ' - ' . $selectedFlight->destination . '</br></br>
+                    Regards, <br>'.
+                    config('app.name', 'Laravel') . ' Site Administrator. <br>
+                    <small><i>This is an automated message, Contact Us incase of any discrepancies </i></small>',
+            'pdfData' => $pdfData,
+            'selectedFlight' => $selectedFlight,
+        ];
+        
+        Mail::send([], $emailData, function ($message) use ($emailData) {
+            $message->to($emailData['recipients']);
+            $message->subject($emailData['subject']);
+            $message->html($emailData['message']);
+            $message->attachData($emailData['pdfData'], 'Services.pdf');
+        });
+
+        // Download PDF
         return response()->streamDownload(function() use ($pdfData) {
             echo $pdfData;
         }, 'services.pdf', $headers);
