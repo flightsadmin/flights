@@ -35,4 +35,9 @@ class Flight extends Model
     {
         return $this->hasMany(FlightDelay::class);
     }
+
+    public function airline()
+    {
+        return $this->belongsTo(Airline::class);
+    }
 }
