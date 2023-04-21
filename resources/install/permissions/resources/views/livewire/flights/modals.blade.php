@@ -111,17 +111,23 @@
                                         <th>Start</th>
                                         <th>Finish</th>
                                         <th>Duration</th>
+                                        @role('super-admin|admin')
+                                        <th>Price</th>
                                         <th></th>
+                                        @endrole()
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($selectedFlight->service as $index => $service)
+                                    @forelse ($selectedFlight->service as $index => $value)
                                         <tr>
-                                            <td>{{ $index + 1 }}. {{ $service->service_type }}</td>
-                                            <td>{{ $service->start }}</td>
-                                            <td>{{ $service->finish }}</td>
-                                            <td>{{ date('H:i', strtotime($service->finish) - strtotime($service->start)) }}</td>
-                                            <td><a href="" wire:click.prevent="destroyService('{{ $service->service_type }}')" class="text-danger bi bi-trash3-fill text-end px-2"></a></td>
+                                            <td>{{ $index + 1 }}. {{ $value->service->service }}</td>
+                                            <td>{{ $value->start }}</td>
+                                            <td>{{ $value->finish }}</td>
+                                            <td>{{ date('H:i', strtotime($value->finish) - strtotime($value->start)) }}</td>
+                                            @role('super-admin|admin')
+                                            <td class="text-end">{{ $value->service->price. " $" }}</td>
+                                            <td><a href="" wire:click.prevent="destroyService('{{ $value->service_id }}')" class="text-danger bi bi-trash3-fill text-end px-2"></a></td>
+                                            @endrole()
                                         </tr>
                                     @empty
                                         <tr>
@@ -131,7 +137,13 @@
                                     @if(count($selectedFlight->service) > 0)
                                         <tr>
                                             <td colspan="3"><strong>Total Services</strong></td>
-                                            <td colspan="2"><strong>{{ count($selectedFlight->service) }} Services</strong></td>
+                                            <td colspan="1"><strong>{{ count($selectedFlight->service) }} Services</strong></td>
+                                            @role('super-admin|admin')
+                                            <td colspan="1" class="text-end"><strong>{{ $selectedFlight->service->sum(function ($service) { 
+                                                return $service->service->price;
+                                               }) }} $</strong></td>
+                                            <td></td>
+                                            @endrole()
                                         </tr>
                                     @endif
                                 </tbody>
@@ -161,7 +173,7 @@
                                         <select class="form-select form-select-sm" id="registration" wire:model="flightFields.{{ $actualService }}.service_type">
                                             <option value="">Select a Service...</option>
                                             @foreach($serviceList as $value)
-                                            <option value="{{ $value->service }}">{{ $value->service }}</option>
+                                            <option value="{{ $value->id }}">{{ $value->service }}</option>
                                             @endforeach()
                                         </select>
                                     </td>
@@ -179,10 +191,19 @@
                             </tbody>
                         </table>
                         @endif
+                        <div wire:loading wire:target="generatePDF">
+                            <div class="custom-spin-overlay">
+                                <div class="position-absolute top-50 start-50 translate-middle d-flex justify-content-center">
+                                    <div class="spinner-border" style="width: 6rem; height: 6rem; border-width: 0.7rem;" role="status">
+                                        <span class="visually-hidden">Sending Movement ...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex align-items-center justify-content-between">
                             <button wire:click.prevent="addService" class="btn btn-sm btn-secondary bi bi-plus-lg"> Add a Service</button>
                             @role('super-admin|admin')
-                            <button wire:click.prevent="generatePDF" class="btn btn-sm btn-warning bi bi-file-earmark-pdf-fill"> Generate PDF</button>
+                            <button  wire:loading.attr="disabled" wire:click.prevent="generatePDF" class="btn btn-sm btn-warning bi bi-file-earmark-pdf-fill"> Generate PDF</button>
                             @endrole
                             <button wire:click.prevent="createServices" class="btn btn-sm btn-primary float-end bi bi-check2-circle"> Create Service</button>
                         </div>

@@ -7,13 +7,13 @@
     <title>Services</title>
     <style>
         body {
-        border: 1px solid black;
-        margin: 0;
-        padding: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            border: 1px solid black;
+            margin: 0;
+            padding: 0;
         }
 
         .card-body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             padding-left: 10px;
             padding-right: 10px;
             border: 1px solid #dee2e6;
@@ -21,6 +21,10 @@
 
         .table-responsive {
         overflow-x: auto;
+        }
+
+        .text-end {
+            text-align: right;
         }
 
         table {
@@ -68,26 +72,32 @@
                         <th>Start</th>
                         <th>Finish</th>
                         <th>Duration</th>
+                        <th>Cost</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($selectedFlight->service as $index => $service)
-                        <tr>
-                            <td>{{ $index + 1 }}. {{ $service->service_type }}</td>
-                            <td>{{ $service->start }}</td>
-                            <td>{{ $service->finish }}</td>
-                            <td>{{ date('H:i', strtotime($service->finish) - strtotime($service->start)) }}</td>
-                        </tr>
+                    @forelse ($selectedFlight->service as $index => $value )
+                    <tr>
+                        <td>{{ $index + 1 }}. {{ $value->service->service }}</td>
+                        <td>{{ $value->start }}</td>
+                        <td>{{ $value->finish }}</td>
+                        <td>{{ date('H:i', strtotime($value->finish) - strtotime($value->start)) }}</td>
+                        <td class="text-end">{{ $value->service->price. " $" }}</td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="100%">No Services for this flight Yet</td>
-                        </tr>
+                    <tr>
+                        <td colspan="100%">No Services for this flight Yet</td>
+                    </tr>
                     @endforelse
                     @if(count($selectedFlight->service) > 0)
-                        <tr>
-                            <td colspan="3"><strong>Total Services</strong></td>
-                            <td colspan="2"><strong>{{ count($selectedFlight->service) }} Services</strong></td>
-                        </tr>
+                    <tr>
+                        <td colspan="3"><strong>Total Services</strong></td>
+                        <td colspan="1"><strong>{{ count($selectedFlight->service) }} Services</strong></td>
+                        <td colspan="1" class="text-end"><strong>{{ $selectedFlight->service->sum(function ($service) { 
+                            return $service->service->price;
+                            }) }} $</strong>
+                        </td>
+                    </tr>
                     @endif
                 </tbody>
             </table>

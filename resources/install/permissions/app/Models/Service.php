@@ -11,14 +11,19 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
-        'service_type',
+        'service_id',
+        'flight_id',
         'start',
         'finish',
-        'flight_id',
     ];
 
     public function flight()
     {
         return $this->belongsTo(Flight::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(ServiceList::class);
     }
 }

@@ -156,11 +156,11 @@ class Flights extends Component
     public function createServices()
     {
         foreach ($this->flightFields as $flight) {
-            Service::updateOrCreate(['flight_id' => $this->flight_id, 'service_type' => $flight['service_type']], [
-                'service_type' => $flight['service_type'],
+            Service::updateOrCreate(['flight_id' => $this->flight_id, 'service_id' => $flight['service_type']], [
+                'service_id' => $flight['service_type'],
+                'flight_id' => $this->flight_id,
                 'start' => $flight['start'],
                 'finish' => $flight['finish'],
-                'flight_id' => $this->flight_id,
             ]);
         }
         session()->flash('message', 'Service Added Successfully.');
@@ -169,7 +169,7 @@ class Flights extends Component
 
     public function destroyService($flight)
     {
-        Service::where([['flight_id', $this->flight_id], ['service_type', $flight]])->delete();
+        Service::where([['flight_id', $this->flight_id], ['service_id', $flight]])->delete();
         session()->flash('message', 'Service Deleted Successfully.');
     }
 

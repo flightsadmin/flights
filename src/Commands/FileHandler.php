@@ -42,19 +42,37 @@ trait FileHandler
             //Updating NavBar
             $layoutsFile = base_path('resources/views/layouts/app.blade.php');
             $layoutsData = $this->filesystem->get($layoutsFile);
-            $spatieNavs  = "\t\t\t\t\t\t
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/users') }}\" class=\"nav-link\"><i class=\"bi bi-people-fill text-info h5\"></i> Users </a>\n\t\t\t\t\t\t</li>
-                        @role('super-admin|admin')
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/roles') }}\" class=\"nav-link\"><i class=\"bi bi-shield-shaded text-info h5\"></i> Roles </a>\n\t\t\t\t\t\t</li>
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/permissions') }}\" class=\"nav-link\"><i class=\"bi bi-person-fill-lock text-info h5\"></i> Permissions </a>\n\t\t\t\t\t\t</li>
-                        @endrole
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/airlines') }}\" class=\"nav-link\"><i class=\"bi bi-database-add text-info h5\"></i> Airlines </a>\n\t\t\t\t\t\t</li>
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/registrations') }}\" class=\"nav-link\"><i class=\"bi bi-clock-history text-info h5\"></i> Registrations </a>\n\t\t\t\t\t\t</li>
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/flights') }}\" class=\"nav-link\"><i class=\"bi bi-airplane-engines-fill text-info h5\"></i> Flights </a>\n\t\t\t\t\t\t</li>
-                        @role('super-admin|admin')
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/delays') }}\" class=\"nav-link\"><i class=\"bi bi-journal-code text-info h5\"></i> Delay Codes </a>\n\t\t\t\t\t\t</li>
-                        <li class=\"nav-item\">\n\t\t\t\t\t\t\t<a href=\"{{ url('/services') }}\" class=\"nav-link\"><i class=\"bi bi-plus-slash-minus text-info h5\"></i> Services </a>\n\t\t\t\t\t\t</li>
-                        @endrole";
+            $spatieNavs  =
+            <<<NAV
+                                    @role('super-admin|admin')
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="bi bi-people-fill h5 text-info"></span>
+                                            Admin
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-light">
+                                            <li><a href="{{ url('/users') }}" class="nav-link"><i class="bi bi-people-fill h5 text-info"></i> Users </a></li>
+                                            <li><a href="{{ url('/roles') }}" class="nav-link"><i class="bi bi-shield-shaded h5 text-info"></i> Roles </a></li>
+                                            <li><a href="{{ url('/permissions') }}" class="nav-link"><i class="bi bi-person-fill-lock h5 text-info"></i> Permissions </a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('/delays') }}" class="nav-link"><i class="bi bi-journal-code text-info h5"></i> Delay Codes </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('/services') }}" class="nav-link"><i class="bi bi-plus-slash-minus text-info h5"></i> Services </a>
+                                    </li>
+                                    @endrole
+                                    <li class="nav-item">
+                                        <a href="{{ url('/airlines') }}" class="nav-link"><i class="bi bi-database-add text-info h5"></i> Airlines </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('/registrations') }}" class="nav-link"><i class="bi bi-clock-history text-info h5"></i> Registrations </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('/flights') }}" class="nav-link"><i class="bi bi-airplane-engines-fill text-info h5"></i> Flights </a>
+                                    </li>
+            NAV;
             $spatieFileHook = "<!--Nav Bar Hooks - Do not delete!!-->";
 
             if (!Str::contains($layoutsData, $spatieNavs)) {

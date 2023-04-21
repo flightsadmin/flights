@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('base');
             $table->string('base_iata_code');
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('flights', function (Blueprint $table) {
@@ -29,7 +28,6 @@ return new class extends Migration
             $table->enum('flight_type', ['arrival', 'departure']);
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
         
         Schema::create('registrations', function (Blueprint $table) {
@@ -38,17 +36,22 @@ return new class extends Migration
             $table->string('aircraft_type');
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
+        });
+
+        Schema::create('service_lists', function (Blueprint $table) {
+            $table->id();
+            $table->string('service');
+            $table->string('price');
+            $table->timestamps();
         });
 
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('service_type');
+            $table->foreignId('service_id')->constrained('service_lists')->onDelete('cascade');
+            $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
             $table->timestamp('start');
             $table->timestamp('finish');
-            $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('movements', function (Blueprint $table) {
@@ -61,7 +64,6 @@ return new class extends Migration
             $table->integer('passengers')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('routes', function (Blueprint $table) {
@@ -71,7 +73,6 @@ return new class extends Migration
             $table->time('flight_time')->nullable();
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('addresses', function (Blueprint $table) {
@@ -80,7 +81,6 @@ return new class extends Migration
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->foreignId('route_id')->constrained('routes')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('airline_delay_codes', function (Blueprint $table) {
@@ -91,7 +91,6 @@ return new class extends Migration
             $table->string('accountable')->nullable();
             $table->foreignId('airline_id')->constrained('airlines')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('flight_delays', function (Blueprint $table) {
@@ -101,27 +100,18 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->foreignId('flight_id')->constrained('flights')->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
-        });
-    
-        Schema::create('service_lists', function (Blueprint $table) {
-            $table->id();
-            $table->string('service');
-            $table->string('price');
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('service_lists');
         Schema::dropIfExists('flight_delays');
         Schema::dropIfExists('airline_delay_codes');
         Schema::dropIfExists('addresses');
         Schema::dropIfExists('routes');
         Schema::dropIfExists('movements');
         Schema::dropIfExists('services');
+        Schema::dropIfExists('service_lists');
         Schema::dropIfExists('registrations');
         Schema::dropIfExists('flights');
         Schema::dropIfExists('airlines');
