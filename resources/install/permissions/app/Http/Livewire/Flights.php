@@ -142,7 +142,7 @@ class Flights extends Component
     // Services Methods
     public function addService()
     {
-        $this->ServiceTypes[] = 'Service '.rand(100, 999);
+        $this->ServiceTypes[] = 'Service '. rand(100, 999);
         $this->emit('refreshItems');
     }
 
@@ -202,8 +202,9 @@ class Flights extends Component
         );
 
         if (!is_null($validatedData['offblocks']) || !is_null($validatedData['airborne']) || !is_null($validatedData['touchdown']) || !is_null($validatedData['onblocks'])) {
-            
             $movement = Movement::updateOrCreate(['flight_id' => $validatedData['flight_id']], $validatedData);
+            $movement->flight_time = Route::latest()->where('airline_id', $movement->flight->airline_id)->where('origin', $movement->flight->origin)->first()->flight_time ?? "00:45:00";
+            $movement->save();
             foreach ($this->delayCodes as $delay) {
                 $movement->flight->delays()->updateOrCreate(['code' => $delay['code'], 'flight_id' => $validatedData['flight_id']],
                 [
@@ -216,6 +217,7 @@ class Flights extends Component
             $this->mvt = $movement;
         }
         $this->viewFlight($this->flight_id);
+        $this->emit('refreshItems');
     }
     
     public function sendMovement()
@@ -223,12 +225,10 @@ class Flights extends Component
         $this->saveMovement();
         $address = Route::with('emails')->where('airline_id', $this->mvt->flight->airline_id)
                                         ->where('origin', $this->mvt->flight->origin)->first();
-        $defaultAddress = ['george@flightadmin.info', 'flightsapps@gmail.com'];
-        
+        $defaultAddress = ['george@flightadmin.info', 'flightsapps@gmail.com'];        
         $emailData = [
             'mvt'               => $this->mvt,
             'flt'               => $this->mvt->flight,
-            'flightTime'        => $address ? $address->flight_time : "00:45:00",
             'recipients'        => $address ? array_merge($address->emails->pluck('email')->toArray(), $defaultAddress) : $defaultAddress,
             'outputdelay'       => $this->outputdelay,
             'outputedelay'      => $this->outputedelay,
@@ -262,13 +262,13 @@ class Flights extends Component
         $emailData = [
             'recipients' => ['george@flightadmin.info', 'flightsapps@gmail.com'],
             'subject' => 'Work-order for ' . $selectedFlight->flight_no,
-            'message' => '
-                    Dear ' . $selectedFlight->airline->name . ' Team.</br>
+            'message' => 
+                    'Dear ' . $selectedFlight->airline->name . ' Team.</br>
                     Find Attached Work-order for ' . $selectedFlight->flight_no .' '.
                     $selectedFlight->origin . ' - ' . $selectedFlight->destination . '</br></br>
                     Regards, <br>'.
                     config('app.name', 'Laravel') . ' Site Administrator. <br>
-                    <small><i>This is an automated message, Contact Us incase of any discrepancies </i></small>',
+                    <small style="color:red;"><i>This is an automated message, Contact Us incase of any discrepancies </i></small>',
             'pdfData' => $pdfData,
             'selectedFlight' => $selectedFlight,
         ];

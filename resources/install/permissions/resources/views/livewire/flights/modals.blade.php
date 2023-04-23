@@ -235,20 +235,22 @@
                                 <p>AA{{ date("Hi", strtotime($flightMvt->touchdown ?? null)) }}/{{ date("Hi", strtotime($flightMvt->onblocks  ?? null)) }}</p>
                                 @else
                                 <p>AD{{ date("Hi", strtotime($flightMvt->offblocks ?? null)) }}/{{ date("Hi", strtotime($flightMvt->airborne ?? null)) }}
-                                EA{{ date("Hi", strtotime($flightMvt->airborne ?? null)+strtotime($flightMvt->airborne ?? null)) }} {{ $selectedFlight->destination }}</p>
+                                EA{{ date("Hi", strtotime($flightMvt->airborne ?? null)+strtotime($flightMvt->flight_time ?? null)) }} {{ $selectedFlight->destination }}</p>
                                 @if (empty($outputdelay))  @else {{ "DL" .$outputdelay ?? null }} @endif
                                 <p>PX{{ $flightMvt->passengers ?? null }}</p>
                                 @if (empty($outputedelay))  @else {{ "EDL" .$outputedelay ?? null }}</p> @endif
                                 @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!} @endif
                                 <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($flightMvt->remarks ?? null) }} @endif</p>
-                                @endif                     
+                                <p>SI EET {{ date("Hi", strtotime($flightMvt->flight_time ?? 0)) }} HRS</p>
+                                @endif
                             </div>
-                            <div>
-                                <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> <input wire:model="History" class="form-check-input mt-0 ms-2" type="checkbox">
+                            <div class="small">
+                                <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> 
+                                <input wire:model="History" class="form-check-input mt-0 ms-2" type="checkbox">
                                 @if($History)
                                 @forelse($selectedFlight->movement->take(2) as $movement)
                                 <div class="row border">
-                                    <div class="col-md p-2 border">
+                                    <div class="col-md px-2 border small">
                                         <b class="small"><u>Sent: {{ date("d-M-Y H:i:s", strtotime($movement->created_at)) }}</u></b>
                                         <p>MVT</p>
                                         {{ $selectedFlight->flight_no }}/{{ ($selectedFlight->flight_type == 'arrival') ? 
@@ -258,12 +260,13 @@
                                         <p>AA{{ date("Hi", strtotime($movement->touchdown)) }}/{{ date("Hi", strtotime($movement->onblocks)) }}</p>
                                         @else
                                         <p>AD{{ date("Hi", strtotime($movement->offblocks)) }}/{{ date("Hi", strtotime($movement->airborne)) }}
-                                            EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->airborne)) }} {{ $selectedFlight->destination }}</p>
+                                            EA{{ date("Hi", strtotime($movement->airborne)+strtotime($movement->flight_time)) }} {{ $selectedFlight->destination }}</p>
                                             @if (empty($outputdelay))  @else {{ "DL" .$outputdelay ?? null }} @endif
                                             <p>PX{{ $movement->passengers ?? null }}</p>
                                             <p>@if (empty($outputedelay))  @else {{ "DL" .$outputedelay ?? null }} @endif</p>
                                             @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!} @endif
                                             <p>@if (empty($flightMvt->remarks))  @else SI {{ strtoupper($movement->remarks ?? null) }} @endif</p>
+                                            <p>SI EET {{ date("Hi", strtotime($movement->flight_time ?? 0)) }} HRS</p>
                                         @endif
                                     </div>
                                 </div>
@@ -316,27 +319,25 @@
                                 </div>
     
                                 @if ($selectedFlight->flight_type == 'departure')
-                                    <div>
-                                        <div class="form-group col-md-12 my-2">
-                                            <label>Delay Codes</label>
-                                            @foreach ($delayCodes as $index => $delayCode)
-                                                <div class="d-flex gap-1 mb-1">
-                                                    <select wire:model="delayCodes.{{ $index }}.code" class="form-select  form-select-sm">
-                                                        <option value="">Choose an option...</option>
-                                                        @foreach($airlineDelays as $value)
-                                                            <option value="{{ $value->numeric_code }}"> {{ $value->alpha_numeric_code }} - {{ Str::limit($value->description, 50) }} </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <input maxlength="5" class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.duration" placeholder="0000">
-                                                    <input class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.description" placeholder="Decription">
-                                                    <a href="" class="bi bi-trash3-fill text-danger text-center px-4" wire:click.prevent="removeDelay({{ $index }})"></a>
-                                                </div>
-                                                @error('delayCodes.'.$index.'.duration') <span class="text-danger small">{{ $message }}</span> @enderror
-                                            @endforeach
-                                            @if (count($delayCodes) < 4 )
-                                                <button class="btn custom-btn-sm btn-secondary bi bi-plus-circle" type="button" wire:click.prevent="addDelay"> Add Delay</button>
-                                            @endif
-                                        </div>
+                                    <div class="form-group col-md-12 my-2">
+                                        <label>Delay Codes</label>
+                                        @foreach ($delayCodes as $index => $delayCode)
+                                            <div class="d-flex gap-1 mb-1">
+                                                <select wire:model="delayCodes.{{ $index }}.code" class="form-select  form-select-sm">
+                                                    <option value="">Choose an option...</option>
+                                                    @foreach($airlineDelays as $value)
+                                                        <option value="{{ $value->numeric_code }}"> {{ $value->alpha_numeric_code }} - {{ Str::limit($value->description, 50) }} </option>
+                                                    @endforeach
+                                                </select>
+                                                <input maxlength="5" class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.duration" placeholder="0000">
+                                                <input class="form-control form-control-sm" type="text" wire:model="delayCodes.{{ $index }}.description" placeholder="Decription">
+                                                <a href="" class="bi bi-trash3-fill text-danger text-center px-4" wire:click.prevent="removeDelay({{ $index }})"></a>
+                                            </div>
+                                            @error('delayCodes.'.$index.'.duration') <span class="text-danger small">{{ $message }}</span> @enderror
+                                        @endforeach
+                                        @if (count($delayCodes) < 4 )
+                                            <button class="btn custom-btn-sm btn-secondary bi bi-plus-circle" type="button" wire:click.prevent="addDelay"> Add Delay</button>
+                                        @endif
                                     </div>
                                 @endif
                             </form>

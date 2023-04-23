@@ -62,6 +62,7 @@ return new class extends Migration
             $table->timestamp('touchdown')->nullable();
             $table->timestamp('onblocks')->nullable();
             $table->integer('passengers')->nullable();
+            $table->string('flight_time')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
         });

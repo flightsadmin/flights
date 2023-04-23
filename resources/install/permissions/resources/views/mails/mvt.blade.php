@@ -15,8 +15,8 @@
         AA{{ date("Hi", strtotime($mvt->touchdown)) }}/{{ date("Hi", strtotime($mvt->onblocks)) }}</br>
         @else
         AD{{ date("Hi", strtotime($mvt->offblocks)) }}/{{ date("Hi", strtotime($mvt->airborne)) }}
-        EA{{ date("Hi", strtotime($mvt->airborne)+strtotime($flightTime ?? 0)) }} {{ $flt->destination }}</br>
-        @if (empty($outputdelay))  @else {{ "DL" .$outputdelay ?? null }}</br> @endif
+        EA{{ date("Hi", strtotime($mvt->airborne) + strtotime($mvt->flight_time ?? 0)) }} {{ $flt->destination }}</br>
+        @if (empty($outputdelay))  @else {{ "DL". $outputdelay ?? null }}</br> @endif
         PX{{ $mvt->passengers ?? 00 }}</br>
         @if (empty($outputedelay))  @else {{ "EDL" .$outputedelay ?? null }}</br> @endif
         @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!}</br> @endif

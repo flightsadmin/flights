@@ -17,6 +17,7 @@ class Movement extends Model
         'airborne',
         'passengers',
         'status',
+        'flight_time',
         'remarks',
         'flight_id',
     ];

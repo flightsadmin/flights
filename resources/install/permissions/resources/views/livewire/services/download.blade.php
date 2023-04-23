@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services</title>
+    <title>Work Order - Flight {{ $selectedFlight->flight_no }} - {{ $selectedFlight->registration }}</title>
     <style>
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -44,10 +44,6 @@
         padding: .3rem;
         vertical-align: top;
         border-top: 1px solid #dee2e6;
-        }
-
-        tbody td:first-child {
-        font-weight: 600;
         }
 
         td[colspan="100%"] {
