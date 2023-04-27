@@ -1,6 +1,6 @@
 {
     "name": "flightsadmin/flights",
-    "description": "Laravel ^9.19 Admin Dashboard using Bootstrap 5, laravel livewire and Spatie Laravel permission. Flights Dashboard",
+    "description": "Flight Management Module Built on Laravel ^9.19 using Bootstrap 5, laravel livewire and Spatie Laravel permission.",
     "keywords": [
         "flightsadmin", "flights", "laravel", "livewire", "spatie permission"
     ],
@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": "^7|^8",
+        "dompdf/dompdf": "^2",
         "laravel/framework": ">9.19",
         "laravel/ui": "^4",
         "livewire/livewire": "^2",
