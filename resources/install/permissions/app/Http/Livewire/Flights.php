@@ -228,14 +228,13 @@ class Flights extends Component
         $defaultAddress = ['george@flightadmin.info', 'flightsapps@gmail.com'];        
         $emailData = [
             'mvt'               => $this->mvt,
-            'flt'               => $this->mvt->flight,
             'recipients'        => $address ? array_merge($address->emails->pluck('email')->toArray(), $defaultAddress) : $defaultAddress,
             'outputdelay'       => $this->outputdelay,
             'outputedelay'      => $this->outputedelay,
             'outputdescription' => $this->outputdescription,
         ];        
         Mail::send('mails.mvt', $emailData, function($message) use($emailData) {
-            $message->subject('MVT '. $emailData['flt']['flight_no']);
+            $message->subject('MVT '. $emailData['mvt']['flight']['flight_no']);
             $message->to(array_unique($emailData['recipients']));
         });
         $this->dispatchBrowserEvent('closeModal');

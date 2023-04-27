@@ -21,15 +21,15 @@ trait FileHandler
             $updatedData = $this->filesystem->get($routeFile);
             $spatieRoutes = 
             <<<ROUTES
-            Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');
-            Route::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');
-            Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin|user');
+            Route::view('flights', 'livewire.flights.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('airlines', 'livewire.airlines.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('registrations', 'livewire.registrations.index')->middleware('auth', 'role:super-admin|admin|user');
-            Route::view('flights', 'livewire.flights.index')->middleware('auth', 'role:super-admin|admin|user');
             Route::view('schedules', 'livewire.schedules.index')->middleware('auth', 'role:super-admin|admin');
             Route::view('delays', 'livewire.delays.index')->middleware('auth', 'role:super-admin|admin');
             Route::view('services', 'livewire.services.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('permissions', 'livewire.permissions.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('roles', 'livewire.roles.index')->middleware('auth', 'role:super-admin|admin');
+            Route::view('users', 'livewire.users.index')->middleware('auth', 'role:super-admin|admin|user');
             ROUTES;
             $fileHook = "//Route Hooks - Do not delete//";
 
