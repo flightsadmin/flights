@@ -23,7 +23,7 @@ class Flights extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
     public $airline_id, $flight_no, $registration, $origin, $destination, $scheduled_time_arrival, $scheduled_time_departure, $flight_type, $keyWord, $flight_id, $selectedDate, $mvt;
-    public $ServiceTypes = [], $flightFields = [],$registrations = [], $delayCodes = [], $History, $outputdelay, $outputedelay, $outputdescription, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
+    public $ServiceTypes = [], $registrations = [], $delayCodes = [], $history, $outputdelay, $outputedelay, $outputdla, $outputdescription, $touchdown, $onblocks, $offblocks, $airborne, $passengers, $remarks;
 
     protected $listeners = ['refreshItems' => '$refresh'];
 
@@ -56,7 +56,7 @@ class Flights extends Component
     {
         return [$this->resetErrorBag(), $this->reset([
             //Service Fields
-            'flightFields', 'ServiceTypes', 'flight_id',
+            'ServiceTypes', 'flight_id',
             //Flight Fields
             'airline_id', 'flight_no', 'registration', 'origin',
             'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type',
@@ -124,13 +124,14 @@ class Flights extends Component
         
         $allDelays = $delays->pluck('duration', 'code')->toArray();
         $formattedDesc  = $delays->pluck('description')->toArray();
-        
+
         $formattedDelay = array_chunk($allDelays, 2, true)[0] ?? [];
         $formattedeDelay = array_chunk($allDelays, 2, true)[1] ?? [];
 
-        $this->outputdelay =  str_replace(':','', implode('/', array_merge(array_keys($formattedDelay), array_values($formattedDelay))));
-        $this->outputedelay =  str_replace(':','', implode('/', array_merge(array_keys($formattedeDelay), array_values($formattedeDelay))));
-        $this->outputdescription =  strtoupper(implode("\nSI ", array_values($formattedDesc)));
+        $this->outputdla = strtoupper(implode('/', array_keys($allDelays)) . str_repeat('/', 4 - count($allDelays)));
+        $this->outputdelay =  preg_replace("/[a-zA-Z:]/",'', implode('/', array_merge(array_keys($formattedDelay), array_values($formattedDelay))));
+        $this->outputedelay =  preg_replace("/[a-zA-Z:]/",'', implode('/', array_merge(array_keys($formattedeDelay), array_values($formattedeDelay))));
+        $this->outputdescription = strtoupper(implode("\nSI ", array_values(array_filter($formattedDesc, function($value) { return !empty($value); }))));
 
         foreach ($delays as $index => $delay) {
             $this->delayCodes[$index]['code'] = $delay->code;
@@ -142,7 +143,7 @@ class Flights extends Component
     // Services Methods
     public function addService()
     {
-        $this->ServiceTypes[] = 'Service '. rand(100, 999);
+        $this->ServiceTypes[] = ['start' => '', 'finish' => ''];
         $this->emit('refreshItems');
     }
 
@@ -155,7 +156,7 @@ class Flights extends Component
 
     public function createServices()
     {
-        foreach ($this->flightFields as $flight) {
+        foreach ($this->ServiceTypes as $flight) {
             Service::updateOrCreate(['flight_id' => $this->flight_id, 'service_id' => $flight['service_type']], [
                 'service_id' => $flight['service_type'],
                 'flight_id' => $this->flight_id,
@@ -164,7 +165,7 @@ class Flights extends Component
             ]);
         }
         session()->flash('message', 'Service Added Successfully.');
-        $this->reset(['flightFields', 'ServiceTypes']);
+        $this->reset(['ServiceTypes']);
     }
 
     public function destroyService($flight)
@@ -191,16 +192,19 @@ class Flights extends Component
     {
         $validatedData = $this->validate(
             [
-                'offblocks'             => 'nullable|date',
-                'airborne'              => 'nullable|date',
-                'touchdown'             => 'nullable|date',
-                'onblocks'              => 'nullable|date',
-                'passengers'            => 'nullable|integer|min:0',
-                'remarks'               => 'nullable|string',
-                'flight_id'             => 'required|exists:flights,id',
+                'offblocks'     => 'nullable|date',
+                'airborne'      => 'nullable|date',
+                'touchdown'     => 'nullable|date',
+                'onblocks'      => 'nullable|date',
+                'passengers'    => 'nullable|integer|min:0',
+                'remarks'       => 'nullable|string',
+                'flight_id'     => 'required|exists:flights,id',
             ]
         );
-
+        $validatedData = array_map(function ($value) {
+            return is_string($value) ? strtoupper($value) : $value;
+        }, $validatedData);
+        
         if (!is_null($validatedData['offblocks']) || !is_null($validatedData['airborne']) || !is_null($validatedData['touchdown']) || !is_null($validatedData['onblocks'])) {
             $movement = Movement::updateOrCreate(['flight_id' => $validatedData['flight_id']], $validatedData);
             $movement->flight_time = Route::latest()->where('airline_id', $movement->flight->airline_id)->where('origin', $movement->flight->origin)->first()->flight_time ?? "00:45:00";
@@ -230,6 +234,7 @@ class Flights extends Component
             'mvt'               => $this->mvt,
             'recipients'        => $address ? array_merge($address->emails->pluck('email')->toArray(), $defaultAddress) : $defaultAddress,
             'outputdelay'       => $this->outputdelay,
+            'outputdla'         => $this->outputdla,
             'outputedelay'      => $this->outputedelay,
             'outputdescription' => $this->outputdescription,
         ];        

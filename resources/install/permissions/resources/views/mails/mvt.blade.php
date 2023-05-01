@@ -19,6 +19,7 @@
         @if (empty($outputdelay))  @else {{ "DL". $outputdelay ?? null }}</br> @endif
         PX{{ $mvt->passengers ?? 00 }}</br>
         @if (empty($outputedelay))  @else {{ "EDL" .$outputedelay ?? null }}</br> @endif
+        @if (empty($outputdelay))  @else {{ "DLA" .$outputdla ?? null }}</br> @endif
         @if (empty($outputdescription))  @else {!! "SI ". nl2br(e($outputdescription)) ?? null !!}</br> @endif
         @if (empty($mvt->remarks))  @else SI {{ strtoupper($mvt->remarks ?? null) }}</br> @endif
         SI EET {{ date("Hi", strtotime($mvt->flight_time ?? 0)) }} HRS
