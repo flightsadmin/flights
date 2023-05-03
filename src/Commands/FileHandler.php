@@ -11,6 +11,7 @@ trait FileHandler
 {
     public function spatiePermissionsInstall()
     {
+        //Spatie Laravel Permission Installation
         if ($this->confirm('Do you want to Install Spatie Laravel Permission?', true, true)) {
             $this->permStubDir = __DIR__ . '/../../resources/install/permissions';
             $this->generatePermissionFiles();

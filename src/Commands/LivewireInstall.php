@@ -35,7 +35,7 @@ class LivewireInstall extends Command
             }
             
 			if ($this->confirm('Do you want to scaffold Authentication files? Only skip if you have authentication system on your App', false, true)) {
-                Artisan::call('ui:auth', [], $this->getOutput());
+                Artisan::call('ui:auth', ['--force' => true], $this->getOutput());
 			}
 
             $this->line('');

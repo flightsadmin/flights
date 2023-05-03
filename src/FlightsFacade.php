@@ -8,6 +8,6 @@ class FlightsFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'livewire-crud';
+        return 'flights';
     }
 }
