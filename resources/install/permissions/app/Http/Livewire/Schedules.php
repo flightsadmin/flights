@@ -104,8 +104,8 @@ class Schedules extends Component
             $flight->registration = $row[2];
             $flight->origin = $row[3];
             $flight->destination = $row[4];
-            $flight->scheduled_time_arrival = date('Y-m-d H:s', strtotime($row[5]));
-            $flight->scheduled_time_departure = date('Y-m-d H:s', strtotime($row[6]));
+            $flight->scheduled_time_arrival = date('Y-m-d H:i', strtotime($row[5]));
+            $flight->scheduled_time_departure = date('Y-m-d H:i', strtotime($row[6]));
             $flight->flight_type = $row[7];
             $flight->save();
         }

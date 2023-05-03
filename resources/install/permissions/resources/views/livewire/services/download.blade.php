@@ -55,8 +55,8 @@
     <div class="card-body">
         <div style="text-align: center; margin: 1rem;">
             <h3 style="margin: 1px;"> {{ $selectedFlight->flight_no }} - {{ $selectedFlight->registration }}</h3>
-            {{ $selectedFlight->destination }} {{ date('H:s', strtotime($selectedFlight->scheduled_time_arrival)) }}
-            {{ $selectedFlight->origin }} {{ date('H:s', strtotime($selectedFlight->scheduled_time_departure)) }} <br>
+            {{ $selectedFlight->destination }} {{ date('H:i', strtotime($selectedFlight->scheduled_time_arrival)) }}
+            {{ $selectedFlight->origin }} {{ date('H:i', strtotime($selectedFlight->scheduled_time_departure)) }} <br>
             Work-Oder No: {{ preg_replace('/\b(\w)\w*\s*/', '$1', ucwords(config('app.name', 'Laravel'))) }}{{ str_pad($selectedFlight->id, 6, '0', STR_PAD_LEFT) }} <br>
             Date: {{ $selectedFlight->created_at->format('d M, Y') }}
         </div>

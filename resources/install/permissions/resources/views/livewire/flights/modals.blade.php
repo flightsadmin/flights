@@ -90,8 +90,8 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <h5> {{ $selectedFlight->flight_no }} - {{ $selectedFlight->registration }}</h5>
-                                <span class="text-warning bi bi-arrow-up-right-circle-fill"> </span> {{ $selectedFlight->destination }} {{ date('H:s', strtotime($selectedFlight->scheduled_time_arrival)) }}
-                                <span class="text-success bi bi-arrow-down-right-circle-fill"></span> {{ $selectedFlight->origin }} {{ date('H:s', strtotime($selectedFlight->scheduled_time_departure)) }}
+                                <span class="text-warning bi bi-arrow-up-right-circle-fill"> </span> {{ $selectedFlight->destination }} {{ date('H:i', strtotime($selectedFlight->scheduled_time_arrival)) }}
+                                <span class="text-success bi bi-arrow-down-right-circle-fill"></span> {{ $selectedFlight->origin }} {{ date('H:i', strtotime($selectedFlight->scheduled_time_departure)) }}
                             </div>
                             <div class="text-center">
                                 <p> {{ config('app.name', 'Laravel') }} </p>
