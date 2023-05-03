@@ -31,27 +31,13 @@ php artisan flight:install
 If you choose to scaffold authentication this command will run `php artisan ui:auth`
 to generate Auth scaffolds using `laravel/ui` package. You can skip this step if your app has authentication already.
 
-## Available routes
-
-/users
-
-/roles
-
-/permissions
-
-/flights
-
-/airlines
-
-/registrations
-
 ## Default Credentials
 
 Level | Email | Password
 ---|---|---
-Super-admin| super-admin@example.com | password
-Admin| admin@example.com | password
-User| user@example.com | password
+Super-admin| super-admin@flightadmin.com | password
+Admin| admin@flightadmin.com | password
+User| user@flightadmin.com | password
 
 ### Changelog
 
