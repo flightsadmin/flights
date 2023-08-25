@@ -8,7 +8,7 @@
                             <h4>Flight Schedules </h4>
                         </div>
                         <div class="d-flex gap-4">
-                            <form wire:submit.prevent="import" enctype="multipart/form-data">
+                            <form wire:submit="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror

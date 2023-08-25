@@ -23,12 +23,12 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="flight_no" class="form-label">Flight Number</label>
-                            <input wire:model.lazy="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
+                            <input wire:model.blur="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
                             @error('flight_no') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="registration" class="form-label">Registration</label>
-                            <select wire:model.lazy="registration" class="form-select  form-select-sm" id="registration">
+                            <select wire:model.blur="registration" class="form-select  form-select-sm" id="registration">
                                 <option value="">Choose an option...</option>
                                 @foreach($registrations as $value)
                                 <option value="{{ $value->registration }}">{{ $value->registration }}</option>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="flight_type" class="form-label">Flight Type</label>
-                            <select wire:model.lazy="flight_type" class="form-select form-select-sm" id="flight_type">
+                            <select wire:model.blur="flight_type" class="form-select form-select-sm" id="flight_type">
                                 <option value="">Select Flight Type</option>
                                 <option value="arrival">Arrival</option>
                                 <option value="departure">Departure</option>
@@ -47,22 +47,22 @@
                         </div> 
                         <div class="col-md-6 mb-3">
                             <label for="origin" class="form-label">Origin</label>
-                            <input wire:model.lazy="origin" type="text" class="form-control form-control-sm" id="origin">
+                            <input wire:model.blur="origin" type="text" class="form-control form-control-sm" id="origin">
                             @error('origin') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="destination" class="form-label">Destination</label>
-                            <input wire:model.lazy="destination" type="text" class="form-control form-control-sm" id="destination">
+                            <input wire:model.blur="destination" type="text" class="form-control form-control-sm" id="destination">
                             @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="scheduled_time_arrival" class="form-label">Scheduled Time of Arrival</label>
-                            <input wire:model.lazy="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
+                            <input wire:model.blur="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
                             @error('scheduled_time_arrival') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="scheduled_time_departure" class="form-label">Scheduled Time of Departure</label>
-                            <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
+                            <input wire:model.blur="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
                             @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks" wire:model.lazy="remarks"></textarea>
+                                    <textarea class="form-control" id="remarks" wire:model.blur="remarks"></textarea>
                                     @error('remarks') <span class="text-danger small">{{ $message }}</span> @enderror
                                 </div>
                                 @endif

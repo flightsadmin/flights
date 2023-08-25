@@ -17,7 +17,7 @@
                             <div class="row g-2 mb-3">
                                 <div class="col-md-12">
                                     <label class="h4" for="role.name">Role Name <span class="text-danger small">*</span></label>
-                                    <input type="text" wire:model.lazy="role.name" class="form-control">
+                                    <input type="text" wire:model.blur="role.name" class="form-control">
                                     @error('role.name') <span class="text-danger small">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="mt-3" style="display: flex; justify-content: space-between; align-items: center;">
@@ -34,7 +34,7 @@
                                     <tr>
                                         <td width="40">
                                             <input class="form-check-input" type="checkbox" 
-                                                wire:model.lazy="permissions_selection" 
+                                                wire:model.blur="permissions_selection" 
                                                 value="{{ $permission->id }}" 
                                                 id="permission_{{ $permission->id }}">
                                         </td>

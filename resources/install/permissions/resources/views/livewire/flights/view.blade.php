@@ -7,9 +7,6 @@
 						<div class="float-left">
 							<h4>Flights</h4>
 						</div>
-						<!-- @if (session()->has('message'))
-						<div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
-						@endif -->
 						<div>
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flights">
 						</div>

@@ -12,12 +12,12 @@
                 <form>
                     <div class="mb-3">
                         <label for="registration" class="form-label">Registration</label>
-                        <input wire:model.lazy="registration" type="text" class="form-control" id="registration">
+                        <input wire:model.blur="registration" type="text" class="form-control" id="registration">
                         @error('registration') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
                         <label for="aircraft_type" class="form-label">Aircraft Type</label>
-                        <select wire:model.lazy="aircraft_type" class="form-select" id="aircraft_type">
+                        <select wire:model.blur="aircraft_type" class="form-select" id="aircraft_type">
                             <option value="">Select Aircraft Type</option>
                             @foreach($registrations->pluck('aircraft_type')->unique()->sort() as $value)
                                 <option value="{{  $value }}">{{  $value }}</option>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="airline_id">Airline:</label>
-                        <select class="form-select" id="airline_id" wire:model.lazy="airline_id">
+                        <select class="form-select" id="airline_id" wire:model.blur="airline_id">
                             <option value="">Select an airline</option>
                             @foreach($registrations->pluck('airline')->unique()->sortBy('name') as $airline)
                                 <option value="{{ $airline['id'] }}">{{ $airline['name'] }}</option>

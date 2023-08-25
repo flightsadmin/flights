@@ -15,7 +15,6 @@
 
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
-    @livewireStyles
 </head>
 <body>
     <div id="app">
@@ -79,7 +78,6 @@
             @yield('content')
         </main>
     </div>
-    @livewireScripts
     @stack('scripts')
 </body>
 </html>

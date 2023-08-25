@@ -22,10 +22,11 @@ class LivewireInstall extends Command
     public function handle()
     {
         $this->filesystem = new Filesystem;
-		(new Filesystem)->ensureDirectoryExists(app_path('Http/Livewire'));
+		(new Filesystem)->ensureDirectoryExists(app_path('Livewire'));
 		(new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers'));
 		(new Filesystem)->ensureDirectoryExists(app_path('Models'));
 		(new Filesystem)->ensureDirectoryExists(resource_path('views/livewire'));
+		(new Filesystem)->ensureDirectoryExists(resource_path('views/components/layouts'));
 		
         if ($this->confirm('This will delete compiled assets in public folder. It will Re-Compile this. Do you want to proceed?', false, true)) { 
             $routeFile = base_path('routes/web.php');

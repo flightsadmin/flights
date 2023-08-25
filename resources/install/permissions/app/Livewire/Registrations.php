@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\Airline;
 use Livewire\Component;
@@ -44,7 +44,7 @@ class Registrations extends Component
         ]);
 
         $this->reset();
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', $this->registration_id ? 'Registration Updated Successfully.' : 'Registration Created Successfully.');
     }
 

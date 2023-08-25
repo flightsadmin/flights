@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Route;
@@ -41,7 +41,7 @@ class Airlines extends Component
 
         Airline::updateOrCreate(['id' => $this->airline_id], $validatedData);
 
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Airline created successfully.');
         $this->reset();
     }
@@ -96,7 +96,7 @@ class Airlines extends Component
                 'airline_id' => $validatedData['airline_id'],
             ]);
         }
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', $route->wasRecentlyCreated ? 'Route Created successfully.' : 'Route Updated successfully.');
         $this->reset();
     }

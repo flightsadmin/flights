@@ -18,7 +18,7 @@
                             <div class="row g-2 mb-3">
                                 <div class="col-md-12">
                                 <label class="h5" for="permission.name">Permissions Name <span class="text-danger small">*</span></label>
-                                    <input type="text" wire:model.lazy="permission.name" class="form-control">
+                                    <input type="text" wire:model.blur="permission.name" class="form-control">
                                     @error('permission.name') <span class="text-danger small">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="mt-3" style="display: flex; justify-content: space-between; align-items: center;">

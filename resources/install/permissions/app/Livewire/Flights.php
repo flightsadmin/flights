@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use Dompdf\Dompdf;
@@ -85,7 +85,7 @@ class Flights extends Component
         $flight = Flight::updateOrCreate(['id' => $this->flight_id], $validatedData);
         
         $this->emptyFields();
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', $this->flight_id ? 'Flight Updated Successfully.' : 'Flight Created Successfully.');
     }
 
@@ -144,14 +144,14 @@ class Flights extends Component
     public function addService()
     {
         $this->ServiceTypes[] = ['start' => '', 'finish' => ''];
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
 
     public function removeService($index)
     {
         unset($this->ServiceTypes[$index]);
         $this->ServiceTypes = array_values($this->ServiceTypes);
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
 
     public function createServices()
@@ -221,7 +221,7 @@ class Flights extends Component
             $this->mvt = $movement;
         }
         $this->viewFlight($this->flight_id);
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
     
     public function sendMovement()
@@ -242,7 +242,7 @@ class Flights extends Component
             $message->subject('MVT '. $emailData['mvt']['flight']['flight_no']);
             $message->to(array_unique($emailData['recipients']));
         });
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Movement Sent successfully.');
         $this->emptyFields();
     }

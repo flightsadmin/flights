@@ -41,7 +41,7 @@ trait FileHandler
             }
 
             //Updating NavBar
-            $layoutsFile = base_path('resources/views/layouts/app.blade.php');
+            $layoutsFile = base_path('resources/views/components/layouts/app.blade.php');
             $layoutsData = $this->filesystem->get($layoutsFile);
             $spatieNavs  =
             <<<NAV

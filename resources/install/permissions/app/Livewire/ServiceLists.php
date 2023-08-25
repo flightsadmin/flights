@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\ServiceList;
@@ -33,7 +33,7 @@ class ServiceLists extends Component
 
         ServiceList::updateOrCreate(['id' => $this->service_id], $validatedData);
 
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Service created successfully.');
         $this->reset();
     }

@@ -53,22 +53,22 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name">Name</label>
-                            <input type="text" wire:model.lazy="name" placeholder="Name" class="form-control">
+                            <input type="text" wire:model.blur="name" placeholder="Name" class="form-control">
                             @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>                                                
                         <div class="col-md-6 mb-3">
                             <label for="email">Email</label>
-                            <input type="email" wire:model.lazy="email" placeholder="Email" class="form-control">
+                            <input type="email" wire:model.blur="email" placeholder="Email" class="form-control">
                             @error('email') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div> 
                         <div class="col-md-6 mb-3">
                             <label for="phone">Phone</label>
-                            <input type="text" wire:model.lazy="phone" placeholder="Phone" class="form-control">
+                            <input type="text" wire:model.blur="phone" placeholder="Phone" class="form-control">
                             @error('phone') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div> 
                         <div class="col-md-6 mb-3">
                             <label for="title">Title</label>
-                            <input type="text" wire:model.lazy="title" placeholder="Title" class="form-control" autocomplete="off">
+                            <input type="text" wire:model.blur="title" placeholder="Title" class="form-control" autocomplete="off">
                             @error('title') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
@@ -90,12 +90,12 @@
                         @if ($changePassword)
                         <div class="col-md-6 mb-3">
                             <label for="password">Password</label>
-                            <input type="password" wire:model.lazy="password" placeholder="Password" class="form-control">
+                            <input type="password" wire:model.blur="password" placeholder="Password" class="form-control">
                             @error('password') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="password_confirmation">Confirm Password</label>
-                            <input type="password" wire:model.lazy="password_confirmation" placeholder="Confirm Password" class="form-control">
+                            <input type="password" wire:model.blur="password_confirmation" placeholder="Confirm Password" class="form-control">
                             @error('password_confirmation') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         @endif
@@ -108,7 +108,7 @@
                                         @foreach($roles as $role)
                                         <tr>
                                             <td class="text-center" width="40">
-                                                <input type="checkbox" wire:model.lazy="selectedRoles" value="{{ $role->id }}" class="form-check-input"
+                                                <input type="checkbox" wire:model.blur="selectedRoles" value="{{ $role->id }}" class="form-check-input"
                                                 @checked(in_array($role->id, $selectedRoles))
                                             </td>
                                             <td>

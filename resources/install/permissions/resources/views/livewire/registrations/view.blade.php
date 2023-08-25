@@ -11,7 +11,7 @@
 							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
 						</div>
 						<div class="d-flex gap-4">
-                            <form wire:submit.prevent="importRegistration" enctype="multipart/form-data">
+                            <form wire:submit="importRegistration" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
                                     <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror

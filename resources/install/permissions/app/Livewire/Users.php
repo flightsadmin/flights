@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
@@ -67,7 +67,7 @@ class Users extends Component
                 ->subject('New Account for '. $emailData['name']);
             });
         }
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         $this->reset();
         session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
     }
