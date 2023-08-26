@@ -85,6 +85,7 @@ class LivewireInstall extends Command
 		
 		tap(new Filesystem, function ($npm) {
             $npm->deleteDirectory(base_path('node_modules'));
+            $npm->deleteDirectory(base_path('resources/views/layouts'));
             $npm->delete(base_path('yarn.lock'));
             $npm->delete(base_path('webpack.mix.js'));
             $npm->delete(base_path('package-lock.json'));
