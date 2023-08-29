@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="dataModalLabel">
                     {{ $flight_id ? 'Edit Flight' : 'Create New Flight' }}  
                 </h5>
-                <button wire:click.prevent="emptyFields" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button wire:click="$refresh" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -69,7 +69,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-between">
-                <button wire:click.prevent="emptyFields" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button wire:click="$refresh" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary bi bi-check2-circle"> Save</button>
             </div>
         </div>
@@ -82,7 +82,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="dataModalLabel"> Flight Services </h6>
-                <button type="button" class="btn-close" wire:click.prevent="emptyFields" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" wire:click="$refresh" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card-body border py-0">
@@ -119,7 +119,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($selectedFlight->service as $index => $value)
-                                        <tr>
+                                        <tr wire:key="{{ $value->id }}">
                                             <td>{{ $index + 1 }}. {{ $value->service->service }}</td>
                                             <td>{{ $value->start }}</td>
                                             <td>{{ $value->finish }}</td>
@@ -158,7 +158,7 @@
                         @if(count($ServiceTypes) > 0)
                         <b>Add Services</b>
                         @foreach ($ServiceTypes as $index => $actualService)
-                            <div class="d-flex gap-1 mb-1">
+                            <div class="d-flex gap-1 mb-1" wire:key="{{ $index }}">
                                 <select class="form-select form-select-sm" id="{{ $index }}" wire:model="ServiceTypes.{{ $index }}.service_type">
                                     <option value="">Select a Service...</option>
                                     @foreach($serviceList as $value)
@@ -200,7 +200,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="dataModalLabel"> Send Movements </h6>
-                <button type="button" wire:click.prevent="emptyFields" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" wire:click="$refresh" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if ($flight_id)
@@ -226,8 +226,8 @@
                             @endif
                         </div>
                         <div class="small">
-                            <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> 
-                            <input name="history" wire:model="history" class="form-check-input mt-0 ms-2" type="checkbox">
+                            <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i>
+                            <input name="history" wire:click="$toggle('history')" class="form-check-input mt-0 ms-2" type="checkbox">
                             @if($history)
                             @forelse($selectedFlight->movement->take(2) as $movement)
                             <div class="row border">
@@ -337,7 +337,7 @@
                     </div>
                 </div>
                 <div class="card-body border py-2 d-flex align-items-center justify-content-between">
-                    <button wire:click.prevent="emptyFields" data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
+                    <button wire:click="$refresh" data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
                     <button wire:loading.attr="disabled" wire:click.prevent="sendMovement" type="button" class="btn btn-sm btn-success bi bi-envelope-check-fill"> Send Movement</button>
                     <button wire:loading.attr="disabled" wire:click.prevent="saveMovement" type="button" class="btn btn-sm btn-primary bi bi-clock-history"> Save Movement</button>
                 </div>
