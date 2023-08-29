@@ -159,7 +159,7 @@
                         <b>Add Services</b>
                         @foreach ($ServiceTypes as $index => $actualService)
                             <div class="d-flex gap-1 mb-1">
-                                <select class="form-select form-select-sm" id="registration" wire:model="ServiceTypes.{{ $index }}.service_type">
+                                <select class="form-select form-select-sm" id="{{ $index }}" wire:model="ServiceTypes.{{ $index }}.service_type">
                                     <option value="">Select a Service...</option>
                                     @foreach($serviceList as $value)
                                     <option value="{{ $value->id }}">{{ $value->service }}</option>
@@ -227,7 +227,7 @@
                         </div>
                         <div class="small">
                             <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> 
-                            <input wire:model="history" class="form-check-input mt-0 ms-2" type="checkbox">
+                            <input name="history" wire:model="history" class="form-check-input mt-0 ms-2" type="checkbox">
                             @if($history)
                             @forelse($selectedFlight->movement->take(2) as $movement)
                             <div class="row border">
@@ -302,7 +302,7 @@
 
                             @if ($selectedFlight->flight_type == 'departure')
                                 <div class="form-group col-md-12 my-2">
-                                    <label>Delay Codes</label>
+                                    <p>Delay Codes</p>
                                     @foreach ($delayCodes as $index => $delayCode)
                                         <div class="d-flex gap-1 mb-1">
                                             <select wire:model="delayCodes.{{ $index }}.code" class="form-select  form-select-sm">
