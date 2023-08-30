@@ -31,16 +31,17 @@
                 </div>
 
                 <div class="card-body border">
+                @if($flightNumbers)
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th width="120">Airline</th>
-                                    <th width="120">Flight Number</th>
-                                    <th width="220">Timings (Arrival & Departure)</th>
-                                    <th width="120">Origin</th>
-                                    <th width="120">Destination</th>
-                                    <th width="120">Type</th>
+                                    <th width="150">Airline</th>
+                                    <th width="130">Flight Number</th>
+                                    <th width="230">Timings (Arrival & Departure)</th>
+                                    <th width="130">Origin</th>
+                                    <th width="130">Destination</th>
+                                    <th width="150">Type</th>
                                     @foreach ($days as $day)
                                     <th>{{ $day }}</th>
                                     @endforeach
@@ -93,6 +94,7 @@
                             </tbody>
                         </table>
                     </div>
+                @endif
                     <button wire:click.prevent="addFlights" class="btn btn-sm btn-secondary">+ Add a Schedule</button>
                     <button wire:click="createFlights" class="btn btn-sm btn-primary float-end">Create Flights</button>
                 </div>
