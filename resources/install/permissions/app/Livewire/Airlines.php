@@ -182,6 +182,6 @@ class Airlines extends Component
         }
 
         session()->flash('message', 'Airlines Imported Successfully.');
-        return redirect('/airlines');
+        return $this->redirect('/airlines', navigate: true);
     }
 }
