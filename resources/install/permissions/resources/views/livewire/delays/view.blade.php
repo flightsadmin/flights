@@ -8,7 +8,7 @@
 							<h4>Delay Codes </h4>
 						</div>
 						<div>
-							<select wire:model="keyWord" class="form-select  form-select-sm" id="airline_id">
+							<select wire:model.live="keyWord" class="form-select  form-select-sm" id="airline_id">
                                 <option value="">Filter By Airline...</option>
                                 @foreach($airlines as $value)
                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -16,9 +16,9 @@
                             </select>
 						</div>
                         <div class="d-flex gap-4">
-                            <form wire:submit.prevent="importDelays" enctype="multipart/form-data">
+                            <form wire:submit="importDelays" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    <input type="file" accept=".csv, .xlsx" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
@@ -47,7 +47,7 @@
 						</thead>
 						<tbody>
 							@forelse($delays as $row)
-							<tr>
+							<tr wire:key="{{ $row->id }}">
 								<td>{{ $loop->iteration }}</td> 
 								<td>{{ $row->numeric_code }}</td>
 								<td>{{ $row->alpha_numeric_code }}</td>

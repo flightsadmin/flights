@@ -31,7 +31,7 @@
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
-                                <tr>
+                                <tr wire:key="{{ $user->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
@@ -44,13 +44,12 @@
                                     </td>
                                     <td class="text-center"><img class="profile-img" src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->title }}"></td>
                                     <td class="text-center">
-                                        <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-info custom-btn-sm text-white bi bi-eye" wire:click="viewUser({{ $user->id }})"> </button>
+                                        <button data-bs-toggle="modal" data-bs-target="#viewModal" class="btn btn-info custom-btn-sm text-white bi bi-eye" wire:click="edit({{ $user->id }})"> </button>
                                     @if($user->id == auth()->user()->id || auth()->user()->can('editUser'))
                                         <button data-bs-toggle="modal" data-bs-target="#dataModal" class="btn btn-primary custom-btn-sm bi bi-pencil-square" wire:click="edit({{ $user->id }})"> </button>
                                         @can('deleteUser')
                                         <button class="btn btn-danger custom-btn-sm text-white bi bi-trash3-fill" 
-                                        wire:click="destroy({{ $user->id }})" 
-                                        onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"> </button>
+                                        onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{ $user->id }})"> </button>
                                         @endcan
                                     @endif
                                     <td>

@@ -7,14 +7,11 @@
 						<div class="float-left">
 							<h4>Flights</h4>
 						</div>
-						<!-- @if (session()->has('message'))
-						<div wire:poll.4s class="btn btn-sm btn-success" style="margin-top:0px; margin-bottom:0px;"> {{ session('message') }} </div>
-						@endif -->
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flights">
+							<input wire:model.live.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Flights">
 						</div>
 						<div>
-							<input type="date" wire:model="selectedDate" id="datepicker" class="form-control form-control-sm">
+							<input type="date" wire:model.live="selectedDate" id="datepicker" class="form-control form-control-sm">
 						</div>
 						<div class="d-flex gap-4">
 							@role('super-admin|admin')
@@ -45,7 +42,7 @@
 						</thead>
 						<tbody>
 							@forelse($flights as $row)
-							<tr>
+							<tr wire:key="{{ $row->id }}">
 								<td>{{ $loop->iteration }}</td>
 								<td class="text-center px-0"><span class="{{ ($row->flight_type == 'arrival') ? 'text-secondary h5 bi bi-arrow-down-right-circle-fill' : 'text-info h5 bi bi-arrow-up-right-circle-fill'}}"></span></td>
 								<td>{{ $row->flight_no }}</td>
@@ -63,7 +60,7 @@
 											<li><a href="" data-bs-toggle="modal" data-bs-target="#viewModal" class="dropdown-item bi bi-database-add" wire:click.prevent="viewFlight({{ $row->id }})" > Services </a></li>
 											<li><a href="" data-bs-toggle="modal" data-bs-target="#mvtModal" class="dropdown-item bi bi-watch" wire:click.prevent="viewFlight({{ $row->id }})" > Movements </a></li>
 											<li><a href="" data-bs-toggle="modal" data-bs-target="#dataModal" class="dropdown-item bi bi-pencil-square" wire:click.prevent="edit({{$row->id}})"> Edit </a></li>
-											<li><a href="" class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight id {{$row->id}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click.prevent="destroy({{$row->id}})"> Delete </a></li>  
+											<li><a href="" class="dropdown-item bi bi-trash3" onclick="confirm('Confirm Delete Flight {{$row->flight_no}}? \nDeleted Flight cannot be recovered!')||event.stopImmediatePropagation()" wire:click.prevent="destroy({{$row->id}})"> Delete </a></li>  
 										</ul>
 									</div>
 								</td>

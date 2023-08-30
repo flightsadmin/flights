@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Route;
@@ -77,7 +77,7 @@ class Schedules extends Component
             }
         }
         session()->flash('message', 'Schedule Created Successfully.');
-        return redirect('/flights');
+        return $this->redirect('/flights', navigate: true);
         $this->reset(['selectedDays', 'flightNumbers', 'flightFields']);
     }
 
@@ -111,7 +111,7 @@ class Schedules extends Component
         }
 
         session()->flash('message', 'Schedule Imported Successfully.');
-        return redirect('/flights');
+        return $this->redirect('/flights', navigate: true);
     }
 
     public function downloadSample()

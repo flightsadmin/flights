@@ -41,7 +41,7 @@ trait FileHandler
             }
 
             //Updating NavBar
-            $layoutsFile = base_path('resources/views/layouts/app.blade.php');
+            $layoutsFile = base_path('resources/views/components/layouts/app.blade.php');
             $layoutsData = $this->filesystem->get($layoutsFile);
             $spatieNavs  =
             <<<NAV
@@ -52,26 +52,26 @@ trait FileHandler
                                             Admin
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-light">
-                                            <li><a href="{{ url('/users') }}" class="nav-link"><i class="bi bi-people-fill h5 text-info"></i> Users </a></li>
-                                            <li><a href="{{ url('/roles') }}" class="nav-link"><i class="bi bi-shield-shaded h5 text-info"></i> Roles </a></li>
-                                            <li><a href="{{ url('/permissions') }}" class="nav-link"><i class="bi bi-person-fill-lock h5 text-info"></i> Permissions </a></li>
+                                            <li><a href="{{ url('/users') }}" wire:navigate class="nav-link"><i class="bi bi-people-fill h5 text-info"></i> Users </a></li>
+                                            <li><a href="{{ url('/roles') }}" wire:navigate class="nav-link"><i class="bi bi-shield-shaded h5 text-info"></i> Roles </a></li>
+                                            <li><a href="{{ url('/permissions') }}" wire:navigate class="nav-link"><i class="bi bi-person-fill-lock h5 text-info"></i> Permissions </a></li>
                                         </ul>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ url('/delays') }}" class="nav-link"><i class="bi bi-journal-code text-info h5"></i> Delay Codes </a>
+                                        <a href="{{ url('/delays') }}" wire:navigate class="nav-link"><i class="bi bi-journal-code text-info h5"></i> Delay Codes </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ url('/services') }}" class="nav-link"><i class="bi bi-plus-slash-minus text-info h5"></i> Services </a>
+                                        <a href="{{ url('/services') }}" wire:navigate class="nav-link"><i class="bi bi-plus-slash-minus text-info h5"></i> Services </a>
                                     </li>
                                     @endrole
                                     <li class="nav-item">
-                                        <a href="{{ url('/airlines') }}" class="nav-link"><i class="bi bi-database-add text-info h5"></i> Airlines </a>
+                                        <a href="{{ url('/airlines') }}" wire:navigate class="nav-link"><i class="bi bi-database-add text-info h5"></i> Airlines </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ url('/registrations') }}" class="nav-link"><i class="bi bi-clock-history text-info h5"></i> Registrations </a>
+                                        <a href="{{ url('/registrations') }}" wire:navigate class="nav-link"><i class="bi bi-clock-history text-info h5"></i> Registrations </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ url('/flights') }}" class="nav-link"><i class="bi bi-airplane-engines-fill text-info h5"></i> Flights </a>
+                                        <a href="{{ url('/flights') }}" wire:navigate class="nav-link"><i class="bi bi-airplane-engines-fill text-info h5"></i> Flights </a>
                                     </li>
             NAV;
             $spatieFileHook = "<!--Nav Bar Hooks - Do not delete!!-->";

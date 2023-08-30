@@ -23,17 +23,17 @@
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="numeric_code" class="form-label">Numeric Code</label>
-                            <input type="text" maxlength="2" class="form-control form-control-sm" id="numeric_code" wire:model.lazy="numeric_code">
+                            <input type="text" maxlength="2" class="form-control form-control-sm" id="numeric_code" wire:model.blur="numeric_code">
                             @error('numeric_code') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="alpha_numeric_code" class="form-label">Alpha Numeric</label>
-                            <input type="text" class="form-control form-control-sm" id="alpha_numeric_code" wire:model.lazy="alpha_numeric_code">
+                            <input type="text" class="form-control form-control-sm" id="alpha_numeric_code" wire:model.blur="alpha_numeric_code">
                             @error('alpha_numeric_code') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control form-control-sm" id="description" wire:model.lazy="description">
+                            <input type="text" class="form-control form-control-sm" id="description" wire:model.blur="description">
                             @error('description') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">

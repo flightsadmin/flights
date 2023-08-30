@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
@@ -47,7 +47,7 @@ class Roles extends Component
         $this->role->save();
         $this->role->permissions()->sync($this->permissions_selection);
         
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Role created successfully.');
         $this->index();
     }

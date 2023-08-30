@@ -13,12 +13,12 @@
                     <div class="row">
                         <div class="form-group col-md-6 mb-2">
                             <label for="service">Service Name</label>
-                            <input type="text" class="form-control" id="service" wire:model.lazy="service">
+                            <input type="text" class="form-control" id="service" wire:model.blur="service">
                             @error('service') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="price">Price</label>
-                            <input type="numer" maxlength="10" class="form-control" id="price" wire:model.lazy="price">
+                            <input type="numer" maxlength="10" class="form-control" id="price" wire:model.blur="price">
                             @error('price') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -42,7 +42,7 @@ class Permissions extends Component
     {
         $this->validate();
         $this->permission->save();
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Permission created successfully.');
         $this->index();
     }

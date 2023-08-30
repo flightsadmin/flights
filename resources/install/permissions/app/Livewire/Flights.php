@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use Dompdf\Dompdf;
@@ -51,21 +51,12 @@ class Flights extends Component
     {
         $this->selectedDate = Carbon::now('Asia/Qatar')->format('Y-m-d');
     }
-    
-    public function emptyFields()
-    {
-        return [$this->resetErrorBag(), $this->reset([
-            //Service Fields
-            'ServiceTypes', 'flight_id',
-            //Flight Fields
-            'airline_id', 'flight_no', 'registration', 'origin',
-            'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type',
-            //MVT Fields
-            'touchdown', 'onblocks', 'offblocks', 'airborne', 'passengers', 'remarks', 'delayCodes'
-            ])];
+
+    public function updatedKeyWord(){
+        $this->resetPage();
     }
 
-    public function updatedairlineId($airline)
+    public function updatedAirlineId($airline)
     {
         $this->registrations = Registration::where('airline_id', $airline)->get();
     }
@@ -83,10 +74,9 @@ class Flights extends Component
             'flight_type'               => 'required|in:arrival,departure'
         ]);
         $flight = Flight::updateOrCreate(['id' => $this->flight_id], $validatedData);
-        
-        $this->emptyFields();
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', $this->flight_id ? 'Flight Updated Successfully.' : 'Flight Created Successfully.');
+        $this->reset(['airline_id', 'flight_no', 'registration', 'origin', 'destination', 'scheduled_time_arrival', 'scheduled_time_departure', 'flight_type']);
     }
 
     public function edit($id)
@@ -144,14 +134,14 @@ class Flights extends Component
     public function addService()
     {
         $this->ServiceTypes[] = ['start' => '', 'finish' => ''];
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
 
     public function removeService($index)
     {
         unset($this->ServiceTypes[$index]);
         $this->ServiceTypes = array_values($this->ServiceTypes);
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
 
     public function createServices()
@@ -221,7 +211,7 @@ class Flights extends Component
             $this->mvt = $movement;
         }
         $this->viewFlight($this->flight_id);
-        $this->emit('refreshItems');
+        $this->dispatch('refreshItems');
     }
     
     public function sendMovement()
@@ -242,9 +232,9 @@ class Flights extends Component
             $message->subject('MVT '. $emailData['mvt']['flight']['flight_no']);
             $message->to(array_unique($emailData['recipients']));
         });
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Movement Sent successfully.');
-        $this->emptyFields();
+        $this->reset(['touchdown', 'onblocks', 'offblocks', 'airborne', 'passengers', 'remarks', 'delayCodes']);
     }
 
     public function generatePDF()

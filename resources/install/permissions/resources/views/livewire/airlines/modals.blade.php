@@ -13,22 +13,22 @@
                     <div class="row">
                         <div class="form-group col-md-6 mb-2">
                             <label for="name">Airline Name</label>
-                            <input type="text" class="form-control" id="name" wire:model.lazy="name">
+                            <input type="text" id="name" class="form-control" wire:model.blur="name" autocomplete="off">
                             @error('name') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="iata_code">Airline Code</label>
-                            <input type="text" maxlength="2" class="form-control" id="iata_code" wire:model.lazy="iata_code">
+                            <input type="text"  id="iata_code" maxlength="2" class="form-control" wire:model.blur="iata_code">
                             @error('iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="base">Airline Base</label>
-                            <input type="text" class="form-control" id="base" wire:model.lazy="base">
+                            <input type="text" id="base" class="form-control" wire:model.blur="base">
                             @error('base') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group col-md-6 mb-2">
                             <label for="base_iata_code">Airline Base Iata Code</label>
-                            <input type="text" class="form-control" id="base_iata_code" wire:model.lazy="base_iata_code">
+                            <input type="text" class="form-control" id="base_iata_code" wire:model.blur="base_iata_code">
                             @error('base_iata_code') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -59,26 +59,26 @@
                             <input type="hidden" wire:model="airline_id">
                             <div class="col-md-6 mb-3">
                                 <label for="origin">Origin:</label>
-                                <input type="text" maxlength="4" class="form-control" wire:model.lazy="origin">
+                                <input type="text" maxlength="4" id="origin" class="form-control" wire:model.blur="origin">
                                 @error('origin') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="destination">Destination:</label>
-                                <input type="text" maxlength="34" class="form-control" wire:model.lazy="destination">
+                                <input type="text" id="destination" maxlength="34" class="form-control" wire:model.blur="destination">
                                 @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="flight_time">Flight Time:</label>
-                                <input maxlength="4" class="form-control form-control-sm" type="text" wire:model.lazy="flight_time" placeholder="0000">
+                                <input type="text" id="flight_time" maxlength="4" class="form-control form-control-sm" wire:model.blur="flight_time" placeholder="0000">
                                 @error('flight_time') <span class="text-danger small">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="emails">Emails:</label>
                                 <div class="d-flex gap-4">
-                                    <input type="text" class="form-control form-control-sm" wire:model.lazy="email" placeholder="example test@test.com">
+                                    <input type="text" id="emails" class="form-control form-control-sm" wire:model.blur="email" placeholder="example test@test.com">
                                     <a href="" wire:click.prevent="addEmail('{{ $email }}')" class="text-danger h5 bi bi-envelope-plus-fill"></a>
                                 </div>
                                 <ol class="mt-2">

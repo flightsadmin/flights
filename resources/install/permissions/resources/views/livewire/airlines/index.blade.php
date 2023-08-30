@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('components.layouts.app')
 @section('title', __('Airlines'))
 @section('content')
 <div class="container-fluid">

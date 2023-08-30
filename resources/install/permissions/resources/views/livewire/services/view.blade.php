@@ -8,7 +8,7 @@
 							<h4>Services </h4>
 						</div>
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Service">
+							<input wire:model.live.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Service">
 						</div>
 						<div class="btn btn-sm btn-info bi bi-plus-lg" data-bs-toggle="modal" data-bs-target="#dataModal">
 							 Add Service
@@ -19,7 +19,7 @@
 					@include('livewire.services.modals')
 					<div class="row">
 						@forelse($services as $row)
-						<div class="col-md-4 border d-flex justify-content-between">
+						<div class="col-md-4 border d-flex justify-content-between" wire:key="{{ $row->id }}">
 							<div class="p-2">
 								<b><i class="bi bi-building-check text-success"></i> {{ $row->service }}</b>
 								<p> <i class="bi bi-cash-coin text-info"> </i> $ {{ number_format($row->price, 2) }}</p>

@@ -2,10 +2,12 @@
 
 namespace Flightsadmin\Flights\Commands;
 
+use Illuminate\Support\Str;
+use RecursiveIteratorIterator;
 use Illuminate\Console\Command;
+use RecursiveDirectoryIterator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 
 class LivewireInstall extends Command
 {
@@ -22,10 +24,11 @@ class LivewireInstall extends Command
     public function handle()
     {
         $this->filesystem = new Filesystem;
-		(new Filesystem)->ensureDirectoryExists(app_path('Http/Livewire'));
+		(new Filesystem)->ensureDirectoryExists(app_path('Livewire'));
 		(new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers'));
 		(new Filesystem)->ensureDirectoryExists(app_path('Models'));
 		(new Filesystem)->ensureDirectoryExists(resource_path('views/livewire'));
+		(new Filesystem)->ensureDirectoryExists(resource_path('views/components/layouts'));
 		
         if ($this->confirm('This will delete compiled assets in public folder. It will Re-Compile this. Do you want to proceed?', false, true)) { 
             $routeFile = base_path('routes/web.php');
@@ -56,7 +59,7 @@ class LivewireInstall extends Command
                     $this->warn('Deleted file: <info>' . $deleteFile . '</info>');
                 }
             }
-            
+
             $this->crudStubDir = __DIR__ . '/../../resources/install/crud';
             $this->generateCrudFiles();
 
@@ -84,11 +87,19 @@ class LivewireInstall extends Command
 		
 		tap(new Filesystem, function ($npm) {
             $npm->deleteDirectory(base_path('node_modules'));
+            $npm->deleteDirectory(base_path('resources/views/layouts'));
             $npm->delete(base_path('yarn.lock'));
             $npm->delete(base_path('webpack.mix.js'));
             $npm->delete(base_path('package-lock.json'));
         });
         $this->line('');
+
+        $viewsDirectory = resource_path('views'); // Adjust this path if needed
+        $searchExtends = "@extends('layouts.app')";
+        $replaceExtends = "@extends('components.layouts.app')";
+        $this->correctLayoutExtention($viewsDirectory, $searchExtends, $replaceExtends);
+        $this->line('');
+        
         $this->warn('All set, Your Flights are ready to take off');		
 	  }
 		else $this->warn('Installation Aborted, No file was changed');
@@ -106,6 +117,25 @@ class LivewireInstall extends Command
             }
             $this->filesystem->put($filePath, $this->replace($file->getContents()));
             $this->warn('Generated file: <info>' . $filePath . '</info>');
+        }
+    }
+    
+    public function correctLayoutExtention($directory, $searchExtends, $replaceExtends) {
+        $dir = new RecursiveDirectoryIterator($directory);
+        $iterator = new RecursiveIteratorIterator($dir);
+        
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                $filePath = $file->getPathname();
+                $content = file_get_contents($filePath);
+                
+                $newContent = str_replace($searchExtends, $replaceExtends, $content);
+                
+                if ($newContent !== $content) {
+                    file_put_contents($filePath, $newContent);
+                    $this->line("Replaced $searchExtends in: $filePath with $replaceExtends");
+                }
+            }
         }
     }
 

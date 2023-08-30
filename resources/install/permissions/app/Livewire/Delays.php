@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Carbon\Carbon;
 use App\Models\Airline;
@@ -42,7 +42,7 @@ class Delays extends Component
 
         AirlineDelayCode::create($validatedData);
 
-        $this->dispatchBrowserEvent('closeModal');
+        $this->dispatch('closeModal');
         session()->flash('message', 'Delay Code Created successfully.');
         $this->reset();
     }
@@ -123,6 +123,6 @@ class Delays extends Component
         }
 
         session()->flash('message', 'Delays Imported Successfully.');
-        return redirect('/delays');
+        return $this->redirect('/delays', navigate: true);
     }
 }

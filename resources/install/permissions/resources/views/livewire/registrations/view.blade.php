@@ -8,12 +8,12 @@
 							<h4>Registrations </h4>
 						</div>
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
+							<input wire:model.live.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Registration">
 						</div>
 						<div class="d-flex gap-4">
-                            <form wire:submit.prevent="importRegistration" enctype="multipart/form-data">
+                            <form wire:submit="importRegistration" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    <input type="file" accept=".csv, .xlsx" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
@@ -43,7 +43,7 @@
 						</thead>
 						<tbody>
 							@forelse($registrations as $row)
-							<tr>
+							<tr wire:key="{{ $row->id }}">
 								<td>{{ $loop->iteration }}</td> 
 								<td>{{ $row->registration }}</td>
 								<td>{{ $row->aircraft_type }}</td>

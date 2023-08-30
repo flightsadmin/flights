@@ -8,9 +8,9 @@
                             <h4>Flight Schedules </h4>
                         </div>
                         <div class="d-flex gap-4">
-                            <form wire:submit.prevent="import" enctype="multipart/form-data">
+                            <form wire:submit="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    <input type="file" accept=".csv, .xlsx" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
@@ -31,16 +31,17 @@
                 </div>
 
                 <div class="card-body border">
+                @if($flightNumbers)
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th width="120">Airline</th>
-                                    <th width="120">Flight Number</th>
-                                    <th width="220">Timings (Arrival & Departure)</th>
-                                    <th width="120">Origin</th>
-                                    <th width="120">Destination</th>
-                                    <th width="120">Type</th>
+                                    <th width="150">Airline</th>
+                                    <th width="130">Flight Number</th>
+                                    <th width="230">Timings (Arrival & Departure)</th>
+                                    <th width="130">Origin</th>
+                                    <th width="130">Destination</th>
+                                    <th width="150">Type</th>
                                     @foreach ($days as $day)
                                     <th>{{ $day }}</th>
                                     @endforeach
@@ -49,7 +50,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($flightNumbers as $index => $flightNumber)
-                                <tr>
+                                <tr wire:key="{{ $index }}">
                                     <td>
                                         <select wire:model="flightFields.{{ $flightNumber }}.airline_id" class="form-select  form-select-sm">
                                             <option value="">--Select Airline--</option>
@@ -93,6 +94,7 @@
                             </tbody>
                         </table>
                     </div>
+                @endif
                     <button wire:click.prevent="addFlights" class="btn btn-sm btn-secondary">+ Add a Schedule</button>
                     <button wire:click="createFlights" class="btn btn-sm btn-primary float-end">Create Flights</button>
                 </div>
@@ -114,7 +116,7 @@
                             </thead>
                             <tbody>
                                 @forelse($flights as $row)
-                                <tr>
+                                <tr wire:key="{{ $row->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td><input type="checkbox" wire:model="selectedFlights" value="{{ $row->flight_no }}"></td>
                                     <td>{{ $row->flight_no }}</td>
@@ -138,17 +140,4 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- Success Message Toast  -->
-<div  id="statusToast" class="toast position-fixed top-0 end-0 p-3 text-bg-success" style="margin-top:5px; margin-bottom:0px;" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="toast-header text-bg-success">
-    <i class="me-2 bi bi-send-fill"></i>
-    <strong class="me-auto text-black">Success</strong>
-    <small class="text-white">{{ now() }}</small>
-    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-  </div>
-  <div class="toast-body text-black text-center">
-    {{ session('message') }}
-  </div>
 </div>

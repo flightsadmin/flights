@@ -6,7 +6,7 @@
                 <h5 class="modal-title" id="dataModalLabel">
                     {{ $flight_id ? 'Edit Flight' : 'Create New Flight' }}  
                 </h5>
-                <button wire:click.prevent="emptyFields" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button wire:click="$refresh" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -23,12 +23,12 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="flight_no" class="form-label">Flight Number</label>
-                            <input wire:model.lazy="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
+                            <input wire:model.blur="flight_no" type="text" class="form-control form-control-sm" id="flight_no">
                             @error('flight_no') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="registration" class="form-label">Registration</label>
-                            <select wire:model.lazy="registration" class="form-select  form-select-sm" id="registration">
+                            <select wire:model.blur="registration" class="form-select  form-select-sm" id="registration">
                                 <option value="">Choose an option...</option>
                                 @foreach($registrations as $value)
                                 <option value="{{ $value->registration }}">{{ $value->registration }}</option>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="flight_type" class="form-label">Flight Type</label>
-                            <select wire:model.lazy="flight_type" class="form-select form-select-sm" id="flight_type">
+                            <select wire:model.blur="flight_type" class="form-select form-select-sm" id="flight_type">
                                 <option value="">Select Flight Type</option>
                                 <option value="arrival">Arrival</option>
                                 <option value="departure">Departure</option>
@@ -47,29 +47,29 @@
                         </div> 
                         <div class="col-md-6 mb-3">
                             <label for="origin" class="form-label">Origin</label>
-                            <input wire:model.lazy="origin" type="text" class="form-control form-control-sm" id="origin">
+                            <input wire:model.blur="origin" type="text" class="form-control form-control-sm" id="origin">
                             @error('origin') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="destination" class="form-label">Destination</label>
-                            <input wire:model.lazy="destination" type="text" class="form-control form-control-sm" id="destination">
+                            <input wire:model.blur="destination" type="text" class="form-control form-control-sm" id="destination">
                             @error('destination') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="scheduled_time_arrival" class="form-label">Scheduled Time of Arrival</label>
-                            <input wire:model.lazy="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
+                            <input wire:model.blur="scheduled_time_arrival" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_arrival">
                             @error('scheduled_time_arrival') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="scheduled_time_departure" class="form-label">Scheduled Time of Departure</label>
-                            <input wire:model.lazy="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
+                            <input wire:model.blur="scheduled_time_departure" type="datetime-local" class="form-control form-control-sm" id="scheduled_time_departure">
                             @error('scheduled_time_departure') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer d-flex align-items-center justify-content-between">
-                <button wire:click.prevent="emptyFields" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button wire:click="$refresh" type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button wire:click.prevent="store" type="button" class="btn btn-sm btn-primary bi bi-check2-circle"> Save</button>
             </div>
         </div>
@@ -82,7 +82,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="dataModalLabel"> Flight Services </h6>
-                <button type="button" class="btn-close" wire:click.prevent="emptyFields" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" wire:click="$refresh" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="card-body border py-0">
@@ -119,7 +119,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse ($selectedFlight->service as $index => $value)
-                                        <tr>
+                                        <tr wire:key="{{ $value->id }}">
                                             <td>{{ $index + 1 }}. {{ $value->service->service }}</td>
                                             <td>{{ $value->start }}</td>
                                             <td>{{ $value->finish }}</td>
@@ -158,8 +158,8 @@
                         @if(count($ServiceTypes) > 0)
                         <b>Add Services</b>
                         @foreach ($ServiceTypes as $index => $actualService)
-                            <div class="d-flex gap-1 mb-1">
-                                <select class="form-select form-select-sm" id="registration" wire:model="ServiceTypes.{{ $index }}.service_type">
+                            <div class="d-flex gap-1 mb-1" wire:key="{{ $index }}">
+                                <select class="form-select form-select-sm" id="{{ $index }}" wire:model="ServiceTypes.{{ $index }}.service_type">
                                     <option value="">Select a Service...</option>
                                     @foreach($serviceList as $value)
                                     <option value="{{ $value->id }}">{{ $value->service }}</option>
@@ -200,7 +200,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="dataModalLabel"> Send Movements </h6>
-                <button type="button" wire:click.prevent="emptyFields" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" wire:click="$refresh" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if ($flight_id)
@@ -226,8 +226,8 @@
                             @endif
                         </div>
                         <div class="small">
-                            <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i> 
-                            <input wire:model="history" class="form-check-input mt-0 ms-2" type="checkbox">
+                            <i class="text-primary me-4 bi bi-clock-history"> History <small>(Last 2 Movements)</small></i>
+                            <input name="history" wire:click="$toggle('history')" class="form-check-input mt-0 ms-2" type="checkbox">
                             @if($history)
                             @forelse($selectedFlight->movement->take(2) as $movement)
                             <div class="row border">
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="remarks">Remarks</label>
-                                    <textarea class="form-control" id="remarks" wire:model.lazy="remarks"></textarea>
+                                    <textarea class="form-control" id="remarks" wire:model.blur="remarks"></textarea>
                                     @error('remarks') <span class="text-danger small">{{ $message }}</span> @enderror
                                 </div>
                                 @endif
@@ -302,7 +302,7 @@
 
                             @if ($selectedFlight->flight_type == 'departure')
                                 <div class="form-group col-md-12 my-2">
-                                    <label>Delay Codes</label>
+                                    <p>Delay Codes</p>
                                     @foreach ($delayCodes as $index => $delayCode)
                                         <div class="d-flex gap-1 mb-1">
                                             <select wire:model="delayCodes.{{ $index }}.code" class="form-select  form-select-sm">
@@ -337,7 +337,7 @@
                     </div>
                 </div>
                 <div class="card-body border py-2 d-flex align-items-center justify-content-between">
-                    <button wire:click.prevent="emptyFields" data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
+                    <button wire:click="$refresh" data-bs-dismiss="modal" type="button" class="btn btn-sm btn-secondary bi bi-backspace-fill"> Close</button>
                     <button wire:loading.attr="disabled" wire:click.prevent="sendMovement" type="button" class="btn btn-sm btn-success bi bi-envelope-check-fill"> Send Movement</button>
                     <button wire:loading.attr="disabled" wire:click.prevent="saveMovement" type="button" class="btn btn-sm btn-primary bi bi-clock-history"> Save Movement</button>
                 </div>
