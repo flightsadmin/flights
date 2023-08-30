@@ -49,8 +49,7 @@
                                         <button data-bs-toggle="modal" data-bs-target="#dataModal" class="btn btn-primary custom-btn-sm bi bi-pencil-square" wire:click="edit({{ $user->id }})"> </button>
                                         @can('deleteUser')
                                         <button class="btn btn-danger custom-btn-sm text-white bi bi-trash3-fill" 
-                                        wire:click="destroy({{ $user->id }})" 
-                                        onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()"> </button>
+                                        onclick="confirm('Confirm Delete \'{{ $user->name }} - {{ $user->email }}\'? \n\nDeleted Users cannot be recovered!')||event.stopImmediatePropagation()" wire:click="destroy({{ $user->id }})"> </button>
                                         @endcan
                                     @endif
                                     <td>
