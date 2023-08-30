@@ -68,8 +68,8 @@ class Users extends Component
             });
         }
         $this->dispatch('closeModal');
-        $this->reset();
         session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
+        $this->reset();
     }
 
     public function viewUser($id)

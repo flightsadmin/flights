@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">View Profile</h5>
-                <button wire:click.prevent="cancel()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button wire:click="$refresh" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if ($userId)
@@ -34,7 +34,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="cancel()" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" wire:click="$refresh">Close</button>
             </div>
         </div>
     </div>
@@ -46,7 +46,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><h4>{{ $userId ? 'Edit User' : 'Create New User' }}</h4></h5>
-                <button wire:click="cancel()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button wire:click="$refresh" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="photo">Photo</label>
-                            <input type="file" id="photo" wire:model="photo" placeholder="Photo" class="form-control">
+                            <input accept="image/png, image/jpeg, image/jpg" type="file" id="photo" wire:model="photo" placeholder="Photo" class="form-control">
                             @error('photo') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
                         @if ($photo)
@@ -83,11 +83,13 @@
                         </div>
                         @endif
                         <div class="col-md-4 mb-3 d-flex align-items-center justify-content-evenly">
-                            <label for="changePassword"> {{ $userId ? 'Change Password?' : 'Create Password?' }}</label>
-                            <input type="checkbox" id="changePassword" class="form-check-input ms-2" wire:model="changePassword">
-                            @error('password') <span class="text-danger small">{{ $message }}</span> @enderror
+                            @if ($userId)
+                                <label for="changePassword"> {{ $userId ? 'Change Password?' : '' }}</label>
+                                <input type="checkbox" id="changePassword" class="form-check-input ms-2" wire:model.live="changePassword">
+                                @error('password') <span class="text-danger small">{{ $message }}</span> @enderror
+                            @endif
                         </div>
-                        @if ($changePassword)
+                        @if (!$userId || $changePassword)
                         <div class="col-md-6 mb-3">
                             <label for="password">Password</label>
                             <input type="password" id="password" wire:model.blur="password" placeholder="Password" class="form-control">
@@ -135,7 +137,7 @@
                 </div>
             </div>            
             <div class="modal-footer mt-3 d-flex align-items-center justify-content-between">
-                <button wire:loading.attr="disabled" wire:click="cancel" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Back</button>
+                <button wire:loading.attr="disabled" wire:click="$refresh" data-bs-dismiss="modal" class="btn btn-sm btn-primary">Back</button>
                 <button wire:loading.attr="disabled" wire:click.prevent="submit" class="btn btn-sm btn-primary bi bi-check2-circle"> {{ $userId ? 'Edit Changes' : 'Add User'}}</button>
             </div>
         </div>
