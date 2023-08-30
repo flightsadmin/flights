@@ -22,8 +22,7 @@ class Users extends Component
     {
         return view('livewire.users.view', [
             'users' => User::latest()->paginate(),
-            'roles' => Role::with('permissions')->get(),
-            'selectedUser' => $this->userId ? User::findOrFail($this->userId) : null,
+            'roles' => Role::with('permissions')->get()
         ]);
     }
 
@@ -38,19 +37,18 @@ class Users extends Component
             'password'      => $this->userId ? 'nullable' : 'required|confirmed',
             'photo'         => $this->userId ? 'nullable' : 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $photo = ($this->photo && !is_string($this->photo)) ?
-                $this->photo->storeAs('users', explode('@', $validatedData['email'])[0] . '.'.$this->photo->getClientOriginalExtension() , 'public') : 
-                'users/noimage.jpg';
-        
-        $user = User::updateOrCreate(['id' => $this->userId],
-        [
-            'name'      => $this->name,
-            'email'     => $this->email,
-            'phone'     => $this->phone,
-            'title'     => $this->title,
-            'photo'     => $photo,
-            'password'  => Hash::make($this->password),
-        ]);
+        if ($this->photo && !is_string($this->photo)) {
+        $validatedData['photo'] = $this->photo->storeAs('users', explode('@', $validatedData['email'])[0] . '.'.$this->photo->getClientOriginalExtension() , 'public');
+        } else {
+            unset($validatedData['photo']);
+        }
+        if (!empty($this->password)) {
+            $validatedData['password'] = Hash::make($this->password);
+        } else {
+            unset($validatedData['password']);
+        }
+
+        $user = User::updateOrCreate(['id' => $this->userId], $validatedData);
         $user->syncRoles($this->selectedRoles);
         
         if($user->wasRecentlyCreated){
@@ -70,11 +68,6 @@ class Users extends Component
         $this->dispatch('closeModal');
         session()->flash('message', $this->userId ? 'User Updated Successfully.' : 'User Created Successfully.');
         $this->reset();
-    }
-
-    public function viewUser($id)
-    {
-        $this->userId = $id;
     }
 
     public function edit($id)
@@ -97,11 +90,5 @@ class Users extends Component
             Storage::disk('public')->delete($user->photo);
         }
         $user->delete();
-    }
-
-    public function cancel()
-    {
-        $this->resetErrorBag();
-        $this->reset();
     }
 }

@@ -10,23 +10,23 @@
                 @if ($userId)
                 <div class="col-12 bg-white px-3 mb-3 pb-3">
                     <div class="d-flex flex-column align-items-center border-bottom">
-                        <img class="profile-img mb-2" src="{{ asset('storage/' . $selectedUser->photo) }}"  style="height:100px; width:100px;"  alt="{{ $selectedUser->title }}">
+                        <img class="profile-img mb-2" src="{{ asset('storage/' . $photo) }}"  style="height:100px; width:100px;"  alt="{{ $title }}">
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
                         <p class="py-2 bi bi-person-vcard-fill"> Full Name</p>
-                        <p class="py-2 text-muted">{{ $selectedUser->name }}</p>
+                        <p class="py-2 text-muted">{{ $name }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
                         <p class="py-2 bi bi-envelope-at-fill"> Email</p>
-                        <p class="py-2 text-muted"> {{ $selectedUser->email }}</p>
+                        <p class="py-2 text-muted"> {{ $email }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
                         <p class="py-2 bi bi-telephone-fill"> Phone</p>
-                        <p class="py-2 text-muted">{{ $selectedUser->phone }}</p>
+                        <p class="py-2 text-muted">{{ $phone }}</p>
                     </div>
                     <div class="d-flex align-items-center justify-content-between border-bottom">
                         <p class="py-2 bi bi-geo-alt-fill"> Title</p>
-                        <p class="py-2 text-muted">{{ $selectedUser->title }}</p>
+                        <p class="py-2 text-muted">{{ $title }}</p>
                     </div>
                 </div>
                 @else
