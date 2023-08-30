@@ -8,12 +8,12 @@
 							<h4>Airlines </h4>
 						</div>
 						<div>
-							<input wire:model.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Airline">
+							<input wire:model.live.debounce.500ms="keyWord" type="text" class="form-control form-control-sm" name="search" id="search" placeholder="Search Airline">
 						</div>
                         <div class="d-flex gap-4">
                             <form wire:submit="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
@@ -36,7 +36,7 @@
 								<b>Routes</b>
 								<ol>
 									@foreach($row->routes as $route)
-										<li>
+										<li wire:key="{{ $row->id }}">
 											<p class="d-flex justify-content-between">
 												{{ $route->origin }} - {{ $route->destination }} ({{ $route->flight_time }})
 												<a href="" data-bs-toggle="modal" data-bs-target="#routeModal" wire:click.prevent="editRoute({{ $route->id }})" class="text-info bi bi-pencil-square"></a>

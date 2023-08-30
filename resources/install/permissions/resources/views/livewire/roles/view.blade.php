@@ -32,7 +32,7 @@
                                 <table class="table table-sm table-bordered">
                                     <tbody>
                                         @foreach($permissions as $permission)
-                                        <tr>
+                                        <tr wire:key="{{ $permission->id }}">
                                             <td width="40">
                                                 <input class="form-check-input" type="checkbox" 
                                                     wire:model.blur="permissions_selection" 
@@ -65,7 +65,7 @@
                             </thead>
                             <tbody>
                                 @foreach($roles as $role)
-                                <tr>
+                                <tr wire:key="{{ $role->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>

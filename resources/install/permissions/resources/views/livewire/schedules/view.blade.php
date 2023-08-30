@@ -10,7 +10,7 @@
                         <div class="d-flex gap-4">
                             <form wire:submit="import" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model="file">
+                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($flightNumbers as $index => $flightNumber)
-                                <tr>
+                                <tr wire:key="{{ $index }}">
                                     <td>
                                         <select wire:model="flightFields.{{ $flightNumber }}.airline_id" class="form-select  form-select-sm">
                                             <option value="">--Select Airline--</option>
@@ -114,7 +114,7 @@
                             </thead>
                             <tbody>
                                 @forelse($flights as $row)
-                                <tr>
+                                <tr wire:key="{{ $row->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td><input type="checkbox" wire:model="selectedFlights" value="{{ $row->flight_no }}"></td>
                                     <td>{{ $row->flight_no }}</td>

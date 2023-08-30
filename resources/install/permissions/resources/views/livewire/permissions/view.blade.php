@@ -44,7 +44,7 @@
                             </thead>
                             <tbody>
                             @foreach($permissions as $permission)
-                                <tr>
+                                <tr wire:key="{{ $permission->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $permission->name }}</td>
                                     <td>

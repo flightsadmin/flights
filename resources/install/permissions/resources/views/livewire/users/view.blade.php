@@ -31,7 +31,7 @@
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
-                                <tr>
+                                <tr wire:key="{{ $user->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
