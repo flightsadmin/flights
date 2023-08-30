@@ -18,7 +18,7 @@
                         <div class="d-flex gap-4">
                             <form wire:submit="importDelays" enctype="multipart/form-data">
                                 <div class="d-flex gap-4">
-                                    <input type="file" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
+                                    <input type="file" accept=".csv, .xlsx" class="form-control form-control-sm mr-2" id="file" wire:model.live="file">
                                     @error('file') <span class="text-danger small">{{ $message }}</span> @enderror
                                     <button type="submit" class="btn btn-success btn-sm bi bi-cloud-upload-fill"></button>
                                 </div>
